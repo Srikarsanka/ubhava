@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>Ubhaava Shop</title>
+      <style>
+            body {
+                  font-family: Arial;
+                  margin: 0;
+                  padding: 0;
+            }
+
+            .header {
+                  padding: 20px;
+                  text-align: center;
+                  background: #f2f2f2;
+            }
+
+            .categories {
+                  display: flex;
+                  justify-content: center;
+                  flex-wrap: wrap;
+                  gap: 10px;
+                  margin: 20px 0;
+            }
+
+            .categories button,
+            .categories select {
+                  padding: 10px 15px;
+                  border: none;
+                  border-radius: 5px;
+                  background-color: #444;
+                  color: white;
+                  cursor: pointer;
+            }
+
+            .categories select {
+                  background-color: #007bff;
+            }
+
+            .shop-container {
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: center;
+                  gap: 20px;
+                  padding: 20px;
+            }
+
+            .card {
+                  border: 1px solid #ddd;
+                  border-radius: 8px;
+                  width: 200px;
+                  padding: 10px;
+                  text-align: center;
+                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .card img {
+                  width: 100%;
+                  height: 180px;
+                  object-fit: cover;
+                  border-radius: 6px;
+            }
+
+            .card h3 {
+                  font-size: 18px;
+                  margin: 10px 0 5px;
+            }
+
+            .card p {
+                  color: green;
+                  font-weight: bold;
+            }
+      </style>
+</head>
+
+<body>
+      <div class="header">
+            <h1>Ubhaava Shop</h1>
+      </div>
+
+      <div class="categories">
+            <button onclick="filterProducts('all')">All</button>
+            <button onclick="filterProducts('men')">Men</button>
+            <button onclick="filterProducts('women')">Women</button>
+            <button onclick="filterProducts('toys')">Toys</button>
+            <button onclick="filterProducts('home-decor')">Home Decor</button>
+
+            <select id="priceFilter" onchange="applyFilters()">
+                  <option value="all">Price: All</option>
+                  <option value="500">Under ₹500</option>
+                  <option value="1000">Under ₹1000</option>
+                  <option value="2000">Under ₹2000</option>
+            </select>
+      </div>
+
+      <div class="shop-container" id="productContainer"></div>
+
+      <script>
+            // Updated product list with several women's products (e.g., sarees and western wear)
+            const products = [
+                  {
+                        id: 1,
+                        name: "Floral Cotton Saree",
+                        price: 799,
+                        category: "women",
+                        image: "https://via.placeholder.com/200x180?text=Floral+Saree"
+                  },
+                  {
+                        id: 2,
+                        name: "Silk Saree",
+                        price: 1299,
+                        category: "women",
+                        image: "https://via.placeholder.com/200x180?text=Silk+Saree"
+                  },
+                  {
+                        id: 3,
+                        name: "Western Dress",
+                        price: 999,
+                        category: "women",
+                        image: "https://via.placeholder.com/200x180?text=Western+Dress"
+                  },
+                  {
+                        id: 4,
+                        name: "Casual Western Top",
+                        price: 699,
+                        category: "women",
+                        image: "https://via.placeholder.com/200x180?text=Western+Top"
+                  },
+                  // Additional products in other categories
+                  {
+                        id: 5,
+                        name: "Men's Cotton Shirt",
+                        price: 499,
+                        category: "men",
+                        image: "https://via.placeholder.com/200x180?text=Men+Shirt"
+                  },
+                  {
+                        id: 6,
+                        name: "Handmade Vase",
+                        price: 899,
+                        category: "home-decor",
+                        image: "https://via.placeholder.com/200x180?text=Vase"
+                  },
+                  {
+                        id: 7,
+                        name: "Teddy Bear",
+                        price: 399,
+                        category: "toys",
+                        image: "https://via.placeholder.com/200x180?text=Teddy+Bear"
+                  },
+                  {
+                        id: 8,
+                        name: "Wooden Wall Hanging",
+                        price: 699,
+                        category: "home-decor",
+                        image: "https://via.placeholder.com/200x180?text=Wall+Hanging"
+                  }
+            ];
+
+            // Set default category to 'women' so that women's wear products are displayed on load
+            let currentCategory = 'women';
+
+            function displayProducts(productArray) {
+                  const container = document.getElementById("productContainer");
+                  container.innerHTML = ""; // Clear previous products
+
+                  productArray.forEach(product => {
+                        const card = `
+          <div class="card">
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>₹${product.price}</p>
+          </div>
+        `;
+                        container.innerHTML += card;
+                  });
+            }
+
+            function filterProducts(category) {
+                  currentCategory = category;
+                  applyFilters();
+            }
+
+            function applyFilters() {
+                  const priceLimit = document.getElementById("priceFilter").value;
+                  let filtered = products;
+
+                  if (currentCategory !== 'all') {
+                        filtered = filtered.filter(p => p.category === currentCategory);
+                  }
+
+                  if (priceLimit !== 'all') {
+                        filtered = filtered.filter(p => p.price <= parseInt(priceLimit));
+                  }
+
+                  displayProducts(filtered);
+            }
+
+            // Load products using the default filter (women's wear)
+            applyFilters();
+      </script>
+</body>
+
+</html>

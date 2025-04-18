@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+</head>
+
+<body>
+      <CENTER>
+            <h1>LOGIN/SIGN-IN PAGE</h1>
+      </CENTER>
+      <div id="div" style="width: 80vw; height: 90vh; display: flex; justify-content: center; align-items: center;">
+            <div id="div1" style="width:40vw;height:90vh;border:1px solid red;border-top-left-radius: 5rem;">
+                  <center>
+                        <h1 STYLE="font-family: 'MyCustomFont', serif;font-size:5vw;font-weight: 600;">UDBHAVA</h1>
+                        <P STYLE="margin-left:8rem;margin-top:-2.9rem;font-weight: 200;font-family: 'MyCustomFont'">-
+                              the orgin of indian
+                              handicraft</P>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+
+                        <H2 style="font-family: 'MyCustomFont', serif;font-size:2vw;font-weight: 400;font-size: 1.5vw;">
+                              Join the Ubhaava
+                              Family
+                              and Unlock Exclusive Perks!</H2>
+                        <br>
+                        <br>
+                        <button style="text-transform: uppercase;
+                        color:white;
+                        background-color:#800000;
+                        margin:auto;
+                        width:14vw;
+                        height:8vh;
+                        border:1px solid maroon;
+                        font-size: 1vw;
+                        font-weight: 300;
+                        padding:5px;" onclick="signup()">Join the Ubhaava Family</button>
+
+                        <button style="text-transform: uppercase;
+                        color:white;
+                        background-color:#800000;
+                        margin:auto;
+                        width:14vw;
+                        height:8vh;
+                        border:1px solid maroon;
+                        font-size: 1vw;
+                        font-weight: 300;
+                        padding:5px;" onclick="signin()">Welcome Back</button>
+                  </center>
+            </div>
+            <!-- Fixed the space issue here: -->
+            <div id="div2" style="width:40vw;height:90vh;border:1px solid black;border-bottom-right-radius: 5rem;">
+                  <CENTER>
+                        <h2 style="color:#2c0665">WELCOME BACK You're not just a buyer… You're an <STRONG
+                                    style="color:orange">ARTIZEN</STRONG></h2>
+                  </CENTER>
+                  <br>
+                  <label for="name" style="font-size: 2.5vw;
+                  font-weight: 500;
+                  color: #4a0101;
+                  margin-bottom: 10px;margin-left: 1em;">Name:</label>
+                  <br>
+                  <input type="text" id="name" name="name" placeholder="Enter your name artizen" required style="width: 80%;
+                  padding: 10px;
+                  margin-bottom: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  font-size: 1.2vw;
+                  font-family: 'MyCustomFont', sans-serif;margin-left:1.5em">
+                  <br><br>
+                  <label for="email" style="font-size: 2.5vw;
+                  font-weight: 500;
+                  color: #4a0101;
+                  margin-bottom: 10px;margin-left: 1em;">Email:</label>
+                  <br>
+                  <input type="email" id="email" name="email" placeholder="Enter your email artizen" required style="width: 80%;
+                  padding: 10px;
+                  margin-bottom: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  font-size: 1.2vw;
+                  font-family: 'MyCustomFont', sans-serif;margin-left:1.5em">
+                  <br><br>
+                  <label for="password" style="font-size: 2.5vw;
+                  font-weight: 500;
+                  color: #4a0101;
+                  margin-bottom: 10px;margin-left: 1em;">Password:</label>
+                  <br>
+                  <input type="password" id="password" name="password" placeholder="Enter your password artizen"
+                        required style="width: 80%;
+                        padding: 10px;
+                        margin-bottom: 20px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        font-size: 1.2vw;
+                        font-family: 'MyCustomFont', sans-serif;margin-left:1.5em">
+                  <br><br>
+                  <center>
+                        <input type="submit" value="submit" style=" width:10vw;
+                  height:5vh;
+                  /* padding: 10px; */
+                  margin-bottom: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  position: relative;
+                  font-size: 1.2vw;
+                  /* transform: translate(-70%, -50%); */
+                  font-family: 'MyCustomFont', sans-serif;
+                  background-color: #4a0101;
+                  color: white;">
+                  </center>
+            </div>
+      </div>
+</body>
+
+<script>
+      function signup() {
+            const div2 = document.getElementById('div2');
+            div2.innerHTML = `<h1>Sign up portal is ongoing...</h1>`;
+      }
+
+      function signin() {
+            const div2 = document.getElementById('div2');
+            div2.innerHTML = `
+                  <CENTER>
+                        <h2 style="color:#2c0665">WELCOME BACK You're not just a buyer… You're an <STRONG
+                                    style="color:orange">ARTIZEN</STRONG></h2>
+                  </CENTER>
+                  <br>
+                  <label for="name" style="font-size: 2.5vw;
+                  font-weight: 500;
+                  color: #4a0101;
+                  margin-bottom: 10px;margin-left: 1em;">Name:</label>
+                  <br>
+                  <input type="text" id="name" name="name" placeholder="Enter your name artizen" required style="width: 80%;
+                  padding: 10px;
+                  margin-bottom: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  font-size: 1.2vw;
+                  font-family: 'MyCustomFont', sans-serif;margin-left:1.5em">
+                  <br><br>
+                  <label for="email" style="font-size: 2.5vw;
+                  font-weight: 500;
+                  color: #4a0101;
+                  margin-bottom: 10px;margin-left: 1em;">Email:</label>
+                  <br>
+                  <input type="email" id="email" name="email" placeholder="Enter your email artizen" required style="width: 80%;
+                  padding: 10px;
+                  margin-bottom: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  font-size: 1.2vw;
+                  font-family: 'MyCustomFont', sans-serif;margin-left:1.5em">
+                  <br><br>
+                  <label for="password" style="font-size: 2.5vw;
+                  font-weight: 500;
+                  color: #4a0101;
+                  margin-bottom: 10px;margin-left: 1em;">Password:</label>
+                  <br>
+                  <input type="password" id="password" name="password" placeholder="Enter your password artizen"
+                        required style="width: 80%;
+                        padding: 10px;
+                        margin-bottom: 20px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                        font-size: 1.2vw;
+                        font-family: 'MyCustomFont', sans-serif;margin-left:1.5em">
+                  <br><br>
+                  <center>
+                        <input type="submit" value="submit" style="width:10vw;
+                  height:5vh;
+                  /* padding: 10px; */
+                  margin-bottom: 20px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  position: relative;
+                  font-size: 1.2vw;
+                  /* transform: translate(-70%, -50%); */
+                  font-family: 'MyCustomFont', sans-serif;
+                  background-color: #4a0101;
+                  color: white;">
+                  </center>`;
+      }
+</script>
+
+</html>

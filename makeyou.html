@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>Clothing Visualization</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+      <link rel="stylesheet" href="makeyou.css">
+</head>
+
+<body>
+      <div class="container">
+            <h2>Upload Your Photo</h2>
+            <input type="file" id="imageUpload" accept="image/*" onchange="uploadImage(event)">
+
+            <div id="imageContainer">
+                  <!-- Uploaded image will be shown here -->
+            </div>
+
+            <h2>Choose Your Clothing Style</h2>
+            <select id="clothingType" onchange="updateClothingOptions()">
+                  <option value="boys">Boys</option>
+                  <option value="ladies">Ladies</option>
+            </select>
+
+            <div id="boysOptions">
+                  <h3>Choose Shirt</h3>
+                  <select id="shirt" onchange="updateCanvas()">
+                        <option value="cottonShirt">Cotton Shirt</option>
+                        <option value="silkShirt">Silk Shirt</option>
+                  </select>
+
+                  <h3>Choose Pants</h3>
+                  <select id="pants" onchange="updateCanvas()">
+                        <option value="cottonPants">Cotton Pants</option>
+                        <option value="linenPants">Linen Pants</option>
+                  </select>
+            </div>
+
+            <div id="ladiesOptions" style="display:none;">
+                  <h3>Choose Saree</h3>
+                  <select id="saree" onchange="updateCanvas()">
+                        <option value="silkSaree">Silk Saree</option>
+                        <option value="cottonSaree">Cotton Saree</option>
+                  </select>
+            </div>
+
+            <h3>Enter Your Measurements</h3>
+            <input type="text" id="measurements" placeholder="e.g., Chest, Waist, Hips">
+
+            <button onclick="calculatePrice()">Get Price</button>
+
+            <h3 id="priceResult"></h3>
+
+            <canvas id="canvas"></canvas>
+      </div>
+
+      <script>
+            let imgElement;
+            let canvas;
+            let ctx;
+
+            async function setup() {
+                  await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+                  await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+                  await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+            }
+
+            async function uploadImage(event) {
+                  const file = event.target.files[0];
+                  imgElement = await loadImage(file);
+                  document.getElementById('imageContainer').appendChild(imgElement);
+                  detectFace();
+            }
+
+            function loadImage(file) {
+                  return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function () {
+                              const img = new Image();
+                              img.src = reader.result;
+                              img.onload = function () {
+                                    // Resize the image to fit within the canvas
+                                    const maxWidth = 500; // Set a maximum width for the image
+                                    const maxHeight = 500; // Set a maximum height for the image
+                                    const ratio = Math.min(maxWidth / img.width, maxHeight / img.height);
+                                    img.width = img.width * ratio;
+                                    img.height = img.height * ratio;
+                                    resolve(img);
+                              };
+                        };
+                        reader.readAsDataURL(file);
+                  });
+            }
+
+            async function detectFace() {
+                  if (!imgElement) return;
+
+                  // Create canvas and set dimensions
+                  canvas = faceapi.createCanvasFromMedia(imgElement);
+                  document.body.append(canvas);
+                  ctx = canvas.getContext('2d');
+                  canvas.width = imgElement.width;
+                  canvas.height = imgElement.height;
+
+                  const detections = await faceapi.detectAllFaces(imgElement).withFaceLandmarks().withFaceDescriptors();
+
+                  faceapi.matchDimensions(canvas, imgElement);
+                  const resizedDetections = faceapi.resizeResults(detections, imgElement);
+                  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+                  ctx.drawImage(imgElement, 0, 0); // Draw the resized image on the canvas
+                  faceapi.draw.drawDetections(canvas, resizedDetections);
+                  faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+
+                  if (detections.length > 0) {
+                        placeClothing(detections[0]);
+                  }
+            }
+
+            function placeClothing(detection) {
+                  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before redrawing
+                  ctx.drawImage(imgElement, 0, 0); // Redraw the image
+
+                  const clothingType = document.getElementById("clothingType").value;
+                  let shirtImage = new Image();
+                  let pantsImage = new Image();
+                  let sareeImage = new Image();
+
+                  if (clothingType === "boys") {
+                        const shirt = document.getElementById("shirt").value;
+                        const pants = document.getElementById("pants").value;
+
+                        // Load shirt image
+                        shirtImage.src = `./clothes/${shirt}.png`;
+                        shirtImage.onload = function () {
+                              // Set position and size for shirt
+                              const x = detection.detection.box.x - 50;
+                              const y = detection.detection.box.y + detection.detection.box.height * 0.3;
+                              const width = detection.detection.box.width + 100;
+                              const height = detection.detection.box.height * 1.2;
+                              ctx.drawImage(shirtImage, x, y, width, height);
+                        };
+
+                        // Load pants image
+                        pantsImage.src = `./clothes/${pants}.png`;
+                        pantsImage.onload = function () {
+                              // Set position and size for pants
+                              const x = detection.detection.box.x - 50;
+                              const y = detection.detection.box.y + detection.detection.box.height * 1.5; // Below the shirt
+                              const width = detection.detection.box.width + 100;
+                              const height = detection.detection.box.height * 1.5;
+                              ctx.drawImage(pantsImage, x, y, width, height);
+                        };
+                  } else {
+                        const saree = document.getElementById("saree").value;
+
+                        // Load saree image
+                        sareeImage.src = `./clothes/${saree}.png`;
+                        sareeImage.onload = function () {
+                              // Set position and size for saree
+                              const x = detection.detection.box.x - 50;
+                              const y = detection.detection.box.y + detection.detection.box.height * 0.3;
+                              const width = detection.detection.box.width + 100;
+                              const height = detection.detection.box.height * 1.5;
+                              ctx.drawImage(sareeImage, x, y, width, height);
+                        };
+                  }
+            }
+
+            function calculatePrice() {
+                  const clothingType = document.getElementById("clothingType").value;
+                  const priceResult = document.getElementById("priceResult");
+                  let basePrice = 0;
+
+                  if (clothingType === "boys") {
+                        const shirt = document.getElementById("shirt").value;
+                        const pants = document.getElementById("pants").value;
+
+                        if (shirt === "cottonShirt") basePrice += 800;
+                        if (shirt === "silkShirt") basePrice += 1500;
+                        if (pants === "cottonPants") basePrice += 800;
+                        if (pants === "linenPants") basePrice += 1200;
+                  } else {
+                        const saree = document.getElementById("saree").value;
+                        if (saree === "silkSaree") basePrice += 1500;
+                        if (saree === "cottonSaree") basePrice += 800;
+                  }
+
+                  priceResult.textContent = `Estimated Price: ₹${basePrice}`;
+            }
+
+            function updateClothingOptions() {
+                  const clothingType = document.getElementById("clothingType").value;
+                  document.getElementById("boysOptions").style.display = clothingType === "boys" ? "block" : "none";
+                  document.getElementById("ladiesOptions").style.display = clothingType === "ladies" ? "block" : "none";
+            }
+
+            function updateCanvas() {
+                  if (imgElement) {
+                        detectFace(); // Redetect face and update canvas with new clothing
+                  }
+            }
+
+            window.onload = setup;
+      </script>
+</body>
+
+</html>
