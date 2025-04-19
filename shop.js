@@ -365,6 +365,7 @@ function displayprofile() {
                   <p style="margin: 0 0 0 1.5rem; font-size: 1vw; color: gray;">
                     You can save your favorite products here for quick access later.
                   </p>
+                  ${wishlist}
               </div>
 
               <div>
@@ -609,7 +610,7 @@ const products = [
     img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744390847/pinksaretrend2_saqzxo.avif',
     price: '6000',
     name: 'Cream Beige Floral Embroidered Saree',
-    video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744873638/DARK_CREAMsaree_kxsv01.mp4',
+    video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744873545/creamsareefloral_thxsbm.mp4',
   },
   {
     id:'3',
@@ -965,11 +966,227 @@ const products = [
   id: 40,
   category:'kids',
   subCategory:'kids',
-  name: 'Warm White Zari Bordered Traditional South Indian Dhoti Set',
-  video: "https://res.cloudinary.com/dnevq4wek/video/upload/v1744921356/weddingm4_sqna7i.mp4",
-  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1744921341/weddinm4_hzsczk.avif',
-  price:'9999',
-}
+  name: ' Boys Peach Jaal Patterned Kurta Set',
+ 
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1744980006/kids3_d30jvu.avif',
+  price:'2499',
+},
+{
+  id: 41,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Boys Grey And Yellow Kurta Jacket Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1744980009/kids4_phg60a.avif',
+  price:'2999',
+},
+{
+  id: 42,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Boys Sea Green Chikan Kurta Jacket Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1744980003/kids2_myi0zj.avif',
+  price:'3499',
+},
+{
+  id: 43,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Boys Dark Blue Paisley Patterned Angrakha Jacket Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1744980003/kids_iy2ce9.avif',
+  price:'3499',
+},
+{
+  id: 44,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Pink Cotton Hand Block Printed 3Pc Lehenga Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1745048475/kidw1_tgaxfv.jpg',
+  price:'3799',
+},
+{
+  id: 45,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Yellow Cotton Chikankari 3Pc Salwar Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1745048638/kidw2_mwpwge.jpg',
+  price:'3299',
+},
+{
+  id: 46,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Green Cotton Silk Hand Block Printed 3Pc Lehenga Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1745054234/kidw3_unduh1.jpg',
+  price:'3099',
+},
+{
+  id: 47,
+  category:'kids',
+  subCategory:'kids',
+  name: 'Blue Cotton Printed 3Pc Lehenga Set',
+  img:'https://res.cloudinary.com/dnevq4wek/image/upload/v1745054367/kidw4_kibn1i.jpg',
+  price:'3000',
+},
+
+  {
+    id: 48,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744616638/homedecor1main_oww9ns.jpg",
+    name: "Helios Alton Arvis Bedside Table",
+    // size: "Standard",
+    category:'HomeDecor',
+    subCategory:'home',
+    price: 3499
+  },
+  {
+    id: 49,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744616829/rabithomedecor_uv8s4x.jpg",
+    name: "Corsica Malta Ceramic Bunny with Pot Planter",
+    size: "Small",
+    price: 799,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 50,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744616907/homedecor2home_czvfkt.jpg",
+    name: "Spinel Decor Artificial Planter in Planter",
+    size: "Medium",
+    price: 1199,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 51,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744617069/claypotdecor_yocxab.jpg",
+    name: "Gloria Human Artificial Succulent in Polyresin Pot",
+    size: "Small",
+    price: 599,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 52,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745060228/homedecor1_m2bfun.jpg",
+    name: "Alpana Polyresin Standing Krishna Figurine",
+    size: "Medium",
+    price: 2499,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 53,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745060397/1000012970427-1000012970426_01-2100_zslghm.jpg",
+    name: "Alpana Polyresin Baby Ganesha Mudra Figurine",
+    size: "Medium",
+    price: 699,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 54,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745060553/wallclock_nmks9v.jpg",
+    name: "Casablanca Glass Wall Clock - 35cm",
+    size: "Large",
+    price: 1299,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 55,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745060703/homedecor3_pp9oom.jpg",
+    name: "Eternity Vogue Pearl Metal Multi T-Light Holder",
+    size: "Medium",
+    price: 1499,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 56,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745060849/homedecor4_a46avq.jpg",
+    name: "Brighton Ceramic Pineapple Table Accent",
+    size: "Medium",
+    price: 1299,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 57,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745061009/homedecor5_sggfap.jpg",
+    name: "Mayur Rumi Polyresin Multi Votive Candle Holder",
+    size: "Small",
+    price: 899,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 58,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745063928/homedecor6_i4bepv.jpg",
+    name: "Corsica Mystic India Polyresin Owl Figurine",
+    size: "Small",
+    price: 999,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  {
+    id: 59,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745064150/homedecor7_yp43u2.jpg",
+    name: "Murphy Velvet Ottoman - Grey",
+    size: "Large",
+    price: 2299,
+    category:'HomeDecor',
+    subCategory:'home',
+  },
+  
+  {
+    "id": 60,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "Corsica Elephant Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1744617990/wallelephantpaint_uqtogl.jpg",
+    "price": 1799,
+    "size": "Medium"
+  },
+  {
+    "id": 61,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "VEDAS Maanav Metal Ginko Leaf Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1744618552/wallleafascent_k3xqwi.jpg",
+    "price": 2199,
+    "size": "Medium"
+  },
+  {
+    "id": 62,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "VEDAS Reva Metal Tree of Wisdom and Life Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1744618235/metalteewall_c5brwp.jpg",
+    "price": 2499,
+    "size": "Medium"
+  },
+  {
+    "id": 63,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "VEDAS Veda Metal Flower Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1744618325/flowerart_m0i6s3.jpg",
+    "price": 1999,
+    "size": "Medium"
+  },
+  {
+    "id": 64,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "VEDAS Veda Metal Elephant Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065468/wallart3_otlomf.png",
+    "price": 3999,
+    "size": "Medium"
+  }
+  
+
+
+
+
 ];
 function renderproducts() {
   products.forEach((product) => {
@@ -984,6 +1201,7 @@ function renderproducts() {
     div.setAttribute('data-price', product.price || 'Not Available');
     div.setAttribute('subcategory', product.subCategory);
     div.setAttribute('id',product.id)
+    div.setAttribute('size',product.size)
     // if (!container) {
     //   console.warn(`Missing container for ${product.subCategory}`);
     //   return;
@@ -996,8 +1214,8 @@ function renderproducts() {
     div.setAttribute('data-original-price', orgnialprice);
 
     const mediaContent = product.video
-      ? `<video class="video-hover" muted loop poster="${product.img}" src="${product.video}" type="video/mp4"></video>`
-      : `<img src="${product.img}" style="width:100%; height:65%; object-fit:cover">`;
+      ? `<video class="video-hover"  loop poster="${product.img}" src="${product.video}" type="video/mp4"></video>`
+      : `<img src="${product.img}" style="width:90%; height:65%; object-fit:cover">`;
 
     div.innerHTML = `
        ${mediaContent}
@@ -1040,6 +1258,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const orgprice = parseInt(container.getAttribute('data-original-price'));
       const saved = orgprice - disprice;
       const cat = container.getAttribute('subcategory');
+      const size = container.getAttribute('size')
 
       let sizeOptions = '';
       if (cat === 'saree') {
@@ -1047,11 +1266,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (['Kurta Pajama', 'pants', 'lehenga', 'sherwani','Stitched Suit','Kurta Jacket',].includes(cat)) {
         sizeOptions = `
           <div class="size-wrapper" style='display:flex;gap:20px;flex-wrap:wrap'>
-            <h3 class="size-option">XS(38-39)</h3>
-            <h3 class="size-option">S(40-41)</h3>
-            <h3 class="size-option">M(42-44)</h3>
-            <h3 class="size-option">L(44-46)</h3>
-            <h3 class="size-option">XL(48-50)</h3>
+            <h3 class="size-option">XS</h3>
+            <h3 class="size-option">S</h3>
+            <h3 class="size-option">M</h3>
+            <h3 class="size-option">L</h3>
+            <h3 class="size-option">XL</h3>
           </div>`;
       }
       else if(cat === 'kids')
@@ -1063,7 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
            
           </div>`
       }
-     
+      
       let description = '';
       
       switch(cat) {
@@ -1180,10 +1399,32 @@ document.addEventListener('DOMContentLoaded', () => {
               </ul>`
             
             break;
+        case 'home':
+            description = `
+                <h3 style='color:#800000'>Description:</h3>
+                <p>Give your space a touch of elegance and warmth with our beautifully crafted home decor items. Whether it’s for your living room, bedroom, or entryway, each piece adds character and charm to any corner of your home.</p>
+
+                <h3 style='color:#800000'>Key Features:</h3>
+                <ul style='color:#0f346c; font-weight:500'>
+                  <li>Material: Premium ceramic, polyresin, or wood depending on the item</li>
+                  <li>Design: Handcrafted and aesthetically pleasing for modern and traditional setups</li>
+                  <li>Usage: Perfect for tabletops, shelves, or gifting purposes</li>
+                  <li>Durability: Long-lasting quality with fade-resistant colors</li>
+                </ul>
+              `
+            break;
+  
         default:
           description = '<p>Product description not available</p>';
       }
-      
+      let size1 = '';
+      if(cat ==='home')
+      {
+        size1 = `<h3 style='color:#800000;font-size:1.5vw'>Size: <strong style='color:#0f346c' > ${size}</strong></h3>`;
+      }
+      else{
+        size1=``
+      }
       // Insert the description into your container
     
 
@@ -1194,7 +1435,7 @@ document.addEventListener('DOMContentLoaded', () => {
       indiv.style.top = '54%';
       indiv.style.left = '50%';
       indiv.style.transform = 'translate(-50%, -50%)';
-      indiv.style.width = '80vw';
+      indiv.style.width = '90vw';
       indiv.style.height = '90vh';
       indiv.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)';
       indiv.style.backgroundColor = '#fffaf0';
@@ -1220,7 +1461,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <br>
         <div style="width:78vw; height:78vh; display:flex;">
           <div style='width:40%; display:flex; a;height:100%'>
-            <img style="max-height:80%; max-width:100%; border-radius:1em;margin-top:2rem;margin-left:2rem" src='${img}' alt='Product Image'/>
+            <img style="max-height:80%; max-width:90%; border-radius:1em;margin-top:2rem;margin-left:2rem" src='${img}' alt='Product Image'/>
           </div>
           <div style='width:60%; padding:2rem;'>
             <h3 style="font-size:2.5vw;color:#0f346c;">${name}</h3>
@@ -1232,9 +1473,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <br>
             ${description}
             <br>
+            ${size1}
+            <br>
+           
+           
             <button id="addToCart" style="padding:1rem 2rem; background:#800000; color:white; border:none; font-size:1rem; border-radius:0.5em;">Add to Cart</button>
             <button id="addToWishlist" style="padding:1rem 2rem; margin-left:1rem; background:transparent; border:1px solid #800000; color:#800000; font-size:1rem; border-radius:0.5em;">♡ Add to Wishlist</button>
+            <br>
+            <br>
+             <button id="chart" style="padding:1rem 2rem; background:transparent; border:1px solid #800000; color:#800000; font-size:1rem; border-radius:0.5em;">Size-Chart</button>
           </div>
+          <div id='display'></div>
         </div>
       `;
 
@@ -1247,15 +1496,16 @@ document.addEventListener('DOMContentLoaded', () => {
         option.style.border = '1px solid #800000';
         option.style.padding = '5px 10px';
         option.style.cursor = 'pointer';
-
+        option.style.color='#0f346c';
+        option.style.backgroundColor='white';
         option.addEventListener('click', () => {
           selectedSize = option.textContent;
           indiv.querySelectorAll('.size-option').forEach(opt => opt.style.backgroundColor = '');
-          option.style.backgroundColor = 'white'
-          option.style.color='#ff7b00';
+          option.style.backgroundColor = 'orange'
+          // option.style.color='#ff7b00';
         });
       });
-
+      
       indiv.querySelector('#close').addEventListener('click', () => {
         document.body.removeChild(indiv);
         document.body.removeChild(overlay);
@@ -1267,7 +1517,8 @@ document.addEventListener('DOMContentLoaded', () => {
           alert("Please select a size.");
           return;
         }
-
+        // the below code is for the size chart to be displayed
+      
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         cart.push({
           name,
@@ -1280,6 +1531,188 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('cart', JSON.stringify(cart));
         window.location.href = "cart.html";
       });
+      indiv.querySelector('#chart').addEventListener('click', () => {
+        // alert('hello')
+      let dis = indiv.querySelector('#display'); // Element for displaying the size chart
+      dis.innerHTML = ``;
+    
+      switch (cat) {
+        case 'lehenga':
+        case 'Stitched Suit':
+          dis.innerHTML = `
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;">
+              <h3 style="text-align: center; color: #222;">${cat} Size Chart (Ladies)</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                  <tr style="background: #222; color: #fff;">
+                    <th style="padding: 10px;border: 1px solid #ddd;">Size</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Bust (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Waist (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Hip (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Length (in)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XS</td><td style="padding:10px;border: 1px solid #ddd;">32</td><td style="padding:10px;border: 1px solid #ddd;">26</td><td style="padding:10px;border: 1px solid #ddd;">34</td><td style="padding:10px;border: 1px solid #ddd;">40-42</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">S</td><td style="padding:10px;border: 1px solid #ddd;">34</td><td style="padding:10px;border: 1px solid #ddd;">28</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">41-43</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">M</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">30</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">42-44</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">L</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">32</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">43-45</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XL</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">34</td><td style="padding:10px;border: 1px solid #ddd;">42</td><td style="padding:10px;border: 1px solid #ddd;">44-46</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XXL</td><td style="padding:10px;border: 1px solid #ddd;">42</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">44</td><td style="padding:10px;border: 1px solid #ddd;">45-47</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          break;
+    
+        case 'Kurta Pajama':
+          dis.innerHTML = `
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;display:block">
+              <h3 style="text-align: center; color: #222;">${cat} Size Chart (Men)</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                  <tr style="background: #222; color: #fff;">
+                    <th style="padding: 10px;border: 1px solid #ddd;">Size</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Chest (in)</th>
+                    <th style="padding: 10pxborder: 1px solid #ddd;Waist (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Shoulder (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Kurta Length</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;"row-span:2>Pajama Waist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XS</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">30</td><td style="padding:10px;border: 1px solid #ddd;">16</td><td style="padding:10px;border: 1px solid #ddd;">38-40</td><td style="padding:10px;border: 1px solid #ddd;">28-30</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">S</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">32</td><td style="padding:10px;border: 1px solid #ddd;">17</td><td style="padding:10px;border: 1px solid #ddd;">40-42</td><td style="padding:10px;border: 1px solid #ddd;">30-32</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">M</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">34</td><td style="padding:10px;border: 1px solid #ddd;">18</td><td style="padding:10px;border: 1px solid #ddd;">42-44</td><td style="padding:10px;border: 1px solid #ddd;">32-34</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">L</td><td style="padding:10px;border: 1px solid #ddd;">42</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">19</td><td style="padding:10px;border: 1px solid #ddd;">44-46</td><td style="padding:10px;border: 1px solid #ddd;">34-36</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XL</td><td style="padding:10px;border: 1px solid #ddd;">44</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">20</td><td style="padding:10px;border: 1px solid #ddd;">46-48</td><td style="padding:10px;border: 1px solid #ddd;">36-38</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XXL</td><td>46</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">21</td><td style="padding:10px;border: 1px solid #ddd;">48-50</td><td style="padding:10px;border: 1px solid #ddd;">38-40</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          break;
+        case 'Kurta Jacket':
+          dis.innerHTML = `
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;display:block">
+              <h3 style="text-align: center; color: #222;">${cat} Size Chart (Men)</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                  <tr style="background: #222; color: #fff;">
+                    <th style="padding: 10px;border: 1px solid #ddd;">Size</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Chest (in)</th>
+                    <th style="padding: 10pxborder: 1px solid #ddd;Waist (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Shoulder (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Kurta Length</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;"row-span:2>Pajama Waist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XS</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">30</td><td style="padding:10px;border: 1px solid #ddd;">16</td><td style="padding:10px;border: 1px solid #ddd;">38-40</td><td style="padding:10px;border: 1px solid #ddd;">28-30</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">S</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">32</td><td style="padding:10px;border: 1px solid #ddd;">17</td><td style="padding:10px;border: 1px solid #ddd;">40-42</td><td style="padding:10px;border: 1px solid #ddd;">30-32</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">M</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">34</td><td style="padding:10px;border: 1px solid #ddd;">18</td><td style="padding:10px;border: 1px solid #ddd;">42-44</td><td style="padding:10px;border: 1px solid #ddd;">32-34</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">L</td><td style="padding:10px;border: 1px solid #ddd;">42</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">19</td><td style="padding:10px;border: 1px solid #ddd;">44-46</td><td style="padding:10px;border: 1px solid #ddd;">34-36</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XL</td><td style="padding:10px;border: 1px solid #ddd;">44</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">20</td><td style="padding:10px;border: 1px solid #ddd;">46-48</td><td style="padding:10px;border: 1px solid #ddd;">36-38</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XXL</td><td>46</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">21</td><td style="padding:10px;border: 1px solid #ddd;">48-50</td><td style="padding:10px;border: 1px solid #ddd;">38-40</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `
+          break;
+        case 'sherwani' :
+          dis.innerHTML = `
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;display:block">
+              <h3 style="text-align: center; color: #222;">${cat} Size Chart (Men)</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                  <tr style="background: #222; color: #fff;">
+                    <th style="padding: 10px;border: 1px solid #ddd;">Size</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Chest (in)</th>
+                    <th style="padding: 10pxborder: 1px solid #ddd;Waist (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Shoulder (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;">Kurta Length</th>
+                    <th style="padding: 10px;border: 1px solid #ddd;"row-span:2>Pajama Waist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XS</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">30</td><td style="padding:10px;border: 1px solid #ddd;">16</td><td style="padding:10px;border: 1px solid #ddd;">38-40</td><td style="padding:10px;border: 1px solid #ddd;">28-30</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">S</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">32</td><td style="padding:10px;border: 1px solid #ddd;">17</td><td style="padding:10px;border: 1px solid #ddd;">40-42</td><td style="padding:10px;border: 1px solid #ddd;">30-32</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">M</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">34</td><td style="padding:10px;border: 1px solid #ddd;">18</td><td style="padding:10px;border: 1px solid #ddd;">42-44</td><td style="padding:10px;border: 1px solid #ddd;">32-34</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">L</td><td style="padding:10px;border: 1px solid #ddd;">42</td><td style="padding:10px;border: 1px solid #ddd;">36</td><td style="padding:10px;border: 1px solid #ddd;">19</td><td style="padding:10px;border: 1px solid #ddd;">44-46</td><td style="padding:10px;border: 1px solid #ddd;">34-36</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XL</td><td style="padding:10px;border: 1px solid #ddd;">44</td><td style="padding:10px;border: 1px solid #ddd;">38</td><td style="padding:10px;border: 1px solid #ddd;">20</td><td style="padding:10px;border: 1px solid #ddd;">46-48</td><td style="padding:10px;border: 1px solid #ddd;">36-38</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">XXL</td><td>46</td><td style="padding:10px;border: 1px solid #ddd;">40</td><td style="padding:10px;border: 1px solid #ddd;">21</td><td style="padding:10px;border: 1px solid #ddd;">48-50</td><td style="padding:10px;border: 1px solid #ddd;">38-40</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          break;
+    
+        case 'kids':
+          dis.innerHTML = `
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;">
+              <h3 style="text-align: center; color: #222;">${cat} Size Chart (Kids)</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                  <tr style="background: #f2f2f2; ;">
+                    <th style="padding: 10px;border: 1px solid #ddd">Age</th>
+                    <th style="padding: 10px;border: 1px solid #ddd">Height (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd">Chest (in)</th>
+                    <th style="padding: 10px;border: 1px solid #ddd">Waist (in)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">2–3Y</td><td style="padding:10px;border: 1px solid #ddd;">33–36</td><td style="padding:10px;border: 1px solid #ddd;">20–21</td><td style="padding:10px;border: 1px solid #ddd;">19–20</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">3–4Y</td><td style="padding:10px;border: 1px solid #ddd;">36–39</td><td style="padding:10px;border: 1px solid #ddd;">21–22</td><td style="padding:10px;border: 1px solid #ddd;">20–21</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">4–5Y</td><td style="padding:10px;border: 1px solid #ddd;">39–42</td><td style="padding:10px;border: 1px solid #ddd;">22–23</td><td style="padding:10px;border: 1px solid #ddd;">21–22</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">5–6Y</td><td style="padding:10px;border: 1px solid #ddd;">42–45</td><td style="padding:10px;border: 1px solid #ddd;">23–24</td><td style="padding:10px;border: 1px solid #ddd;">22–23</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">6–7Y</td><td style="padding:10px;border: 1px solid #ddd;">45–48</td><td style="padding:10px;border: 1px solid #ddd;">24–25</td><td style="padding:10px;border: 1px solid #ddd;">23–24</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">7–8Y</td><td style="padding:10px;border: 1px solid #ddd;">48–51</td><td style="padding:10px;border: 1px solid #ddd;">25–26</td><td style="padding:10px;border: 1px solid #ddd;">24–25</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">8–9Y</td><td style="padding:10px;border: 1px solid #ddd;">51–54</td><td style="padding:10px;border: 1px solid #ddd;">26–27</td><td style="padding:10px;border: 1px solid #ddd;">25–26</td></tr>
+                  <tr><td style="padding:10px;border: 1px solid #ddd;">9–10Y</td><td style="padding:10px;border: 1px solid #ddd;">54–57</td><td style="padding:10px;border: 1px solid #ddd;">27–28</td><td style="padding:10px;border: 1px solid #ddd;">26–27</td></tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+          break;
+        case 'home':
+          dis.innerHTML = `  <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;"> <h3 style='color:#800000'>Size Chart:</h3>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+    <thead>
+      <tr style="background-color: #f2f2f2;">
+        <th style="border: 1px solid #ddd; padding: 8px;">Size</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Height (cm)</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Width (cm)</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Depth (cm)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 8px;">Small</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">10 - 15</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">8 - 12</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">5 - 8</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 8px;">Medium</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">16 - 25</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">13 - 20</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">9 - 12</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #ddd; padding: 8px;">Large</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">26 - 35</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">21 - 30</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">13 - 18</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>`
+  break;
+    
+        default:
+          dis.innerHTML = `<p style="text-align:center; color:red;">Size chart not available for "${cat}"</p>`;
+      }
+    });
 
       indiv.querySelector('#addToWishlist').addEventListener('click', () => {
         const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');

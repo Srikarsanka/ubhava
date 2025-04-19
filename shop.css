@@ -186,7 +186,7 @@
   flex-wrap: wrap;
   margin-left:auto;
   margin-right:auto;
-  border:1px solid orange;
+  /* border:1px solid orange; */
  }
  /* for video and image for product card */
  .video-hover {
