@@ -1,0 +1,23 @@
+{
+  "name": "pride-pt-2-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Srikarsanka/ubhava.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Srikarsanka/ubhava/issues"
+  },
+  "homepage": "https://github.com/Srikarsanka/ubhava#readme",
+  "description": "",
+  "dependencies": {
+    "nodemailer": "^6.10.1"
+  }
+}

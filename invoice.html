@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>Udbhava - Invoice</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="invoice.css">
+</head>
+
+<body>
+
+      <div id="invoice-container">
+            <h1 style="text-align:center;">UDBHAVA - INVOICE</h1>
+            <hr>
+
+            <!-- Customer Details -->
+            <div id="customer-details">
+                  <h2>Customer Information</h2>
+                  <p id="customer-name"></p>
+                  <p id="customer-phone"></p>
+                  <p id="customer-address"></p>
+            </div>
+
+            <div id="order-details">
+                  <h2>Order Summary</h2>
+                  <div id="cart-items"></div>
+                  <div id="total-price"></div>
+            </div>
+
+            <button id="download-invoice">Download Invoice</button>
+      </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <script src="invoice.js"></script>
+</body>
+
+</html>

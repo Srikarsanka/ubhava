@@ -3,159 +3,236 @@
 
 <head>
       <meta charset="UTF-8">
-      <title>Cart - Ubhaava</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>UDBHAVA - THE ORIGIN OF INDIAN HANDCRAFT Cart Page</title>
+      <link rel="icon" href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
       <style>
+            * {
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+            }
+
+            @font-face {
+                  font-family: 'MyCustomFont';
+                  src: url('fonts/GeosansLight.ttf') format('truetype');
+                  font-weight: normal;
+                  font-style: normal;
+            }
+
             body {
-                  font-family: Arial, sans-serif;
-                  padding: 2rem;
                   background-color: #fffaf0;
+                  font-family: 'MyCustomFont', sans-serif;
+                  width: 100vw;
+                  overflow-x: hidden;
             }
 
-            h1 {
-                  text-align: center;
-                  color: #800000;
-            }
-
-            .cart-item {
+            /* Navbar */
+            .navbar {
+                  position: fixed;
+                  top: 0;
+                  width: 100%;
+                  padding: 20px 60px;
                   display: flex;
-                  align-items: center;
                   justify-content: space-between;
-                  padding: 1rem;
-                  border-bottom: 1px solid #ccc;
-                  background: #ffffff;
-                  border-radius: 1rem;
-                  margin: 1rem 0;
-            }
-
-            .cart-item img {
-                  width: 100px;
-                  height: 100px;
-                  object-fit: cover;
-                  border-radius: 0.5rem;
-            }
-
-            .cart-details {
-                  flex: 1;
-                  margin-left: 1rem;
-            }
-
-            .cart-actions {
-                  display: flex;
                   align-items: center;
-                  gap: 10px;
-            }
-
-            .cart-actions button {
-                  padding: 5px 10px;
-                  font-size: 1rem;
-                  background-color: #800000;
+                  background: transparent;
                   color: white;
-                  border: none;
-                  border-radius: 0.3rem;
-                  cursor: pointer;
+                  z-index: 1000;
             }
 
-            .remove-btn {
-                  background-color: #cc0000;
+            .navbar h1 {
+                  font-size: 2vw;
+                  font-weight: 100;
+                  color: rgb(74, 1, 1);
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                  letter-spacing: 5px;
             }
 
-            .total-section {
-                  margin: 2rem 0;
-                  padding: 1rem;
-                  background-color: #ffe4b5;
-                  border-radius: 1rem;
-                  font-size: 1.5rem;
-                  font-weight: bold;
+            .nav-links {
+                  display: flex;
+                  gap: 30px;
+            }
+
+            .nav-links a {
+                  text-decoration: none;
+                  color: #242323;
+                  font-weight: 500;
+                  letter-spacing: 3px;
+                  font-family: 'MyCustomFont';
+                  transition: 0.3s;
+                  font-size: 1.1vw;
+            }
+
+            .nav-links a:hover {
+                  color: rgb(74, 1, 1);
+                  transform: scale(1.1);
+                  border-bottom: 1px solid rgb(74, 1, 1);
+            }
+
+            .navbar.shadow {
+                  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                  background-color: rgba(255, 255, 255, 0.6);
+                  transition: all 0.3s ease;
+                  backdrop-filter: blur(20px);
+            }
+
+            /* Total container fixed at bottom */
+            #total {
+                  position: fixed;
+                  bottom: 0;
+                  left: 0;
+                  width: 100%;
+                  background-color: #fffaf0;
                   text-align: center;
-                  color: #0f346c;
+                  padding: 10px 0;
+                  z-index: 1000;
             }
       </style>
 </head>
 
 <body>
-
-      <h1>Your Cart</h1>
-      <div class="total-section" id="totalCost">
-            Total: ₹0
+      <div class="navbar">
+            <a href="index.html" style="text-decoration: none;">
+                  <h1 style="color:rgb(29, 1, 1)">UDBHAVA</h1>
+            </a>
+            <div class="nav-links">
+                  <a href="index.html">HOME</a>
+                  <a href="shop.html">SHOP</a>
+                  <a href="#">COLLECTIONS</a>
+                  <a href="contact.html">CONTACT</a>
+                  <a id="profile">PROFILE</a>
+                  <a href="cart.html"
+                        style="scale:1.1; transition: all 0.3s ease; color:maroon; font-weight:bolder;">CART</a>
+            </div>
       </div>
 
-      <div id="cartContainer"></div>
+      <!-- Add some top margin so that content does not hide behind the fixed navbar -->
+      <br><br><br><br><br><br><br><br><br><br>
+      <center>
+            <h1 style="font-size: 5vw; text-decoration: wavy; border-bottom: 1px solid red; padding-bottom: 10px;">
+                  Your Cart
+            </h1>
+      </center>
+
+      <div id="cart-items" style="margin-bottom: 12vh;"></div>
+      <div id="total">
+            <!-- Total pricing and checkout button updated dynamically -->
+      </div>
 
       <script>
-            let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+            // Retrieve cart data from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const container = document.getElementById('cart-items');
 
-            function calculateDiscount(total) {
-                  if (total <= 20000) return 0;
-                  let extra = total - 20000;
-                  let slabs = Math.floor(extra / 5000);
-                  let discountPercent = Math.min(5 + slabs * 5, 20);
-                  return (total * discountPercent) / 100;
-            }
+            function renderCart() {
+                  let tprice = 0;
+                  container.innerHTML = '';
 
-            function updateCartDisplay() {
-                  const container = document.getElementById("cartContainer");
-                  container.innerHTML = "";
+                  cart.forEach((item, index) => {
+                        // Ensure quantity is available
+                        if (!item.quantity) item.quantity = 1;
 
-                  let total = 0;
-
-                  cartItems.forEach((item, index) => {
-                        const itemTotal = item.price * item.quantity;
-                        total += itemTotal;
-
-                        const div = document.createElement("div");
-                        div.className = "cart-item";
-
+                        const div = document.createElement('div');
+                        div.style.height = '60vh';
+                        div.style.width = '95vw';
+                        div.style.marginLeft = 'auto';
+                        div.style.marginRight = 'auto';
+                        div.style.borderBottom = '1px solid black';
                         div.innerHTML = `
-        <img src="${item.img}" alt="product">
-        <div class="cart-details">
-          <h3>${item.name}</h3>
-          <p>Size: ${item.size}</p>
-          <p>Price: ₹${item.price}</p>
-          <p>Total: ₹${itemTotal}</p>
-        </div>
-        <div class="cart-actions">
-          <button onclick="decreaseQty(${index})">-</button>
-          <span>${item.quantity}</span>
-          <button onclick="increaseQty(${index})">+</button>
-          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-        </div>
-      `;
+          <div style="display:flex; gap:30px">
+            <div style="width:30hv; height:50vh;">
+              <img src="${item.img}" style="width:20vw; height:55vh; margin-left:3rem; margin-top:1.5rem; border-radius:1em">
+            </div>
+            <div style="display:flex; flex-direction:column; width:60vw; height:50vh;">
+              <br><br>
+              <h3 style="color: #3b0a45; font-size:2.5vw;">${item.name}</h3>
+              <p style="font-size:2vw; color:#005f73; font-weight:700;">
+                Size: <strong style="color:#ff6f61; font-weight:300; font-size:1.5vw;">${item.size}</strong>
+              </p>
+              <p style="font-size:2vw; color:#005f73; font-weight:700;">
+                Price: <strong style="color:#ff6f61; font-weight:300; font-size:1.5vw;">₹${item.disprice}</strong>
+              </p>
+              <p style="font-size:2vw; color:#005f73; font-weight:700;">
+                Original Price: <strong style="color:#ff6f61; font-weight:300; font-size:1.5vw;">₹${item.orgprice}</strong>
+              </p>
+              <p style="font-size:2vw; color:#005f73; font-weight:700;">
+                Quantity:  
+                <button onclick="updateQuantity(${index}, -1)" style="background-color:#ff6f61; color:white; padding:0.5rem; border:none; border-radius:0.5rem;">-</button>
+                ${item.quantity}
+                <button onclick="updateQuantity(${index}, 1)" style="background-color:#ff6f61; color:white; padding:0.5rem; border:none; border-radius:0.5rem;">+</button>
+              </p>
+              <p style="font-size:2vw; color:#005f73; font-weight:700;">
+                Total Item Price: <strong style="color:#ff6f61; font-weight:300; font-size:1.5vw;">₹${item.quantity * item.disprice}</strong>
+              </p>
+              <br><br>
+              <button onclick="removeItem(${index})" style="background-color:#005f73; color:white; padding:1rem; border:none; border-radius:0.5rem; width:10vw; height:8vh;">Remove</button>
+            </div>
+          </div>
+        `;
+
+                        tprice += item.quantity * item.disprice;
                         container.appendChild(div);
                   });
 
-                  const discount = calculateDiscount(total);
-                  const finalAmount = total - discount;
+                  // Update total price and checkout button at the bottom
+                  const total = document.getElementById('total');
+                  total.innerHTML = `
+        <p style="color:black; font-weight:600; font-size:2.5vw; margin-top:0.5rem">
+          Total Price To Be Paid: <strong style="color:#0f346c; font-weight:300">₹${tprice}</strong>
+        </p>
+        <br>
+        <button id="check" style="
+          text-transform: uppercase;
+          color: white;
+          background-color: #800000;
+          margin: auto;
+          width: 14vw;
+          height: 8vh;
+          border: 1px solid maroon;
+          font-size: 1vw;
+          font-weight: 300;
+          padding: 5px;
+        ">Proceed To Check Out</button>
+      `;
 
-                  document.getElementById("totalCost").innerText = `
-      Subtotal: ₹${total} | Discount: ₹${discount.toFixed(0)} | Final: ₹${finalAmount.toFixed(0)}
-    `;
+                  // Attach event listener to the newly added checkout button
+                  const checkButton = document.getElementById('check');
+                  if (checkButton) {
+                        checkButton.addEventListener('click', function () {
+                              window.location.href = 'checkout.html';
+                        });
+                  }
+
+                  // Save updated cart back to localStorage
+                  localStorage.setItem('cart', JSON.stringify(cart));
             }
 
-            function increaseQty(index) {
-                  cartItems[index].quantity += 1;
-                  saveAndUpdate();
-            }
-
-            function decreaseQty(index) {
-                  if (cartItems[index].quantity > 1) {
-                        cartItems[index].quantity -= 1;
-                        saveAndUpdate();
+            function updateQuantity(index, change) {
+                  if (cart[index].quantity + change >= 1) {
+                        cart[index].quantity += change;
+                        renderCart();
                   }
             }
 
             function removeItem(index) {
-                  cartItems.splice(index, 1);
-                  saveAndUpdate();
+                  cart.splice(index, 1);
+                  renderCart();
             }
 
-            function saveAndUpdate() {
-                  localStorage.setItem("cartItems", JSON.stringify(cartItems));
-                  updateCartDisplay();
-            }
+            // Initial render of the cart
+            renderCart();
 
-            updateCartDisplay();
+            // Navbar shadow effect on scroll
+            window.addEventListener("scroll", function () {
+                  const navbar = document.querySelector(".navbar");
+                  if (window.scrollY > 50) {
+                        navbar.classList.add("shadow");
+                  } else {
+                        navbar.classList.remove("shadow");
+                  }
+            });
       </script>
-
 </body>
 
 </html>

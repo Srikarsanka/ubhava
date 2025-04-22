@@ -1181,8 +1181,160 @@ const products = [
     "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065468/wallart3_otlomf.png",
     "price": 3999,
     "size": "Medium"
-  }
-  
+  },
+  {
+    "id": 65,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "VEDAS Ivy Metal Boat Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745216675/wallart4_bzuvsg.jpg",
+    "price": 2999,
+    "size": "Medium"
+  },
+  {
+    "id": 66,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "VEDAS Mystical Indiana Metal Dhol Wall Accent",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745216823/wallpaint5_spvls7.jpg",
+    "price": 5999,
+    "size": "Medium"
+  },
+  {
+    "id": 67,
+    "category": "home",
+    "subCategory": "wallart",
+    "name": "Vedas Victor Metal Scooter Wall Hook",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745217023/1000014670669-1000014670668_01-2100_wdqlhh.jpg",
+    "price": 999,
+    "size": "Medium"
+  },
+  { id: 68, name: "Handcrafted Wooden Puzzles With Box (Set of 3)", price: 1299, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745221576/puzzle_hui4rz.webp","category": "home", "size": "small",
+    "subCategory": "toys", },
+
+  { id: 69, name: "Handcrafted Wooden Kit Kat Sound Toy - Twirling Elephant", price: 399, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745221867/toy2_luuokk.webp" ,"category": "home", "size": "small",
+    "subCategory": "toys", },
+
+  { id: 70, name: "Handcrafted Wooden<br>Tangram Puzzle", price: 799, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745221894/toy3_ygguw9.webp","category": "home", "subCategory": "toys", "size": "small", },
+
+  { id: 71, name: "Tic-Tac-Toe Puzzle", price: 1500, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745221925/toy4_ofuwmc.webp","category": "home","subCategory": "toys",  "size": "small" },
+  { id: 72, name: "Channapatna Wooden Toy <br>- Engine, Red", price: 610, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222015/toy5_sg8rrn.webp" ,"category": "home","subCategory": "toys",  "size": "small" },
+  { id: 73, name: "Channapatna Wooden Toy - Rural Couple (Set of 2)", price:920, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222016/toy6_fnscxf.webp","category": "home", "subCategory": "toys", "size": "small" },
+  { id: 74, name: "Handcrafted Wooden<br> 5-in-1 Doll Set", price: 800, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222017/toy7_xudv13.webp","category": "home","subCategory": "toys",  },
+  { id: 75, name: "Channapatna Wooden Toy - Balancing Penguin, Pink", price: 900, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222018/toy8_cfsizg.webp","category": "home","subCategory": "toys", "size": "small"  },
+  { id: 76, name: "Kamadhenu cow" , price: 600, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222476/yoy9_eoa5so.webp","category": "home","subCategory": "toys",  "size": "small" },
+  { id: 77, name: "Thela Push Cart" , price: 800, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222354/toy10_ii8qld.webp","category": "home","subCategory": "toys", "size": "small"  },
+  { id: 78, name: "Handcrafted GI TAGGED Etikoppaka Veena - Red" , price: 480, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222699/toy11_gbcoyg.webp","category": "home","subCategory": "toys", "size": "small"  },
+  { id: 79, name: "Handcrafted GI TAGGED Etikoppaka Dugi Tabla Dhoop Stand" , price: 400, img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745222862/toy12_r59y1w.webp","category": "home","subCategory": "toys",  "size": "small" },
+  {
+    "id":80,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "multicolour hook brass necklace",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745232038/newjew1_ctshzm.avif",
+    "price": 8999,
+    "size": "small"
+  },
+  {
+    "id":81,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Gold Toned Handcrafted Brass Necklace with Earrings - Set of 2",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745232487/NEWJEW2_vnebwx.webp",
+    "price": 12999,
+    "size": "Medium"
+  },
+  {
+    "id":82,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Red Handcrafted Brass Choker with Earrings- Set of 2",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745232651/newjew3_spwyrx.webp",
+    "price": 9999,
+    "size": "Medium"
+  },
+  {
+    "id":83,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Brown Handcrafted Cotton Beaded Necklace",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745232959/tr_c-at_max_w-800_h-1066_akbhdy.webp",
+    "price": 999,
+    "size": "Medium"
+  },
+  {
+    "id":84,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Gold Plated Green Handcrafted Brass Semi Precious Stone Necklace",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745233074/newjew4_nsisbq.webp",
+    "price": 2999,
+    "size": "Medium"
+  },
+  {
+    "id":84,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Multicolor Handcrafted Brass Kundan Necklace with Earrings- Set of 2",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745233310/jewl8_blksvm.webp",
+    "price": 4999,
+    "size": "Medium"
+  },
+  {
+    "id":85,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "White Handcrafted Pearl Beaded Necklace",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745236132/jewl9_gwr4cs.webp",
+    "price": 2999,
+    "size": "Medium"
+  },
+  {
+    "id":86,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Gold Plated Handcrafted Metal Kundan Choker with Earrings- Set of 2",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745236310/jewl10_hf23nd.webp",
+    "price": 4999,
+    "size": "Medium"
+  },
+  {
+    "id":87,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Gold Plated Handcrafted Brass Jhumkies",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745236434/jewl11_ifthrs.webp",
+    "price": 999,
+    "size": "Medium"
+  },
+  {
+    "id":88,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Gold Plated Handcrafted Brass Kundan Earrings",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745236534/jewl12_nfyisb.webp",
+    "price": 1299,
+    "size": "Medium"
+  },
+  {
+    "id":89,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Silver Toned Maroon Handcrafted Brass Earrings",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745237103/jewl13_exq0cb.webp",
+    "price": 499,
+    "size": "Medium"
+  },  {
+    "id":90,
+    "category": "jewellary",
+    "subCategory": "jew",
+    "name": "Gold Plated White Handcrafted Brass Pearl Earrings",
+    "img": "https://res.cloudinary.com/dnevq4wek/image/upload/v1745237804/jewl14_ds2nc9.webp",
+    "price": 999,
+    "size": "Medium"
+  },
+
+
 
 
 
@@ -1262,7 +1414,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let sizeOptions = '';
       if (cat === 'saree') {
-        sizeOptions = `<div><h2 class="size-option">free-size</h2></div>`;
+        sizeOptions = `<div><h2 class="size-option" >free-size</h2></div>`;
       } else if (['Kurta Pajama', 'pants', 'lehenga', 'sherwani','Stitched Suit','Kurta Jacket',].includes(cat)) {
         sizeOptions = `
           <div class="size-wrapper" style='display:flex;gap:20px;flex-wrap:wrap'>
@@ -1327,8 +1479,34 @@ document.addEventListener('DOMContentLoaded', () => {
               </ul>`
             ;
             break;
-          
-      
+            case 'wallart':
+              description = `
+                <h3 style='color:#800000'>Description:</h3>
+                <p>Wall Asceents are beautifully handcrafted pieces that elevate the charm of any living space. Designed with traditional techniques and a modern aesthetic, these art pieces bring character and warmth to your walls.</p>
+                <h3 style='color:#800000'>Key Features:</h3>
+                <ul style='color:#0f346c;font-weight:500'>
+                  <li>Material: Wood, metal, terracotta, or mixed media</li>
+                  <li>Design: Hand-painted, carved, or textile-based with rich detailing</li>
+                  <li>Usage: Ideal for living rooms, entryways, bedrooms, or gifting</li>
+                  <li>Style: Ethnic, boho, or contemporary designs</li>
+                </ul>`
+              ;
+              break;
+              
+              case 'jew':
+                description = `
+                  <h3 style='color:#800000'>Description:</h3>
+                  <p>Our gold-coated jewellery is an exquisite blend of elegance and craftsmanship. Each piece reflects a regal charm, handcrafted to perfection with a luxurious golden finish—perfect for weddings, festivities, or everyday royal style.</p>
+                  <h3 style='color:#800000'>Key Features:</h3>
+                  <ul style='color:#0f346c;font-weight:500'>
+                    <li>Material: Brass, copper, or alloy with high-quality gold plating</li>
+                    <li>Finish: Matte, glossy, or antique gold polish</li>
+                    <li>Designs: Traditional, ethnic, temple-inspired, or contemporary</li>
+                    <li>Ideal For: Gifting, festive wear, weddings, and cultural events</li>
+                    <li>Care: Avoid water and perfume contact to maintain shine</li>
+                  </ul>`;
+                break;
+              
         case 'Stitched Suit':
           description = `
           <h3 style="color:#800000;">Description:</h3>
@@ -1399,6 +1577,20 @@ document.addEventListener('DOMContentLoaded', () => {
               </ul>`
             
             break;
+            case 'toys':
+              description = `
+                <h3 style='color:#800000'>Description:</h3>
+                <p>Our handcrafted toys bring joy, creativity, and tradition together. Made with eco-friendly materials and safe finishes, these toys are perfect for children to play, learn, and grow naturally.</p>
+                <h3 style='color:#800000'>Key Features:</h3>
+                <ul style='color:#0f346c;font-weight:500'>
+                  <li>Material: Natural wood, cotton, and organic dyes</li>
+                  <li>Safety: Non-toxic, splinter-free, child-safe finishes</li>
+                  <li>Designs: Animals, puzzles, vehicles, and cultural toys</li>
+                  <li>Ideal For: Kids aged 1–10 years, gifting, and educational play</li>
+                  <li>Care: Wipe with a dry cloth; avoid water exposure</li>
+                </ul>`;
+              break;
+                
         case 'home':
             description = `
                 <h3 style='color:#800000'>Description:</h3>
@@ -1418,7 +1610,7 @@ document.addEventListener('DOMContentLoaded', () => {
           description = '<p>Product description not available</p>';
       }
       let size1 = '';
-      if(cat ==='home')
+      if(cat ==='home' || cat==='toys')
       {
         size1 = `<h3 style='color:#800000;font-size:1.5vw'>Size: <strong style='color:#0f346c' > ${size}</strong></h3>`;
       }
@@ -1517,7 +1709,11 @@ document.addEventListener('DOMContentLoaded', () => {
           alert("Please select a size.");
           return;
         }
-        // the below code is for the size chart to be displayed
+        else
+        {
+          alert("Item added to cart successfully!");
+        }
+        
       
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         cart.push({
@@ -1529,8 +1725,9 @@ document.addEventListener('DOMContentLoaded', () => {
           size: selectedSize
         });
         localStorage.setItem('cart', JSON.stringify(cart));
-        window.location.href = "cart.html";
+        // window.location.href = "cart.html";
       });
+      // the below code is for the size chart to be displayed
       indiv.querySelector('#chart').addEventListener('click', () => {
         // alert('hello')
       let dis = indiv.querySelector('#display'); // Element for displaying the size chart
@@ -1675,38 +1872,44 @@ document.addEventListener('DOMContentLoaded', () => {
           `;
           break;
         case 'home':
-          dis.innerHTML = `  <div style="max-width: 800px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff;"> <h3 style='color:#800000'>Size Chart:</h3>
-  <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th style="border: 1px solid #ddd; padding: 8px;">Size</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">Height (cm)</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">Width (cm)</th>
-        <th style="border: 1px solid #ddd; padding: 8px;">Depth (cm)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="border: 1px solid #ddd; padding: 8px;">Small</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">10 - 15</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">8 - 12</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">5 - 8</td>
-      </tr>
-      <tr>
-        <td style="border: 1px solid #ddd; padding: 8px;">Medium</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">16 - 25</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">13 - 20</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">9 - 12</td>
-      </tr>
-      <tr>
-        <td style="border: 1px solid #ddd; padding: 8px;">Large</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">26 - 35</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">21 - 30</td>
-        <td style="border: 1px solid #ddd; padding: 8px;">13 - 18</td>
-      </tr>
-    </tbody>
-  </table>
-  </div>`
+        case 'toys':
+          dis.innerHTML = `<table border="1" style="width:100%; border-collapse:collapse; text-align:center; margin-top:10px;">
+  <thead style="background:#0f346c; color:#fff;">
+    <tr>
+      <th>Age Group</th>
+      <th>Recommended Toy Type</th>
+      <th>Dimensions</th>
+      <th>Size Label</th>
+    </tr>
+  </thead>
+  <tbody style="font-weight:500; color:#333;">
+    <tr>
+      <td>1 – 2 Years</td>
+      <td>Rattles, Pull-along Toys</td>
+      <td>4 – 6 inches</td>
+      <td>Small (S)</td>
+    </tr>
+    <tr>
+      <td>3 – 4 Years</td>
+      <td>Puzzle Boards, Shape Sorters</td>
+      <td>5 – 8 inches</td>
+      <td>Medium (M)</td>
+    </tr>
+    <tr>
+      <td>5 – 7 Years</td>
+      <td>Vehicles, Dolls, Story Toys</td>
+      <td>6 – 10 inches</td>
+      <td>Large (L)</td>
+    </tr>
+    <tr>
+      <td>8 – 10 Years</td>
+      <td>Building Sets, Role Play Kits</td>
+      <td>8 – 12 inches</td>
+      <td>Large (L)</td>
+    </tr>
+  </tbody>
+</table>
+`
   break;
     
         default:

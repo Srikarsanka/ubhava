@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>UDBHAVA - THE ORGIN OF INDIAN HANDCRAFT</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="checkout.css">
+      <link rel=icon href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+</head>
+
+<body>
+
+      <div class="navbar">
+            <a href="index.html" style="text-decoration: none;">
+                  <h1 style="color:rgb(29, 1, 1)">UDBHAVA</h1>
+            </a>
+            <div class="nav-links">
+                  <a href="cart.html">CART</a>
+                  <a href="" style="scale:1.1; transition: all 0.3s ease; color:maroon; font-weight:bolder;">CHECKOUT
+                        PAGE</a>
+            </div>
+      </div>
+
+      <br><br><br><br><br><br><br><br><br><br><br>
+      <center>
+            <h1 style="display:inline-block;border-bottom: 4px solid orange;font-style: italic;font-family:cursive;">
+                  SECURE CHECKOUT</h1>
+      </center>
+      <br><br>
+      <h1 style="color:maroon;display: inline-block;margin-left: 2rem;">Checkout Products</h1>
+      <div id="cart"></div><br><br>
+      <div id="total" style="margin-top: 2rem; text-align: center;"></div>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin: 2rem;">
+            <!-- Address Form -->
+            <div style="flex: 1; min-width: 300px;">
+                  <h2 style="color:#0f346c;">Shipping Address</h2>
+                  <form id="addressForm">
+                        <input type="text" placeholder="Full Name" required
+                              style="width:80%; margin: 0.5rem 0;height:6vh;border-radius:0.5em;" id="name"><br>
+
+                        <input type="tel" placeholder="Phone Number" required
+                              style="width:80%; margin: 0.5rem 0;height:6vh;border-radius:0.5em;" id="phone"><br>
+
+                        <textarea placeholder="Full Address" required
+                              style="width:80%; margin: 0.5rem 0;height:6vh;border-radius:0.5em;"
+                              id="add"></textarea><br>
+
+                        <input type="text" placeholder="City" required
+                              style="width:80%; margin: 0.5rem 0;height:6vh;border-radius:0.5em;" id="city"><br>
+
+                        <input type="text" placeholder="State" required
+                              style="width:80%; margin: 0.5rem 0;height:6vh;border-radius:0.5em;" id="state"><br>
+
+                        <input type="number" placeholder="Pin Code" required
+                              style="width:80%; margin: 0.5rem 0;height:6vh;border-radius:0.5em;" id="pincode"><br>
+
+                        <button type="submit"
+                              style="background:#800000; color:white; padding: 0.6rem 2rem; border: none; border-radius: 0.4rem;">Continue</button>
+                  </form>
+
+            </div>
+
+            <!-- Order Summary -->
+            <div style="flex: 1; min-width: 300px;">
+                  <h2 style="color:#0f346c;">Order Summary</h2>
+                  <div id="summary" style="padding: 1rem; border: 1px solid #ccc; border-radius: 0.5rem;">
+                        <!-- Summary will be added by JS -->
+                  </div>
+            </div>
+
+      </div>
+
+      <script src="checkout.js"></script>
+
+</body>
+
+</html>

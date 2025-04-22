@@ -667,10 +667,11 @@ h2 {
   footer{
       width:100vw;
       height:40vh;
-      border:1px solid orange;
+      border:1px solid black;
       display: flex;
       justify-content: center;
       background-color: maroon;
+      bottom: 0;
 
 }
 /* for profile button clicking
