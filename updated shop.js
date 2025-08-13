@@ -1,4 +1,5 @@
 // Set user value from localStorage (if exists) or null
+
 let user = JSON.parse(localStorage.getItem("user")) || null;
 
 // Navbar scroll shadow code...
@@ -1212,6 +1213,172 @@ const products = [
       const filterButton = document.getElementById('fill'); // If you plan to use a separate filter button
       const productsContainer = document.getElementsByClassName('containers')[0]; // Get the first element with class 'containers'
 function renderproducts() {
+  
+document.addEventListener('DOMContentLoaded', () => {
+  // 1️⃣ State for filtering
+  let filters = {
+    category: 'all'
+  };
+
+  // 2️⃣ Cache DOM nodes
+  const container = document.querySelector('.containers');
+  const categoryButtons = document
+    .querySelectorAll('.categories button')
+    // ignore the “filter” button
+    .forEach(btn => {
+      // map button → filter value
+      let cat = btn.getAttribute('cat') || btn.id === 'a' ? 'all' : null;
+      if (btn.id === 'c')        cat = 'jewellary';
+      if (btn.id === 'fill')     cat = null;      // skip
+      if (!cat && btn.id !== 'fill' && btn.id !== 'a') {
+        // if HTML has no cat, try lowercase innerText
+        cat = btn.innerText.trim().toLowerCase().includes("women") ? 'women'
+            : btn.innerText.trim().toLowerCase().includes("men")   ? 'men'
+            : btn.innerText.trim().toLowerCase().includes("kid")   ? 'kids'
+            : null;
+      }
+
+      if (cat) {
+        btn.addEventListener('click', () => {
+          // update state
+          filters.category = cat;
+          highlightActiveButton(btn);
+          renderProducts();
+        });
+      }
+    });
+
+  function highlightActiveButton(activeBtn) {
+    document.querySelectorAll('.categories button')
+      .forEach(b => b.classList.toggle('active', b === activeBtn));
+  }
+
+  // 3️⃣ Render + Filter
+  function renderProducts() {
+    container.innerHTML = '';
+    // filter by category
+    let list = products.filter(p => {
+      return filters.category === 'all'
+        ? true
+        : p.category === filters.category;
+    });
+
+    if (list.length === 0) {
+      container.innerHTML = `<p style="text-align:center">No products in this category.</p>`;
+      return;
+    }
+
+    list.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-content';
+      card.dataset.id = p.id;
+      card.dataset.img = p.img;
+      card.dataset.name = p.name;
+      card.dataset.price = p.price;
+      card.dataset.category = p.category;
+      card.dataset.subCategory = p.subCategory;
+      card.dataset.originalPrice = p.price + Math.floor(Math.random()*100);
+      const discounted = card.dataset.originalPrice * 0.9;
+
+      card.innerHTML = `
+        ${p.video 
+          ? `<video muted loop poster="${p.img}" src="${p.video}"></video>`
+          : `<img src="${p.img}" alt="${p.name}" style="width:100%;height:200px;object-fit:cover">`}
+        <p><strong>${p.name}</strong></p>
+        <p>
+          <strong style="color:#ff7b00">₹${discounted.toFixed(0)}</strong>
+          <del style="color:gray">₹${card.dataset.originalPrice}</del>
+        </p>
+      `;
+      container.appendChild(card);
+    });
+
+    attachCardEvents();
+  }
+
+  // 4️⃣ Hover + Click on cards
+  function attachCardEvents() {
+    document.querySelectorAll('.product-content').forEach(card => {
+      const vid = card.querySelector('video');
+      card.onmouseenter = () => {
+        card.style.transform = 'scale(1.05)';
+        if (vid) vid.play();
+      };
+      card.onmouseleave = () => {
+        card.style.transform = '';
+        if (vid) {
+          vid.pause();
+          vid.currentTime = 0;
+        }
+      };
+      card.onclick = () => {
+        showModal(card);
+      };
+    });
+  }
+
+  // 5️⃣ Show detail modal
+  function showModal(card) {
+    const img   = card.dataset.img;
+    const name  = card.dataset.name;
+    const org   = +card.dataset.originalPrice;
+    const dis   = Math.floor(org * 0.9);
+    const save  = org - dis;
+    const cat   = card.dataset.category;
+
+    // overlay
+    const overlay = document.createElement('div');
+    overlay.style = `
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(0,0,0,0.6);z-index:9998;
+    `;
+    // modal
+    const modal = document.createElement('div');
+    modal.style = `
+      position:fixed;top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      width:80vw;max-width:800px;height:auto;
+      background:#fffaf0;padding:1.5rem;border-radius:1rem;
+      box-shadow:0 5px 20px rgba(0,0,0,0.3);z-index:9999;
+    `;
+    modal.innerHTML = `
+      <button id="close" style="float:right;font-size:1.5rem;background:none;border:none;cursor:pointer;color:#800000">✕</button>
+      <h2 style="margin-top:0">${name}</h2>
+      <img src="${img}" style="width:40%;float:left;margin-right:1rem;border-radius:0.5rem">
+      <div style="overflow:hidden">
+        <p><strong>Price:</strong> ₹${dis}</p>
+        <p><del>₹${org}</del></p>
+        <p style="color:green"><strong>You Save:</strong> ₹${save}</p>
+        <button id="addToCart" style="
+          padding:0.5rem 1rem;
+          background:#800000;color:#fff;
+          border:none;border-radius:0.3rem;
+          margin-top:1rem;cursor:pointer;
+        ">Add to Cart</button>
+      </div>
+    `;
+
+    document.body.append(overlay, modal);
+    document.body.style.overflow = 'hidden';
+
+    modal.querySelector('#close').onclick = () => {
+      modal.remove();
+      overlay.remove();
+      document.body.style.overflow = '';
+    };
+
+    modal.querySelector('#addToCart').onclick = () => {
+      const cart = JSON.parse(localStorage.getItem('cart')||'[]');
+      cart.push({ name, img, price: dis, original: org });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert('Added to cart!');
+    };
+  }
+
+  // 6️⃣ Initial render
+  renderProducts();
+});
+
           
   products.forEach((product) => {
     
@@ -1813,236 +1980,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
  
-// ENHANCED FILTER FUNCTIONALITY WITH PRICE RANGE AND DYNAMIC HEADINGS
-
-let currentCategory = 'all';
-let currentMinPrice = 0;
-let currentMaxPrice = 50000;
-
-// Function to show/hide products based on category and price range
-function filterProducts(category, minPrice = 0, maxPrice = 50000) {
-  currentCategory = category;
-  currentMinPrice = minPrice;
-  currentMaxPrice = maxPrice;
-  
-  const allProductContainers = document.querySelectorAll('.product-content');
-  const defaultContent = document.getElementById('defaultContent');
-  let visibleCount = 0;
-  
-  // Handle default content visibility
-  if (category === 'all') {
-    if (defaultContent) defaultContent.style.display = 'block';
-  } else {
-    if (defaultContent) defaultContent.style.display = 'none';
-  }
-  
-  allProductContainers.forEach(container => {
-    const productCategory = container.getAttribute('subcategory');
-    const productId = container.getAttribute('id');
-    const product = products.find(p => p.id == productId);
-    const productMainCategory = product?.category;
-    const productPrice = parseInt(product?.price || 0);
-    
-    // Check if product matches category filter
-    let categoryMatch = false;
-    if (category === 'all') {
-      categoryMatch = true;
-    } else if (category === 'women' && productMainCategory === 'women') {
-      categoryMatch = true;
-    } else if (category === 'men' && productMainCategory === 'men') {
-      categoryMatch = true;  
-    } else if (category === 'kids' && productMainCategory === 'kids') {
-      categoryMatch = true;
-    } else if (category === 'HomeDecor' && (productMainCategory === 'HomeDecor' || productMainCategory === 'home')) {
-      categoryMatch = true;
-    } else if (category === 'jewellary' && productMainCategory === 'jewellary') {
-      categoryMatch = true;
-    } else if (category === 'toys' && productCategory === 'toys') {
-      categoryMatch = true;
-    }
-    
-    // Check if product matches price range
-    const priceMatch = productPrice >= minPrice && productPrice <= maxPrice;
-    
-    // Show/hide product based on both filters
-    if (categoryMatch && priceMatch) {
-      container.style.display = 'block';
-      visibleCount++;
-    } else {
-      container.style.display = 'none';
-    }
-  });
-  
-  // Update category heading
-  updateCategoryHeading(category, visibleCount);
-}
-
-// Function to update the dynamic category heading
-function updateCategoryHeading(category, count = 0) {
-  const categoryTitle = document.getElementById('categoryTitle');
-  let headingText = '';
-  
-  switch(category) {
-    case 'all':
-      headingText = 'All Products';
-      break;
-    case 'women':
-      headingText = "Women's Wear Collection";
-      break;
-    case 'men':
-      headingText = "Men's Wear Collection";
-      break;
-    case 'kids':
-      headingText = "Kid's Wear Collection";
-      break;
-    case 'HomeDecor':
-      headingText = 'Home Decor Collection';
-      break;
-    case 'jewellary':
-      headingText = 'Jewelry Collection';
-      break;
-    case 'toys':
-      headingText = 'Toys Collection';
-      break;
-    default:
-      headingText = 'Our Products';
-  }
-  
-  if (categoryTitle) {
-    categoryTitle.textContent = `${headingText} (${count} items)`;
-    // Add animation effect
-    categoryTitle.style.animation = 'fadeIn 0.5s ease-in-out';
-  }
-}
-
-// Function to apply price range filter
-function applyPriceFilter() {
-  const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
-  const maxPrice = parseInt(document.getElementById('maxPrice').value) || 50000;
-  
-  if (minPrice > maxPrice) {
-    alert('Minimum price cannot be greater than maximum price!');
-    return;
-  }
-  
-  filterProducts(currentCategory, minPrice, maxPrice);
-}
-
-// Function to clear price range filter
-function clearPriceFilter() {
-  document.getElementById('minPrice').value = '';
-  document.getElementById('maxPrice').value = '';
-  filterProducts(currentCategory, 0, 50000);
-}
-
-// Add event listeners to filter buttons and price controls
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(() => {
-    const allButton = document.getElementById('a');
-    const homeDecorButton = document.getElementById('b');
-    const jewelryButton = document.getElementById('c');
-    const womenButton = document.getElementById('d');
-    const menButton = document.getElementById('e');
-    const kidsButton = document.getElementById('f');
-    const toysButton = document.getElementById('e1');
-
-    // Category filter event listeners
-    if (allButton) {
-      allButton.addEventListener('click', () => {
-        filterProducts('all', currentMinPrice, currentMaxPrice);
-        setActiveButton(allButton);
-      });
-    }
-
-    if (homeDecorButton) {
-       const jp = document.getElementById('jp');
-      homeDecorButton.addEventListener('click', () => {
-        filterProducts('HomeDecor', currentMinPrice, currentMaxPrice);
-        setActiveButton(homeDecorButton);
-       
-        if (jp) {
-          jp.style.display = 'none';
-
-      }});
-    }
-
-    if (jewelryButton) {
-      jewelryButton.addEventListener('click', () => {
-        filterProducts('jewellary', currentMinPrice, currentMaxPrice);
-        setActiveButton(jewelryButton);
-      });
-    }
-
-    if (womenButton) {
-      womenButton.addEventListener('click', () => {
-        filterProducts('women', currentMinPrice, currentMaxPrice);
-        setActiveButton(womenButton);
-      });
-    }
-
-    if (menButton) {
-      menButton.addEventListener('click', () => {
-        filterProducts('men', currentMinPrice, currentMaxPrice);
-        setActiveButton(menButton);
-      });
-    }
-
-    if (kidsButton) {
-      kidsButton.addEventListener('click', () => {
-        filterProducts('kids', currentMinPrice, currentMaxPrice);
-        setActiveButton(kidsButton);
-      });
-    }
-
-    if (toysButton) {
-      toysButton.addEventListener('click', () => {
-        filterProducts('toys', currentMinPrice, currentMaxPrice);
-        setActiveButton(toysButton);
-      });
-    }
-
-    // Price filter event listeners
-    const applyPriceBtn = document.getElementById('applyPriceFilter');
-    const clearPriceBtn = document.getElementById('clearPriceFilter');
-    
-    if (applyPriceBtn) {
-      applyPriceBtn.addEventListener('click', applyPriceFilter);
-    }
-    
-    if (clearPriceBtn) {
-      clearPriceBtn.addEventListener('click', clearPriceFilter);
-    }
-
-    // Allow Enter key to apply price filter
-    document.getElementById('minPrice')?.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') applyPriceFilter();
-    });
-    
-    document.getElementById('maxPrice')?.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') applyPriceFilter();
-    });
-
-    // Initialize with all products showing and default content visible
-    filterProducts('all');
-    
-  }, 1000);
-});
-
-// Function to highlight active filter button
-function setActiveButton(activeBtn) {
-  const filterButtons = ['a', 'b', 'c', 'd', 'e', 'f', 'e1'];
-  filterButtons.forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.style.backgroundColor = 'transparent';
-      btn.style.color = '#ff7b00';
-    }
-  });
-  
-  if (activeBtn) {
-    activeBtn.style.backgroundColor = '#ffa500';
-    activeBtn.style.color = 'white';
-  }
-}
 
   // the below code is for the filtering of the products based on the selected category

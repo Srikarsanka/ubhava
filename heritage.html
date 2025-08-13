@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>UDBHAVA - THE ORGIN OF INDIAN HANDCRAFT</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="index.css">
+      <link rel=icon href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+
+</head>
+<style>
+
+</style>
+
+<body>
+
+
+      <div class="navbar">
+            <a href="index.html" style="text-decoration: none;">
+                  <h1 style="color:rgb(29, 1, 1)">UDBHAVA</h1>
+            </a>
+            <div class="nav-links">
+                  <a href="index.html" style="scale:1.1;
+                  transition: all 0.3s ease;
+                  color:maroon;
+                  font-weight:bolder;">HOME</a>
+                  <a href="shop.html">SHOP</a>
+                  <a href="heritage.html" style="text-transform: uppercase;">Indian Heritage Crafts</a>
+                  <a href="contact.html">CONTACT</a>
+                  <a id="profile">PROFILE</a>
+                  <a href="cart.html">CART</a>
+            </div>
+      </div>
+</body>
+<script>
+      window.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".navbar");
+            if (window.scrollY > 50) {
+                  navbar.classList.add("shadow");
+            } else {
+                  navbar.classList.remove("shadow");
+            }
+      });
+
+</script>
+
+</html>

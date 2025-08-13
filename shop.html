@@ -39,19 +39,56 @@
             <h2>SHOP BY CATEGORIES</h2>
       </center>
       <div class="categories">
-            <button>ALL</button>
-            <button>HOME DECOR</button>
-            <button>JEWELRY</button>
-            <button>WOMEN'S WEAR</button>
-            <button>MEN'S WEAR</button>
-            <button>KID'S WEAR</button>
+            <button id="a">ALL</button>
+            <button id="b" cat="HomeDecor">HOME DECOR & WALL PAINTS</button>
+            <button id="c">JEWELRY</button>
+            <button id="d" cat="women">WOMEN'S WEAR</button>
+            <button id="e" cat="men">MEN'S WEAR</button>
+            <button id="f" cat="kids">KID'S WEAR</button>
+            <button id="e1" cat="toys">TOYS</button>
             <button id="fill">filter</button>
 
       </div>
+      <!-- Price Range Filter Section -->
+      <div class="price-filter-section"
+            style="text-align: center; margin: 20px 0; background: rgba(255, 123, 0, 0.05); border-radius: 15px; padding: 20px;">
+            <h3 style="color: #800000; margin-bottom: 15px;">Filter by Price Range</h3>
+            <div class="price-range-controls"
+                  style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+                  <label for="minPrice" style="color: #383838; font-weight: 500;">Min Price: ₹</label>
+                  <input type="number" id="minPrice" placeholder="0"
+                        style="width: 100px; padding: 8px; border: 1px solid #ff7b00; border-radius: 5px;">
+
+                  <label for="maxPrice" style="color: #383838; font-weight: 500;">Max Price: ₹</label>
+                  <input type="number" id="maxPrice" placeholder="50000"
+                        style="width: 100px; padding: 8px; border: 1px solid #ff7b00; border-radius: 5px;">
+
+                  <button id="applyPriceFilter"
+                        style="background: #ff7b00; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Apply</button>
+                  <button id="clearPriceFilter"
+                        style="background: transparent; color: #ff7b00; border: 1px solid #ff7b00; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Clear</button>
+            </div>
+      </div>
+
+      <!-- Dynamic Category Heading -->
+      <div id="categoryHeading" style="text-align: center; margin: 30px 0;">
+            <h2 id="categoryTitle"
+                  style="color: #0f346c; font-size: 2.5vw; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #ff7b00; display: inline-block;">
+                  All Products</h2>
+      </div>
+
+      <!-- Default Content Container (shown only when ALL is selected) -->
+      <div id="defaultContent" style="margin: 20px 0;">
+
+            <p style="text-align: center; color: #666; font-size: 1.2em;">Welcome to UDBHAVA - Discover our complete
+                  collection of handcrafted items</p>
+      </div>
+
+
 
       <div class="containers">
             <center>
-                  <h1 id="women"></h1>
+                  <h1 id="women1"></h1>
                   <br>
                   <h1>women's wear</h1>
             </center>
@@ -88,7 +125,7 @@
 
             </div>
             <br>
-            <h1 id="men"></h1>
+            <h1 id="men1"></h1>
             <br>
             <center>
                   <h1>MEN'S WEAR</h1>
@@ -122,7 +159,7 @@
                   <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744916416/men_s_wedding_mt5csz.png"
                         alt="" style="height:65vh;width:90%">
             </center>
-
+            <h1 id="wed"></h1>
 
             <div class="container" id="weding-w">
 
@@ -152,7 +189,7 @@
             <br>
             <br>
             <br>
-            <h2>jewellary</h2>
+            <h2 id="jp">jewellary</h2>
             <center>
                   <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1745218687/cardsopjewellary_mymsfz.webp"
                         alt="" style="height:65vh">
@@ -176,7 +213,7 @@
 
 
       </div>
-      >
+
 
 
 

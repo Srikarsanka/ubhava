@@ -1,0 +1,709 @@
+const home=document.getElementById("ho1");
+home.addEventListener('click',()=>
+{
+    window.location.href='pmain.html';
+});
+const name = localStorage.getItem('firstName') || 'User';
+const dob = localStorage.getItem('dob') || 'N/A';
+const email = localStorage.getItem('userEmail') || 'N/A';
+const gender = localStorage.getItem('gender') || 'N/A';
+
+// Check if data is available
+console.log("User Profile Data:", { name, dob, email, gender });
+const profile = document.getElementById('pop')
+// Function to create and display the profile modal
+profile.addEventListener('click', () => {
+    // Remove existing profile modal if it exists
+    const existingModal = document.getElementById('profileModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Decide the profile image based on gender
+    let profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJd42JdHzWNXP6VQQbiNZ3VrzHtDmvYMYQEVEriEi7kCw5Uz06QQtyfQeNoHItvNO0mKQ&usqp=CAU"; // Default image
+    if (gender.toLowerCase() === 'm') {
+        profileImage = "https://cdn-icons-png.flaticon.com/512/2922/2922506.png"; // Male image
+    } else if (gender.toLowerCase() === 'f') {
+        profileImage = "https://cdn-icons-png.flaticon.com/512/2922/2922561.png"; // Female image
+    }
+
+    // Create the profile modal
+    const div = document.createElement('div');
+    div.id = 'profileModal';
+    div.style.width = '25%';
+    div.style.height = '100%';
+    div.style.backgroundColor = 'white';
+    div.style.color = '#0f346c';
+    div.style.position = 'fixed';
+    div.style.top = '0px';
+    div.style.overflowY = 'scroll';
+    div.style.right = '0';
+    div.style.zIndex = '90000';
+    div.style.border = '1px solid #ddd';
+    div.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+    div.style.borderRadius = '8px';
+    div.style.padding = '10px';
+
+    // Add user information to the modal
+    div.innerHTML = `
+        <h2 style="text-align: center; margin-bottom: 20px;">User Information</h2>
+        <div style="text-align: center; padding: 20px;">
+            <img src="${profileImage}" alt="Profile Image" 
+                 style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #0f346c;">
+        </div>
+        <h2 style='font-size:1.5rem;font-weight:100;margin-left:10%'><strong style='font-weight:800'>Name:</strong> ${name}</h2>
+        <h2 style='font-size:1.5rem;font-weight:100;margin-left:10%'><strong style='font-weight:800'>Date of Birth:</strong> ${dob}</h2>
+        <h2 style='font-size:1.5rem;font-weight:100;margin-left:10%'><strong style='font-weight:800'>Gender:</strong> ${gender}</h2>
+        <h2 style='font-size:1.5rem;font-weight:100;margin-left:10%'><strong style='font-weight:800;font-size:1.7rem'>Email:</strong> ${email}</h2>
+        <button id="closeProfile" style="display: block; margin: 20px auto; padding: 10px 20px; background-color: orange; border: none; color: white; border-radius: 5px; font-size: 1rem; cursor: pointer;">Close</button>
+        
+        `;
+
+    document.body.appendChild(div);
+
+    // Close the modal on button click
+    const closeProfile = document.getElementById('closeProfile');
+    closeProfile.addEventListener('click', () => {
+        div.remove();
+    });
+});
+let count = 0;
+let totalprice = 0;
+let cartItems = [];
+
+// 🟢 Load cart data from local storage when the page loads
+window.onload = function () {
+    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const savedCount = JSON.parse(localStorage.getItem("cartCount")) || 0;
+    const savedTotalPrice = JSON.parse(localStorage.getItem("cartTotalPrice")) || 0;
+
+    cartItems = savedCart;
+    count = savedCount;
+    totalprice = savedTotalPrice;
+
+    updateCartUI();
+};
+
+// 🟢 Save cart data in local storage
+function saveCartToLocalStorage() {
+    if (cartItems.length === 0) {
+        localStorage.clear();
+    } else {
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        localStorage.setItem("cartCount", cartItems.length); // 🔹 Save correct count
+        localStorage.setItem("cartTotalPrice", totalprice);
+    }
+}
+
+
+// 🟢 Update Cart UI (Count & Total Price)
+function updateCartUI() {
+    document.getElementById("cart-count").innerText = cartItems.length; // 🔹 Use actual length, not a default value
+}
+
+
+// 🟢 Add item to cart
+function addToCart(button) {
+    alert("Added to cart!");
+
+    let price = parseFloat(button.getAttribute('data-price'));
+    let name = button.getAttribute('data-name');
+    let image = button.getAttribute('data-image');
+
+    if (!price || !name || !image) {
+        console.error("Missing product details for cart.");
+        return;
+    }
+
+    count++;
+    totalprice += price;
+    cartItems.push({ name, price, image });
+
+    saveCartToLocalStorage();
+    updateCartUI();
+    updateCartModal();
+}
+
+// 🟢 Remove item from cart
+function removeFromCart(index) {
+    totalprice -= cartItems[index].price;
+    cartItems.splice(index, 1);
+    count = Math.max(0, count - 1); // Prevent negative values
+
+    saveCartToLocalStorage();
+    updateCartUI();
+    updateCartModal();
+}
+
+// 🟢 Show cart modal
+const cart = document.querySelector('#cart');
+cart.addEventListener('click', showCartModal);
+
+function showCartModal() {
+    const existingModal = document.getElementById('cartModal');
+    if (existingModal) existingModal.remove();
+
+    let div = document.createElement('div');
+    div.id = 'cartModal';
+    div.style.cssText = `
+        width: 25%;
+        height: 100%;
+        overflow-y: scroll;
+        background-color: white;
+        color: #0f346c;
+        position: fixed;
+        top: 1%;
+        right: 5px;
+        padding: 10px;
+        border-radius: 10px;
+        z-index: 1000;
+    `;
+
+    let cartContent = cartItems.length === 0 
+        ? "<p>No items added yet.</p>" 
+        : cartItems.map((item, index) => `
+            <div style="border-bottom: 1px solid #ddd; padding: 10px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <img src="${item.image}" alt="Test Image" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #0f346c; margin-right: 10px;">
+                    <div>
+                        <p><b>${item.name}</b></p>
+                        <p style="color: orange; font-weight: bold;">Price: ₹${item.price}</p>
+                    </div>
+                </div>
+                <button onclick="removeFromCart(${index})" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px;">Remove</button>
+            </div>
+        `).join("");
+
+    div.innerHTML = `
+        <span id='close' style="margin-left:20rem;cursor:pointer">✖</span>
+        <div id="cartitems" style="width:100%;height:90%;border:1px solid red;overflow-y:scroll; padding: 10px;">
+            ${cartContent}
+        </div>
+        <div id="total-price" style="color:black; font-size: 16px; font-weight: bold; margin-top: 10px;">
+            Total Price To Be Paid: ₹${totalprice}
+        </div>
+    `;
+
+    document.body.appendChild(div);
+    document.getElementById('close').addEventListener('click', () => div.remove());
+}
+
+// 🟢 Update cart modal
+function updateCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        let cartContent = cartItems.map((item, index) => `
+            <div style="border-bottom: 1px solid #ddd; padding: 10px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <img src="${item.image}" alt="Test Image" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #0f346c; margin-right: 10px;">
+                    <div>
+                        <p><b>${item.name}</b></p>
+                        <p style="color: orange; font-weight: bold;">Price: ₹${item.price}</p>
+                    </div>
+                </div>
+                <button onclick="removeFromCart(${index})" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px;">Remove</button>
+            </div>
+        `).join("");
+
+        document.getElementById('cartitems').innerHTML = cartContent;
+        document.getElementById('total-price').innerHTML = `Total Price To Be Paid: ₹${totalprice}`;
+    }
+}
+
+
+const productdetails = [
+    {
+        id: 1,
+        name: 'CBC (Complete Blood Count) Test',
+        details: "A CBC test measures key blood components to assess overall health and detect conditions like anemia, infections, and blood disorders Includes .<br>🔴 RBC Tests – Hemoglobin, Hematocrit, RBC Count, MCV, MCH, MCHC, RDW <br> ⚪ WBC Tests – Total WBC, Neutrophils, Lymphocytes, Monocytes, Eosinophils, <br>Basophils.<br> 🩸 Platelet Tests – Platelet Count, MPV, PDW, PCT, IPF.<br> 🔬 Others – nRBC, Immature Granulocytes, Large Unstained Cells.",
+        Requirements: "No fasting required. Blood sample is drawn from a vein. Results help diagnose various health conditions.",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp"
+    },
+    {
+        id: 2,
+        name: 'HbA1c Test (Hemoglobin A1c)',
+        details: "Includes:<br>1️⃣ HbA1c (%) – Average blood sugar control.<br> 2️⃣ Estimated Average Glucose (eAG) – Converts HbA1c to an estimated glucose level.<br> 3️⃣ Blood Glucose Level – Checks current sugar levels.",
+        Requirements: "No fasting required. Blood sample is drawn from a vein. Results help diagnose diabetes and monitor blood sugar control.",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364807/Diabetes_tye3mx.webp"
+    },
+    {
+        id: 3,
+        name: 'FBS (Fasting Blood Sugar) Test',
+        details: "Includes:<br>1️⃣ Fasting Blood Sugar (FBS) – Blood sugar levels after fasting for 8-12 hours.",
+        Requirements: "Fasting for 8-12 hours before the test. Blood sample is drawn from a vein. Results help diagnose diabetes and monitor blood sugar levels.",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364807/Diabetes_tye3mx.webp"
+    },
+    {
+        id: 4,
+        name: 'Lipid Profile Test (Heart)',
+        details: "Includes:<br>1️⃣ Total Cholesterol – Total cholesterol levels.<br> 2️⃣ HDL Cholesterol – Good cholesterol levels.<br> 3️⃣ LDL Cholesterol – Bad cholesterol levels. <br>4️⃣ Triglycerides – Fatty substances in the blood.",
+        Requirements: "Fasting for 9-12 hours before the test. Blood sample is drawn from a vein. Results help diagnose heart diseases and monitor cholesterol levels.",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364886/Heart_m4yyav.webp"
+    },
+    {
+        id: 5,
+        name: 'LFT (Liver Function Test)',
+        details: "Includes:<br>1️⃣ Total Protein – Total protein levels.<br> 2️⃣ Albumin – Albumin levels. <br>3️⃣ Globulin – Globulin levels.<br> <br>4️⃣ A/G Ratio – Albumin to Globulin ratio.<br> 5️⃣ Bilirubin – Bilirubin levels.<br> 6️⃣ SGOT (AST) – Liver enzyme levels.<br> 7️⃣ SGPT (ALT) – Liver enzyme levels.<br> 8️⃣ Alkaline Phosphatase – Liver enzyme levels.",
+        Requirements: "No fasting required. Blood sample is drawn from a vein. Results help diagnose liver diseases and monitor liver function.",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364924/Liver_jgoone.webp"
+    },
+    {
+        id: 6,
+        name: 'Lipid Profile Test (Kidney)',
+        details: "Includes:<br>1️⃣ Urea – Urea levels.<br> 2️⃣ Creatinine – Creatinine levels.<br> 3️⃣ Uric Acid – Uric acid levels.<br> 4️⃣ BUN – Blood Urea Nitrogen.<br> 5️⃣ eGFR – Estimated Glomerular Filtration Rate.<br> 6️⃣ Sodium – Sodium levels.<br> 7️⃣ Potassium – Potassium levels.<br> 8️⃣ Chloride – Chloride levels.<br> 9️⃣ Calcium – Calcium levels.<br> 1️⃣0️⃣ Phosphorus – Phosphorus levels.<br> 1️⃣1️⃣ Albumin – Albumin levels.<br> 1️⃣2️⃣ Total Protein – Total protein levels.",
+        Requirements: "No fasting required. Blood sample is drawn from a vein. Results help diagnose kidney diseases and monitor kidney function.",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364915/Kidney_rimznp.webp"
+    },
+    {
+        id: 7,
+        name: 'Glucose Fasting & PP Test',
+        details: "This test measures blood sugar levels before and after a meal to diagnose diabetes and glucose metabolism disorders. Includes (2 Tests):<br> 1️⃣ Fasting Blood Sugar (FBS) – Measures glucose after 8-12 hours of fasting.<br> 2️⃣ Postprandial Blood Sugar (PPBS) – Measures glucose 2 hours after a meal.",
+        Requirements: "Fasting required for FBS. Blood samples are taken twice (before and after a meal).",
+        img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364801/Default_oqkswb.webp"
+    },
+    {
+        id: 8,
+        name: 'Thyroid Profile (T3, T4, TSH) Test',
+        details: "This test evaluates thyroid function to diagnose conditions like hypothyroidism and hyperthyroidism. Includes (4 Tests):<br> 1️⃣ Total Triiodothyronine (T3) – Measures T3 hormone levels.<br> 2️⃣ Total Thyroxine (T4) – Measures T4 hormone levels. <br>3️⃣ Thyroid-Stimulating Hormone (TSH) – Regulates thyroid activity. <br>4️⃣ Free T4 (FT4) – Measures the active form of Thyroxine.",
+        Requirements: "No fasting required. Blood sample is drawn from a vein. Results help diagnose thyroid disorders and monitor thyroid function.",
+        img: "Thyroid.webp"
+    }
+];
+
+// creating a div to print the details of the blood tests.......
+document.querySelectorAll(".te").forEach(div => {
+    div.addEventListener("click", function () {
+        const button = this.querySelector(".te-2 button"); // Get the button inside the clicked div
+        if (!button) return;
+
+        const testId = button.getAttribute("data-id");
+
+        // Find the matching product in the existing productdetails array
+        const selectedProduct = productdetails.find(product => product.id == testId);
+
+        if (selectedProduct) {
+            // Remove any existing popups before creating a new one
+            const existingPopup = document.getElementById("popup");
+            if (existingPopup) existingPopup.remove();
+
+            // Creating popup div
+            const popup = document.createElement("div");
+            popup.id = "popup"; // Add an ID to the popup
+            popup.style.width = '40%';
+            popup.style.height = '50%';
+            popup.style.backgroundColor = 'white';
+            popup.style.color = '#0f346c';
+            popup.style.position = 'fixed';
+            popup.style.top = '50%';
+            popup.style.left = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            popup.style.zIndex = '9999';
+            popup.style.borderRadius = '10px';
+            popup.style.fontFamily = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif';
+            popup.style.padding = '20px';
+            popup.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.2)';
+            popup.style.overflowY = 'auto'; // Allows scrolling if content overflows
+            popup.style.overflowY = 'scroll'; // Enable scrolling
+            popup.style.scrollbarWidth = 'none'; // Hides scrollbar in Firefox
+            popup.style.msOverflowStyle = 'none'; // Hides scrollbar in IE/Edge
+            popup.style.WebkitOverflowScrolling = 'touch'; // Enables smooth scrolling in Safari
+
+            popup.innerHTML = `
+                <span id='close' style="float:right; cursor:pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
+                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                    </svg>
+                </span>
+             
+                <h3 style="color:orange;font-weight:400;font-size;1rem;display:inline-block;border-bottom:1px solid #0f346c">Test Details</h3>
+                   <div style="display:flex;justify-content:center">
+                 <img src="${selectedProduct.img}" alt="Test Image" style="width:100px; height:100px; ; border:2px solid #0f346c; border-radius:50%; margin: 10px 0;box-sizzling:border-box;">
+                <h3 style="margin-left:2rem;margin-top:3rem;font-size:2rem;font-weight:200;">${selectedProduct.name}</h3>
+               </div>
+                <p><strong style="color:orange">Details:</strong> ${selectedProduct.details}</p>
+                <p style="color:maroon"><strong style='color:orange'>Requirements:</strong> ${selectedProduct.Requirements}</p>
+            `;
+
+            document.body.appendChild(popup);
+
+            // Close functionality
+            popup.querySelector("#close").addEventListener("click", function () {
+                popup.remove();
+            });
+        } else {
+            console.error("Test ID not found in productdetails");
+        }
+    });
+});
+// the below object is used to create the pop-up for the antiagent or for antirapid tests like covid 19 or like that
+const productdetails1 = [
+    {
+        id: 9,
+        name: 'Dengue Rapid Test',
+        details: "The Dengue Rapid Test detects dengue virus antigens in the blood, helping diagnose dengue fever quickly.",
+        Requirements: "No fasting required. A blood sample is taken from a vein.",
+        img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp', 
+        price: 1280,
+        originalPrice: 1728,
+        discount: 25
+    },
+    {
+        id: 10,
+        name: 'HIV Test',
+        details: "The HIV test detects antibodies or antigens in the blood to check for HIV infection.",
+        Requirements: "No fasting required. A blood sample is taken from a vein.",
+        img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp', 
+        price: 963,
+        originalPrice: 1150,
+        discount: 25
+    },
+    {
+        id: 11,
+        name: 'HBsAg Test (Hepatitis B Surface Antigen)',
+        details: "The HBsAg test detects the presence of the hepatitis B virus in the blood, helping diagnose hepatitis B infection.",
+        Requirements: "No fasting required. A blood sample is taken from a vein.",
+        img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp', 
+        price: 975,
+        originalPrice: 1300,
+        discount: 25
+    },
+    {
+        id: 12,
+        name: 'Widal Test',
+        details: "The Widal test is used to diagnose typhoid fever by detecting antibodies against Salmonella bacteria.",
+        Requirements: "No fasting required. A blood sample is taken from a vein.",
+        img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp', 
+        price: 399,
+        originalPrice: 532,
+        discount: 25
+    }
+];
+const anti = document.querySelectorAll(".test-3-1-1");
+
+anti.forEach(item => {
+    item.addEventListener('click', () => {
+        let btn1 = item.querySelector(".test3-2-2 button"); // Correctly selecting the button inside the clicked div
+        if (!btn1) return;
+
+        const testId = btn1.getAttribute("data-id");
+
+        // Find the matching product in the existing productdetails array
+        const selectedProduct1 = productdetails1.find(product => product.id == testId);
+
+        if (selectedProduct1) {
+            // Remove any existing popups before creating a new one
+            const existingPopup1 = document.getElementById("popup1");
+            if (existingPopup1) existingPopup1.remove();
+
+            // Create a new popup
+            const popup1 = document.createElement("div");
+            popup1.id = "popup1";
+            popup1.style.cssText = `
+                width: 40%;
+                height: 50%;
+                background-color: white;
+                color: #0f346c;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                border-radius: 10px;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                padding: 20px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+                overflow-y: auto;
+            `;
+
+            popup1.innerHTML = `
+                <span id='close' style="float:right; cursor:pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
+                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                    </svg>
+                </span>
+                <h3 style="color:orange; font-weight:400; font-size:1rem; display:inline-block; border-bottom:1px solid #0f346c">Test Details</h3>
+                <div style="display:flex;justify-content:center">
+                    <img src="${selectedProduct1.img}" alt="Test Image" style="width:100px; height:100px; border:2px solid #0f346c; border-radius:50%; margin: 10px 0;">
+                    <h3 style="margin-left:2rem; margin-top:3rem; font-size:2rem; font-weight:200;">${selectedProduct1.name}</h3>
+                </div>
+                <p><strong style="color:orange">Details:</strong> ${selectedProduct1.details}</p>
+                <p style="color:maroon"><strong style='color:orange'>Requirements:</strong> ${selectedProduct1.Requirements}</p>
+            `;
+
+            document.body.appendChild(popup1);
+
+            // Close functionality
+            popup1.querySelector("#close").addEventListener("click", function () {
+                popup1.remove();
+            });
+        } else {
+            console.error("Test ID not found in productdetails");
+        }
+    });
+});
+
+// 🟢 Fix for Antigen-Rapid Tests Not Adding to Cart
+document.querySelectorAll(".test3-2-2 button").forEach(button => {
+    button.addEventListener("click", function(event) {
+        event.stopPropagation();
+        addToCart(this);
+    });
+});
+
+// 🟢 Just a practice script (Not related to cart)
+// =============================================================
+// Basavatarakam Diagnostics – test.js  (30-Jun-2025)
+// -------------------------------------------------------------
+// 1. Navigation & profile modal
+// 2. Product catalogs (productdetails & productdetails1)
+// 3. Cart system (add / remove / modal view)
+// 4. Checkout flow (localStorage → patient-details.html)
+// -------------------------------------------------------------
+//  ‼️ Do NOT rename element IDs/classes in your HTML; this script
+//    plugs-in smoothly without changing any other functionality.
+// =============================================================
+
+// ------------------------------
+// 1. NAVIGATION
+// ------------------------------
+const home = document.getElementById("ho1");
+if (home) {
+  home.addEventListener("click", () => {
+    window.location.href = "pmain.html";
+  });
+}
+
+// ------------------------------
+// 2. USER-PROFILE MODAL
+// ------------------------------
+const profileBtn = document.getElementById("pop");
+if (profileBtn) profileBtn.addEventListener("click", showProfileModal);
+
+function showProfileModal() {
+  document.getElementById("profileModal")?.remove();           // remove old
+
+  const name   = localStorage.getItem("firstName")  || "User";
+  const dob    = localStorage.getItem("dob")        || "N/A";
+  const email  = localStorage.getItem("userEmail")  || "N/A";
+  const gender = localStorage.getItem("gender")     || "N/A";
+
+  let avatar =
+    gender.toLowerCase() === "f"
+      ? "https://cdn-icons-png.flaticon.com/512/2922/2922561.png"
+      : "https://cdn-icons-png.flaticon.com/512/2922/2922506.png";
+
+  const modal = document.createElement("div");
+  modal.id = "profileModal";
+  modal.style.cssText =
+    "position:fixed;top:0;right:0;width:26%;height:100%;background:#fff;color:#0f346c;z-index:90000;padding:25px;overflow-y:auto;box-shadow:-3px 0 8px rgba(0,0,0,.15)";
+  modal.innerHTML = `
+    <h2 style="text-align:center;margin-bottom:20px">User Information</h2>
+    <div style="text-align:center">
+      <img src="${avatar}" alt="Avatar"
+           style="width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid #0f346c">
+    </div>
+    <p><strong>Name:</strong> ${name}</p>
+    <p><strong>DOB:</strong> ${dob}</p>
+    <p><strong>Gender:</strong> ${gender}</p>
+    <p><strong>Email:</strong> ${email}</p>
+    <button id="closeProfile"
+            style="display:block;margin:25px auto 0;background:orange;color:#fff;border:none;padding:10px 25px;border-radius:6px;cursor:pointer">
+      Close
+    </button>`;
+  document.body.appendChild(modal);
+  modal.querySelector("#closeProfile").addEventListener("click", () => modal.remove());
+}
+
+// ------------------------------
+// 3. PRODUCT CATALOGS
+//    (add price data if it was missing)
+// ------------------------------
+const productdetails = [
+  { id: 1, name: "CBC (Complete Blood Count) Test", price: 400, originalPrice: 500, discount: 20,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp" },
+  { id: 2, name: "HbA1c Test",                      price: 600, originalPrice: 800, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364807/Diabetes_tye3mx.webp" },
+  { id: 3, name: "Fasting Blood Sugar",             price: 120, originalPrice: 160, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364807/Diabetes_tye3mx.webp" },
+  { id: 4, name: "Lipid Profile (Heart)",           price: 750, originalPrice:1000, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364886/Heart_m4yyav.webp" },
+  { id: 5, name: "LFT (Liver Function)",            price: 750, originalPrice:1000, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364924/Liver_jgoone.webp" },
+  { id: 6, name: "Kidney Profile",                  price: 290, originalPrice: 388, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364915/Kidney_rimznp.webp" },
+  { id: 7, name: "Glucose Fasting & PP",            price: 145, originalPrice: 194, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364801/Default_oqkswb.webp" },
+  { id: 8, name: "Thyroid Profile (T3 T4 TSH)",     price: 565, originalPrice: 755, discount: 25,
+    img: "Thyroid.webp" }
+];
+
+const productdetails1 = [
+  { id: 9,  name: "Dengue Rapid Test", price: 1280, originalPrice: 1728, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp" },
+  { id: 10, name: "HIV Test",          price: 963,  originalPrice: 1150, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp" },
+  { id: 11, name: "HBsAg Test",        price: 975,  originalPrice: 1300, discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp" },
+  { id: 12, name: "Widal Test",        price: 399,  originalPrice: 532,  discount: 25,
+    img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1742364796/cbc_gzt24q.webp" }
+];
+
+function findProduct(id) {
+  return [...productdetails, ...productdetails1].find(p => p.id === id);
+}
+
+// ------------------------------
+// 4. CART SYSTEM  (localStorage)
+// ------------------------------
+let cart = loadCart();
+updateCartBadge();
+
+function loadCart() {
+  try {
+    return JSON.parse(localStorage.getItem("medicalCart")) || [];
+  } catch {
+    return [];
+  }
+}
+function saveCart() {
+  localStorage.setItem("medicalCart", JSON.stringify(cart));
+}
+function cartQty() {
+  return cart.reduce((s, i) => s + i.quantity, 0);
+}
+function updateCartBadge() {
+  const badge = document.getElementById("cart-count");
+  if (badge) badge.textContent = cartQty();
+}
+
+// toast helper
+function toast(msg) {
+  const t = document.createElement("div");
+  t.textContent = msg;
+  t.style.cssText =
+    "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0f346c;color:#fff;padding:10px 18px;border-radius:6px;z-index:99999;opacity:0";
+  document.body.appendChild(t);
+  requestAnimationFrame(() => (t.style.opacity = "1"));
+  setTimeout(() => {
+    t.style.opacity = "0";
+    setTimeout(() => t.remove(), 300);
+  }, 1800);
+}
+
+// ------------------------------
+// 5. ADD-TO-CART BUTTONS
+// ------------------------------
+document.addEventListener("click", e => {
+  if (e.target.matches(".te-2-2 button, .test3-2-2 button")) {
+    e.stopPropagation();
+    const id = parseInt(e.target.dataset.id, 10);
+    const product = findProduct(id);
+    if (!product) return alert("Product not found!");
+    const item = cart.find(i => i.id === id);
+    item ? (item.quantity += 1) : cart.push({ ...product, quantity: 1, selected: true });
+    saveCart();
+    updateCartBadge();
+    toast(`${product.name} added to cart`);
+  }
+});
+
+// ------------------------------
+// 6. CART ICON  (auto-inject if missing)
+// ------------------------------
+(function ensureCartIcon() {
+  const nav = document.querySelector("nav ul");
+  if (!nav || document.getElementById("cart-icon")) return;
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <span id="cart-icon" style="position:relative;cursor:pointer">
+      🛒 Cart
+      <span id="cart-count"
+            style="position:absolute;top:-8px;right:-10px;background:red;color:#fff;border-radius:50%;padding:2px 6px;font-size:0.8em">
+        0
+      </span>
+    </span>`;
+  nav.appendChild(li);
+})();
+
+// ------------------------------
+// 7. CART MODAL
+// ------------------------------
+document.addEventListener("click", e => {
+  if (e.target.closest("#cart-icon")) renderCartModal();
+});
+
+function renderCartModal() {
+  document.getElementById("cartModal")?.remove();              // old modal
+
+  const modal = document.createElement("div");
+  modal.id = "cartModal";
+  modal.style.cssText =
+    "position:fixed;top:0;right:0;width:380px;height:100%;background:#fff;z-index:10000;box-shadow:-3px 0 8px rgba(0,0,0,.15);display:flex;flex-direction:column";
+
+  const header = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 20px;border-bottom:1px solid #ddd">
+      <h3 style="margin:0;color:#0f346c">Your Cart</h3>
+      <span id="closeCart" style="cursor:pointer;font-size:22px">✖</span>
+    </div>`;
+
+  const items = cart
+    .map(
+      (it, i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid #f1f1f1">
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="${it.img}" style="width:55px;height:55px;border-radius:8px;border:2px solid #0f346c;object-fit:cover">
+        <div>
+          <p style="margin:0 0 4px;font-weight:600;color:#0f346c">${it.name}</p>
+          <small>Qty: ${it.quantity} | ₹${it.price}</small>
+        </div>
+      </div>
+      <button data-index="${i}"
+              style="background:red;color:#fff;border:none;padding:4px 8px;border-radius:4px;cursor:pointer">
+        Remove
+      </button>
+    </div>`
+    )
+    .join("");
+
+  const body = cart.length ? items : '<p style="padding:30px;text-align:center">No items in cart</p>';
+  const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
+  const footer = `
+    <div style="margin-top:auto;padding:20px;border-top:1px solid #ddd">
+      <p style="display:flex;justify-content:space-between;font-weight:600;margin:0 0 10px">
+        <span>Subtotal</span><span>₹${subtotal}</span>
+      </p>
+      <button id="proceedCheckout"
+              style="width:100%;padding:12px;background:#0f346c;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer"
+              ${cart.length ? "" : "disabled"}>
+        Proceed to Checkout
+      </button>
+    </div>`;
+
+  modal.innerHTML = header + `<div id="cartBody" style="flex:1;overflow-y:auto">${body}</div>` + footer;
+  document.body.appendChild(modal);
+
+  // close
+  modal.querySelector("#closeCart").addEventListener("click", () => modal.remove());
+
+  // remove item buttons
+  modal.querySelectorAll("button[data-index]").forEach(btn =>
+    btn.addEventListener("click", () => {
+      cart.splice(parseInt(btn.dataset.index, 10), 1);
+      saveCart();
+      updateCartBadge();
+      renderCartModal();                        // re-render
+    })
+  );
+
+  // checkout
+  modal.querySelector("#proceedCheckout").addEventListener("click", () => {
+    localStorage.setItem("checkoutItems", JSON.stringify(cart));
+    modal.remove();
+    window.location.href = "patient-details.html";
+  });
+}
+
+// ensure badge is correct on load
+updateCartBadge();
+///

@@ -1,18 +1,21 @@
 // Fetch cart data and customer details from localStorage
 const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 const userdata = JSON.parse(localStorage.getItem('user') || '{}');
-console.log(userdata); // double check again
+const ship1 = JSON.parse(localStorage.getItem('invoiceData') || '{}')
+alert(ship1);
+alert(userdata); // double check again
 // Get DOM elements
 const customerNameElement = document.getElementById('customer-name');
 const customerPhoneElement = document.getElementById('customer-phone');
 const customerAddressElement = document.getElementById('customer-address');
 const cartItemsContainer = document.getElementById('cart-items');
 const totalPriceContainer = document.getElementById('total-price');
+// for
 
 // Display Customer Information
-customerNameElement.innerHTML = `<strong>Name:</strong> ${userdata.name}`;
-customerPhoneElement.innerHTML = `<strong>Phone:</strong> ${userdata.phone || userdata.contact}`;
-customerAddressElement.innerHTML = `<strong>Address:</strong> ${userdata.address}`;
+customerNameElement.innerHTML = `<strong style='color:#0f346c;font-size:1.5vw;font-weight:600'>Name:</strong> ${userdata.name}`;
+customerPhoneElement.innerHTML = `<strong style='color:#0f346c;font-size:1.5vw;font-weight:600'>Phone:</strong> ${userdata.phone || userdata.contact}`;
+customerAddressElement.innerHTML = `<strong style='color:#0f346c;font-size:1.5vw;font-weight:600'>Address:</strong> ${userdata.address}`;
 
 // Display Cart Items
 let totalAmount = 0;

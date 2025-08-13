@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>UDBHAVA - THE ORGIN OF INDIAN HANDCRAFT</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="shop.css">
+      <link rel=icon href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+      <style>
+            /* Basic styling for product cards, you can integrate this into your shop.css */
+            .containers {
+                  display: grid;
+                  /* Use CSS Grid for a responsive layout */
+                  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                  /* Adjust minmax as needed */
+                  gap: 20px;
+                  padding: 20px;
+                  justify-content: center;
+                  /* Center items in the grid */
+            }
+
+            .product-card {
+                  border: 1px solid #ddd;
+                  border-radius: 8px;
+                  overflow: hidden;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                  text-align: center;
+                  background-color: #fff;
+            }
+
+            .product-card img {
+                  width: 100%;
+                  height: 250px;
+                  /* Fixed height for images */
+                  object-fit: cover;
+                  /* Ensures images cover the area without distortion */
+                  display: block;
+            }
+
+            .product-card-content {
+                  padding: 15px;
+            }
+
+            .product-card h3 {
+                  margin-top: 0;
+                  font-size: 1.2em;
+                  color: #333;
+            }
+
+            .product-card p {
+                  color: #666;
+                  font-size: 1em;
+                  margin-bottom: 5px;
+            }
+
+            .categories {
+                  text-align: center;
+                  margin-bottom: 20px;
+                  padding: 10px;
+            }
+
+            .categories button {
+                  padding: 10px 15px;
+                  margin: 5px;
+                  border: 1px solid #ccc;
+                  border-radius: 5px;
+                  background-color: #f0f0f0;
+                  cursor: pointer;
+                  font-size: 1em;
+            }
+
+            .categories button:hover {
+                  background-color: #e0e0e0;
+            }
+      </style>
+</head>
+
+<body>
+
+
+      <div class="navbar">
+            <a href="index.html" style="text-decoration: none;">
+                  <h1 style="color:rgb(29, 1, 1)">UDBHAVA</h1>
+            </a>
+            <div class="nav-links">
+                  <a href="index.html">HOME</a>
+                  <a href="shop.html" style="scale:1.1;
+                  transition: all 0.3s ease;
+                  color:maroon;
+                  font-weight:bolder;">SHOP</a>
+                  <a href=" #">COLLECTIONS</a>
+                  <a href="contact.html">CONTACT</a>
+                  <a id="profile">PROFILE</a>
+                  <a href="cart.html">CART</a>
+            </div>
+      </div>
+
+
+      <div id="hero">
+            <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744786622/SHOPHEADER_aw8fxs.png" alt="">
+      </div>
+      <br><br><br><br>
+      <center>
+            <h2>SHOP BY CATEGORIES</h2>
+      </center>
+      <div class="categories">
+            <button id="a">ALL</button>
+            <button id="b" cat="HomeDecor">HOME DECOR & WALL PAINTS</button>
+            <button id="c">JEWELRY</button>
+            <button id="d" cat="women">WOMEN'S WEAR</button>
+            <button id="e" cat="men">MEN'S WEAR</button>
+            <button id="f" cat="kids">KID'S WEAR</button>
+            <button id="e1" cat="toys">TOYS</button>
+            <button id="fill">filter</button>
+
+      </div>
+
+      <div class="containers">
+            <center>
+                  <h1>women's wear</h1>
+            </center>
+            <br>
+            <br>
+            <h2>Sarees</h2>
+      </div>
+
+</body>
+<script>
+      // Set user value from localStorage (if exists) or null
+      let user = JSON.parse(localStorage.getItem("user")) || null;
+
+      // Navbar scroll shadow code...
+      window.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".navbar");
+            if (window.scrollY > 50) {
+                  navbar.classList.add("shadow");
+            } else {
+                  navbar.classList.remove("shadow");
+            }
+      });
+
+      // Profile icon click event
+      const profileIcon = document.querySelector("#profile");
+      profileIcon.addEventListener("click", function () {
+            if (user === null) {
+                  display();
+                  // alert("the user is null");
+            } else {
+                  // alert("the user is not null");
+                  displayprofile();
+            }
+      });
+
+      // Helper: Remove existing modals or popups (if any)
+      function removeModalContainers() {
+            const existingModal = document.querySelector("#modalContainer");
+            if (existingModal) {
+                  existingModal.remove();
+            }
+            const existingProfile = document.querySelector("#profilePopup");
+            if (existingProfile) {
+                  existingProfile.remove();
+            }
+      }
+
+      /* ----------------------------- */
+      /* display()            */
+      /* ----------------------------- */
+      function display() {
+            // Disable body scroll and create overlay
+            const body = document.querySelector("body");
+            body.style.overflow = "hidden";
+            const overlay = document.createElement("div");
+            overlay.style.position = "fixed";
+            overlay.style.top = 0;
+            overlay.style.left = 0;
+            overlay.style.width = "100vw";
+            overlay.style.height = "100vh";
+            overlay.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+            overlay.style.backdropFilter = "blur(10px)";
+            overlay.style.zIndex = "9998";
+
+            // Create modal container (ls) and assign an id for removal
+            const ls = document.createElement("div");
+            ls.id = "modalContainer";
+            ls.style.width = "80vw";
+            ls.style.height = "90vh";
+            ls.style.position = "fixed";
+            ls.style.top = "5vh";
+            ls.style.left = "10vw";
+            ls.style.backgroundColor = "#fffaf0";
+            ls.style.zIndex = "9999";
+            ls.style.borderRadius = "10px";
+            ls.style.boxSizing = "border-box";
+            ls.style.display = "flex";
+            ls.style.justifyContent = "center";
+            ls.style.borderTopLeftRadius = "5rem";
+            ls.style.borderBottomRightRadius = "5rem";
+            ls.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+
+            // Create left pane (div1) & dynamic right pane (div2)
+            ls.innerHTML = `
+    <div id="div1" style="width: 40vw; height: 90vh; border: 1px solid red; border-top-left-radius: 5rem; padding: 2rem; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: start;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png" alt="logo" style="width: 8vw; height: 8vw; border-radius: 50%; border: 1px solid black;">
+            <div style="display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="font-family: 'MyCustomFont', serif; font-size: 3vw; font-weight: 600; color: orange; margin: 0;">UDBHAVA</h1>
+                <p style="font-size: 0.9vw; font-family: 'MyCustomFont'; margin: 0; color: #555;">- The Origin of Indian Handicraft</p>
+            </div>
+        </div>
+        <div style="height: 3rem;"></div>
+        <h2 style="text-align: center; font-family: 'MyCustomFont', serif; font-size: 1.5vw; font-weight: 400;">
+            Join the Ubhaava Family and Unlock Exclusive Perks!
+        </h2>
+        <div style="height: 2rem;"></div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <button id="signup" style="text-transform: uppercase; color: white; background-color: #800000; width: 14vw; height: 8vh; border: 1px solid maroon; font-size: 1vw; font-weight: 300; padding: 5px;">
+                Join the Ubhaava Family
+            </button>
+            <button id="signin" style="text-transform: uppercase; color: white; background-color: #800000; width: 14vw; height: 8vh; border: 1px solid maroon; font-size: 1vw; font-weight: 300; padding: 5px;">
+                Welcome Back
+            </button>
+        </div>
+    </div>
+    <div id="div2" style="width: 40vw; height: 90vh; border: 1px solid black; border-bottom-right-radius: 5rem; padding: 2rem; box-sizing: border-box;">
+         ${getSignupForm()}
+    </div>
+  `;
+
+            // Append modal and overlay to DOM
+            document.body.appendChild(overlay);
+            document.body.appendChild(ls);
+
+            // Input focus effects
+            const inputs = ls.querySelectorAll("input");
+            inputs.forEach(input => {
+                  input.addEventListener("focus", () => {
+                        input.style.borderColor = "#ff6347";
+                        input.style.boxShadow = "0 0 5px maroon";
+                        input.style.transition = "box-shadow 0.3s ease-in-out";
+                  });
+                  input.addEventListener("blur", () => {
+                        input.style.borderColor = "#ccc";
+                        input.style.boxShadow = "none";
+                  });
+            });
+
+            // Close button for modal
+            const closeBtn = document.createElement("button");
+            closeBtn.innerText = "X";
+            closeBtn.style.position = "absolute";
+            closeBtn.style.top = "10px";
+            closeBtn.style.right = "20px";
+            closeBtn.style.fontSize = "2rem";
+            closeBtn.style.border = "none";
+            closeBtn.style.background = "transparent";
+            closeBtn.style.cursor = "pointer";
+            closeBtn.style.color = "#800000";
+            ls.appendChild(closeBtn);
+            closeBtn.addEventListener("click", () => {
+                  ls.remove();
+                  overlay.remove();
+                  document.body.style.overflow = "auto";
+            });
+
+            // Get references to div2 and the left pane buttons.
+            let div2 = ls.querySelector("#div2");
+            const signinBtn = ls.querySelector("#signin");
+            const signupBtn = ls.querySelector("#signup");
+
+            // Helper functions returning form markup.
+            function getSignupForm() {
+                  return `
+      <center>
+          <h2 style="color:#2c0665; font-family: 'MyCustomFont', serif;">
+              Join the Ubhaava Family and Unlock Exclusive Perks!
+          </h2>
+      </center>
+      <label for="name" style="font-size: 1.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Name:</label><br>
+      <input type="text" id="name" name="name" placeholder="Enter your name, Artizen" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em; display: block;">
+      <label for="email" style="font-size: 1.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Email:</label><br>
+      <input type="email" id="email" name="email" placeholder="Enter your email, Artizen" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em; display: block;">
+      <label for="contact" style="font-size: 1.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Contact No:</label><br>
+      <input type="tel" id="contact" name="contact" placeholder="Enter your contact" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em; display: block;">
+      <label for="password" style="font-size: 1.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Password:</label><br>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em; display: block;">
+      <label for="confirm-password" style="font-size: 1.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Confirm Password:</label><br>
+      <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em; display: block;">
+      <center>
+          <input type="submit" value="Submit" style="width: 10vw; height: 5vh; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; background-color: #4a0101; color: white;">
+      </center>
+    `;
+            }
+
+            function getLoginForm() {
+                  return `
+      <center>
+          <h2 style="color:#2c0665; font-family: 'MyCustomFont', serif;">
+              WELCOME BACK! You're not just a buyer… You're an <strong style="color:orange">ARTIZEN</strong>
+          </h2>
+      </center>
+      <label for="name1" style="font-size: 2.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Name:</label>
+      <br>
+      <input type="text" id="name1" name="name1" placeholder="Enter your name, Artizen" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em;">
+      <br><br>
+      <label for="email1" style="font-size: 2.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Email:</label>
+      <br>
+      <input type="email" id="email1" name="email1" placeholder="Enter your email, Artizen" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em;">
+      <br><br>
+      <label for="password1" style="font-size: 2.5vw; font-weight: 500; color: #4a0101; margin-left: 1em;">Password:</label>
+      <br>
+      <input type="password" id="password1" name="password1" placeholder="Enter your password, Artizen" required style="width: 80%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; margin-left: 1.5em;">
+      <br><br>
+      <center>
+          <input type="submit" value="Submit" style="width: 10vw; height: 5vh; border: 1px solid #ccc; border-radius: 5px; font-size: 1.2vw; background-color: #4a0101; color: white;">
+      </center>
+    `;
+            }
+
+            // Attach listener for signup form submission
+            function attachSignupSubmit() {
+                  const submitBtn = div2.querySelector("input[type='submit']");
+                  if (submitBtn) {
+                        submitBtn.addEventListener("click", function (event) {
+                              event.preventDefault();
+                              const name = div2.querySelector("#name").value;
+                              const email = div2.querySelector("#email").value;
+                              const contact = div2.querySelector("#contact").value;
+                              const password = div2.querySelector("#password").value;
+                              const confirmPassword = div2.querySelector("#confirm-password").value;
+
+                              if (password !== confirmPassword) {
+                                    alert("Passwords do not match!");
+                                    return;
+                              } else {
+                                    localStorage.setItem("name", name);
+                                    localStorage.setItem("email", email);
+                                    localStorage.setItem("contact", contact);
+                                    localStorage.setItem("password", password);
+
+                                    const userDetails = { name, email, contact, password };
+                                    localStorage.setItem("user", JSON.stringify(userDetails));
+
+                                    alert("Registration successful");
+                                    // Switch to the login form after registration
+                                    div2.innerHTML = getLoginForm();
+                                    attachLoginSubmit();
+                              }
+                        });
+                  }
+            }
+
+            // Attach listener for login form submission
+            function attachLoginSubmit() {
+                  const submitBtn = div2.querySelector("input[type='submit']");
+                  if (submitBtn) {
+                        submitBtn.addEventListener("click", function (event) {
+                              event.preventDefault();
+                              const storedName = localStorage.getItem("name");
+                              const storedEmail = localStorage.getItem("email");
+                              const storedPassword = localStorage.getItem("password");
+                              const name1 = div2.querySelector("#name1").value;
+                              const email1 = div2.querySelector("#email1").value;
+                              const password1 = div2.querySelector("#password1").value;
+
+                              if (name1 === storedName && email1 === storedEmail && password1 === storedPassword) {
+                                    alert("Login successful");
+                                    // Update the global user variable
+                                    user = JSON.parse(localStorage.getItem("user"));
+                                    // Call displayprofile() for a standalone profile popup
+                                    displayprofile();
+                              } else {
+                                    alert("Login failed. Please check your credentials.");
+                              }
+                        });
+                  }
+            }
+
+            // Initially attach signup listener (signup form loaded by default)
+            attachSignupSubmit();
+
+            // Switch forms on clicking left pane buttons
+            signupBtn.addEventListener("click", () => {
+                  div2.innerHTML = getSignupForm();
+                  attachSignupSubmit();
+            });
+
+            signinBtn.addEventListener("click", () => {
+                  div2.innerHTML = getLoginForm();
+                  attachLoginSubmit();
+            });
+
+            /* --- End of display() function --- */
+      }
+
+      /* ----------------------------- */
+      /* New: displayprofile()    */
+      /* ----------------------------- */
+      function displayprofile() {
+            // Remove any existing modals or popups first
+            removeModalContainers();
+
+
+            // Remove existing modal (if any) and then create the popup container
+            removeModalContainers();
+            const body = document.querySelector("body");
+            body.style.overflow = "hidden";
+            const overlay = document.createElement("div");
+            overlay.style.position = "fixed";
+            overlay.style.top = 0;
+            overlay.style.left = 0;
+            overlay.style.width = "100vw";
+            overlay.style.height = "100vh";
+            overlay.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+            overlay.style.backdropFilter = "blur(10px)";
+            overlay.style.zIndex = "9998";
+            const profilePopup = document.createElement("div");
+            profilePopup.id = "profilePopup";
+            profilePopup.style.position = "fixed";
+            profilePopup.style.top = "9vh";
+            profilePopup.style.right = "0";
+            profilePopup.style.width = "45vw";
+            profilePopup.style.height = "95vh";
+            profilePopup.style.backgroundColor = "#fffaf0";
+            profilePopup.style.borderTopLeftRadius = "2rem";
+            profilePopup.style.borderBottomLeftRadius = "2rem";
+            profilePopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
+            profilePopup.style.padding = "1rem";
+            profilePopup.style.zIndex = "10000";
+            profilePopup.style.scrollbarWidth = 'none';
+            profilePopup.style.msOverflowStyle = 'none';
+            profilePopup.style.WebkitOverflowScrolling = 'touch';
+            profilePopup.style.overflowY = "auto";
+
+            // Create header with title and close button (ensuring the close button is at the top)
+            const headerDiv = document.createElement("div");
+            headerDiv.style.position = "relative";
+            headerDiv.style.width = "100%";
+            headerDiv.style.display = "flex";
+            headerDiv.style.justifyContent = "space-between";
+            headerDiv.style.alignItems = "center";
+            headerDiv.style.marginBottom = "1rem";
+
+            const headerTitle = document.createElement("h2");
+            headerTitle.textContent = "Profile";
+            headerTitle.style.fontFamily = "'MyCustomFont', sans-serif";
+            headerTitle.style.color = "#2c0665";
+            headerTitle.style.margin = "0";
+
+            // The close button placed in the header
+            const closeBtn = document.createElement("button");
+            closeBtn.textContent = "X";
+            closeBtn.style.background = "transparent";
+            closeBtn.style.border = "none";
+            closeBtn.style.color = "#800000";
+            closeBtn.style.fontSize = "1.5rem";
+            closeBtn.style.cursor = "pointer";
+            closeBtn.addEventListener("click", () => {
+                  profilePopup.remove();
+            });
+
+            headerDiv.appendChild(headerTitle);
+            headerDiv.appendChild(closeBtn);
+
+            // Create body with user info and profile details
+            const bodyDiv = document.createElement("div");
+            bodyDiv.style.marginTop = "1rem";
+
+            // Retrieve user data (with an optional address property)
+            const userData = JSON.parse(localStorage.getItem("user")) ||
+                  { name: "", email: "", contact: "", address: "" };
+
+            // Build the profile contents without any duplicate close button.
+            bodyDiv.innerHTML = `
+        <div id="dashboard" style="padding: 2rem; font-family: 'Segoe UI', sans-serif;">
+          <h2 style="color:#2c0665; text-align:center; font-size: 2.5vw;">
+              Welcome back, <span style="color: orange;">${userData.name}</span> 👋
+          </h2>
+          <p style="text-align: center; color: #4a0101; font-size: 1.2vw;">
+              Explore your profile details and manage your personal preferences here.
+          </p>
+          <hr style="margin: 1.5rem 0; border-color: #800000;">
+
+          <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 1.2vw; color: #333;">
+              <p><strong>📧 Email:</strong> ${userData.email}</p>
+              <p><strong>📞 Contact:</strong> ${userData.contact}</p>
+
+              <div>
+                  <strong>🛍️ Wishlist:</strong>
+                  <p style="margin: 0.3rem 0 0 1.5rem;">You haven't added any items yet.</p>
+                  <p style="margin: 0 0 0 1.5rem; font-size: 1vw; color: gray;">
+                    You can save your favorite products here for quick access later.
+                  </p>
+              </div>
+
+              <div>
+                  <strong>📦 Your Orders:</strong>
+                  <p style="margin: 0.3rem 0 0 1.5rem;">No orders yet.</p>
+                  <p style="margin: 0 0 0 1.5rem; font-size: 1vw; color: gray;">
+                    Track your future purchases and delivery here.
+                  </p>
+              </div>
+
+              <div>
+                  <strong>🏠 Address:</strong>
+                  <p id="addressText" style="margin: 0.3rem 0 0 1.5rem;">
+                      ${userData.address ? userData.address : "Not Provided"}
+                  </p>
+                  <button id="editAddressBtn" style="margin-left: 1.5rem; margin-top: 0.5rem;
+                          background-color: maroon; color: white; padding: 0.4rem 0.8rem;
+                          border: none; border-radius: 5px;">
+                    Edit Address
+                  </button>
+              </div>
+          </div>
+
+          <div id="addressForm" style="display: none; margin-top: 1.5rem;">
+              <textarea id="addressInput" rows="4" style="width: 100%; padding: 0.5rem; 
+                        font-size: 1.1vw; border-radius: 8px; border: 1px solid #ccc;"
+                        placeholder="Enter your full address here..."></textarea>
+              <br>
+              <button id="saveAddressBtn" style="margin-top: 0.5rem; background-color: orange;
+                        color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px;">
+                Save Address
+              </button>
+          </div>
+        </div>
+      `;
+
+            // Set up the address editing functionality
+            const editAddressBtn = bodyDiv.querySelector("#editAddressBtn");
+            const saveAddressBtn = bodyDiv.querySelector("#saveAddressBtn");
+            const addressText = bodyDiv.querySelector("#addressText");
+            const addressInput = bodyDiv.querySelector("#addressInput");
+            const addressForm = bodyDiv.querySelector("#addressForm");
+
+            editAddressBtn.addEventListener("click", () => {
+                  if (addressForm.style.display === "none") {
+                        addressForm.style.display = "block";
+                        addressInput.value = addressText.innerText !== "Not Provided" ? addressText.innerText : "";
+                  } else {
+                        addressForm.style.display = "none";
+                  }
+            });
+
+            saveAddressBtn.addEventListener("click", () => {
+                  const newAddress = addressInput.value.trim();
+                  if (newAddress !== "") {
+                        addressText.innerText = newAddress;
+                        userData.address = newAddress;
+                        localStorage.setItem("user", JSON.stringify(userData));
+                  }
+                  addressForm.style.display = "none";
+            });
+
+            // Create and style the logout button
+            const logoutBtn = document.createElement("button");
+            logoutBtn.textContent = "Logout";
+            logoutBtn.style.backgroundColor = "#800000";
+            logoutBtn.style.color = "#fff";
+            logoutBtn.style.border = "none";
+            logoutBtn.style.padding = "0.5rem 1rem";
+            logoutBtn.style.borderRadius = "5px";
+            logoutBtn.style.marginTop = "1rem";
+            logoutBtn.style.marginBottom = "2rem";
+            logoutBtn.style.cursor = "pointer";
+            logoutBtn.style.display = "block";
+            logoutBtn.style.marginLeft = "auto";
+            logoutBtn.style.marginRight = "auto";
+            logoutBtn.addEventListener("click", () => {
+                  localStorage.removeItem("user");
+                  profilePopup.remove();
+            });
+
+            // Assemble and append the modal: header, body, then logout button
+            profilePopup.appendChild(headerDiv);
+            profilePopup.appendChild(bodyDiv);
+            profilePopup.appendChild(logoutBtn);
+            document.body.appendChild(profilePopup);
+      }
+
+
+      // Your existing products array
+      const products = [
+            {
+                  category: 'women',
+                  id: '1',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744390707/trendsaree_vbeoxs.avif',
+                  price: '5000',
+                  name: 'Sea Green Bel Buti Patterned Saree',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744873419/seagreensareevedio_gvynpb.mp4',
+            },
+            {
+                  id: '2',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744390847/pinksaretrend2_saqzxo.avif',
+                  price: '6000',
+                  name: 'Cream Beige Floral Embroidered Saree',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744873545/creamsareefloral_thxsbm.mp4',
+            },
+            {
+                  id: '3',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744527266/trendwhitesaree_uhkcyb.avif',
+                  name: 'Dark Cream Bel Buti Stone Embellished Saree',
+                  price: '7000',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744873638/DARK_CREAMsaree_kxsv01.mp4',
+            },
+            {
+                  id: '4',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744391222/geensareetrend_wesada.avif',
+                  price: '8099',
+                  name: 'Sea Green Beige Floral Embroidered Saree',
+                  video: 'https://manyavar.scene7.com/is/content/manyavar/SB17529_436-SEA%20GREEN_301_30-09-2024-08-46-0x900-1500k',
+            },
+            {
+                  id: '5',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744821470/blueleafsaree_qw4sfx.avif',
+                  price: '2999',
+                  name: 'Indigo Blue Leaf Patterned Saree',
+                  video: 'https://manyavar.scene7.com/is/content/manyavar/SB16556_439-INDIGO%20BLUE_201_05-06-2024-11-43-0x900-1500k',
+            },
+            {
+                  id: '6',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744821725/pinkyellowsaree_qepd4e.avif',
+                  price: '3999',
+                  name: 'Mustard Yellow Jaal Patterned Saree with Square Motifs',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744874287/mustedyellowsaree_ziphfl.mp4',
+            },
+            {
+                  id: '7',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744822341/redrubysaree_h00gdg.avif',
+                  price: '14999',
+                  name: 'Ruby Red Floral Zari Work Bridal Saree',
+                  video: 'https://manyavar.scene7.com/is/content/manyavar/SB16047_422-WINE_201_03-01-2025-05-20-0x900-1500k',
+            },
+            {
+                  id: '8',
+                  category: 'women',
+                  subCategory: 'saree',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744821958/pinknetsaree_tkoc7w.avif',
+                  price: '11999',
+                  name: 'Dusty Pink Floral Jaal Embroidered Saree with Rhinestone Work',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744874494/dustyfloralpinksaree_iz3iho.mp4',
+            },
+
+            {
+                  id: '9',
+                  category: 'women',
+                  subCategory: 'lehenga',
+                  img: 'https://manyavar.scene7.com/is/image/manyavar/SKT4894_441-D.+PURPLE_101.2579_27-07-2024-23-50:650x900?&dpr=on,2',
+                  price: '9000',
+                  name: 'Festive Purple Georgette Lehenga',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744874550/purpulelehanga_eflagt.mp4',
+
+            },
+            {
+                  id: '10',
+                  category: 'women',
+                  subCategory: 'lehenga',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744874954/purpulepinklehanga_cqkrpe.avif',
+                  price: '26000',
+                  name: 'Majestic Purple Net Crop Top Lehenga with Thread and Zari Work',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744874857/purpulepinklehanga.mp4_crqki9.mp4',
+
+            },
+            {
+                  id: '11',
+                  category: 'women',
+                  subCategory: 'lehenga',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744885561/bluenetlehangajanhvi_dkaip8.avif',
+                  price: '29000',
+                  name: '(SEMI-STITCHED)Ethereal Blue Net Lehenga',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744885478/lightbluelehangavideo_kqzbzb.mp4',
+
+            },
+            {
+                  id: '12',
+                  category: 'women',
+                  subCategory: 'lehenga',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744387946/womenwear_trlaal.avif',
+                  price: '39000',
+                  name: 'Teal Blue Aari Embroidered Lehenga with Imperial, Floral And Peacock Motifs',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744885843/peckoklehanga_pqeaeq.mp4',
+
+            },
+            {
+                  id: '13',
+                  category: 'women',
+                  subCategory: 'weding-w',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744387946/womenwear_trlaal.avif',
+                  price: '39000',
+                  name: 'Teal Blue Aari Embroidered Lehenga with Imperial, Floral And Peacock Motifs',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744885843/peckoklehanga_pqeaeq.mp4',
+            },
+            {
+                  id: '14',
+                  category: 'women',
+                  subCategory: 'weding-w',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744897971/wedding_sarre1_i4tcwg.avif',
+                  price: '42000',
+                  name: 'Classic Wine Bel Buti Patterned Bridal Saree',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744898256/weddingsaree1_xlnmio.mp4'
+            },
+            {
+                  id: '15',
+                  category: 'women',
+                  subCategory: 'weding-w',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744898424/weddingsaree2_vtyc3x.avif',
+                  price: '45000',
+                  name: 'Rani Pink Bel Buti Patterned Bridal Saree with Rhinestones',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744898471/weddingsaree2_wk1pov.mp4'
+            },
+            {
+                  id: '16',
+                  category: 'women',
+                  subCategory: 'weding-w',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744899232/wedingsaree34_i6ojyi.avif',
+                  price: '35000',
+                  name: 'Rani Pink Bel Buti Patterned Bridal Saree with Rhinestones',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744899280/wedingsaree4_lvgsjr.mp4'
+            },
+            {
+                  id: '17',
+                  category: 'women',
+                  subCategory: 'Stitched Suit',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744900946/MOIW238_409-MEHANDI_301_f9yg98.avif',
+                  price: '6544',
+                  name: 'Mehandi Green Plain Indo Western with Sequin And Cape Blouse',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744901786/switcheddress1_kyztak.mp4',
+            },
+            {
+                  id: '18',
+                  category: 'women',
+                  subCategory: 'Stitched Suit',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744902194/switcheddress2_voeeif.avif',
+                  price: '20000',
+                  name: 'Wine Hued Elegance Indo Western',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744907635/MOIW184-422-WINE_301_23-09-2024-06-41-0x900-1500k_hk2e2y.mp4',
+            },
+            {
+                  id: '19',
+                  category: 'women',
+                  subCategory: 'Stitched Suit',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744907307/NMSAS6419_404-FAWN_101_swnwpp.avif',
+                  price: '5500',
+                  name: 'Fawn Bel Buti Patterned Straight Suit',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744907439/switcheddress3_jnj5yj.mp4',
+            },
+            {
+                  id: '20',
+                  category: 'women',
+                  subCategory: 'Stitched Suit',
+                  img: 'https://res.cloudinary.com/dnevq4wek/image/upload/v1744908131/stitched_suit_4_xosf05.avif',
+                  price: '14499',
+                  name: 'Fawn Bel Buti Patterned Straight Suit',
+                  video: 'https://res.cloudinary.com/dnevq4wek/video/upload/v1744908116/switcheddress4_ogtg6h.mp4',
+            },
+            {
+                  id: 21,
+                  category: 'men',
+                  subCategory: 'weding-w',
+                  name: "Cream Elegance Kurta Jacket Set",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/SHOS368D_304-Fawn_201_03-12-2024-09-15-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744544568/MENSTRENSHERVANI1_rahxfv.avif",
+                  price: '24499'
+            },
+            {
+                  id: 22,
+                  category: 'men',
+                  subCategory: 'Kurta Jacket',
+                  name: "Antique White Floral Printed Jacket Set",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/JOSK017-303_25-05-2023-11-44-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744553270/kurthabiscuttrend_ybrjwh.avif",
+                  price: '9000'
+            },
+            {
+                  id: 23,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Light Blue Blended Cotton Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPOSK722_341-Light%20Blue_201_14-10-2024-05-27-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554015/menskurthablue_jj5bga.avif",
+                  price: '2500'
+            },
+            {
+                  id: 24,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Black Geometric Patterned Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPSH6740_301-BLACK_201_13-10-2024-09-51-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554160/BLACKKURTHAMEN_c9v0vj.avif",
+                  price: '3000'
+            },
+            {
+                  id: 25,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Pastel Green Viscose Blend Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPOSK681_372-PASTEL%20GREEN_201_14-10-2024-05-27-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554378/LIGHTGREENKURTHAMEN_m3882k.avif",
+                  price: '2800'
+            },
+            {
+                  id: 26,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Mustard Yellow Silk Blend Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPOSK722_312-MUSTARD%20YELLOW_201_14-10-2024-05-27-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554479/Yellowkurthamen_lq6s1s.avif",
+                  price: '3200'
+            },
+            {
+                  id: 27,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Peach Geometric Patterned Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPSH6740_309-PEACH_201_13-10-2024-09-51-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554605/peachkurthamen_nffv0k.avif",
+                  price: '2900'
+            },
+            {
+                  id: 28,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Teal Blue Silk Blend Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPOSK681_351-TEAL%20BLUE_201_14-10-2024-05-27-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554707/tealkurthamen_d08620.avif",
+                  price: '3500'
+            },
+            {
+                  id: 29,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Rose Pink Blended Cotton Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPOSK722_311-ROSE%20PINK_201_14-10-2024-05-27-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554807/pinkkurthamen_b05q40.avif",
+                  price: '2700'
+            },
+            {
+                  id: 30,
+                  category: 'men',
+                  subCategory: 'Kurta Pajama',
+                  name: "Grey Geometric Patterned Kurta Pajama",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/CPSH6740_307-GREY_201_13-10-2024-09-51-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744554900/greykurthamen_a6j8ml.avif",
+                  price: '3100'
+            },
+            {
+                  id: 31,
+                  category: 'men',
+                  subCategory: 'Sherwani',
+                  name: "Maroon Jacquard Sherwani with Zari Work",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/SHOS237_426-MAROON_201_17-09-2024-05-59-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744555024/sherwanimarron_m4q0j6.avif",
+                  price: '18000'
+            },
+            {
+                  id: 32,
+                  category: 'men',
+                  subCategory: 'Sherwani',
+                  name: "Navy Blue Velvet Sherwani with Gold Embroidery",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/SHOS237_424-NAVY_201_17-09-2024-05-59-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744555138/sherwaninavyblue_n8b64e.avif",
+                  price: '22000'
+            },
+            {
+                  id: 33,
+                  category: 'men',
+                  subCategory: 'Sherwani',
+                  name: "Cream Silk Sherwani with Green Brocade",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/SHOS237_304-CREAM_201_17-09-2024-05-59-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744555239/sherwanibrocode_qj896n.avif",
+                  price: '25000'
+            },
+            {
+                  id: 34,
+                  category: 'men',
+                  subCategory: 'Sherwani',
+                  name: "Black Self-Design Sherwani with Mandarin Collar",
+                  video: "https://manyavar.scene7.com/is/content/manyavar/SHOS237_301-BLACK_201_17-09-2024-05-59-0x900-1500k",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1744555355/sherwaniblack_b3f9x5.avif",
+                  price: '20000'
+            },
+            {
+                  id: 35,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Elegant Ceramic Vase",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745064789/vace1_eztq6q.avif",
+                  price: '1200'
+            },
+            {
+                  id: 36,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Abstract Wall Art Canvas",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745064883/wallart1_h0z1u2.avif",
+                  price: '3500'
+            },
+            {
+                  id: 37,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Decorative Throw Pillow",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065008/pillows_f2klyr.avif",
+                  price: '800'
+            },
+            {
+                  id: 38,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Scented Candle Set",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065116/candle_q9y59a.avif",
+                  price: '950'
+            },
+            {
+                  id: 39,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Handcrafted Wooden Sculpture",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065207/sculpture_d0c91w.avif",
+                  price: '2800'
+            },
+            {
+                  id: 40,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Modern Table Lamp",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065289/lamp_s306w7.avif",
+                  price: '2200'
+            },
+            {
+                  id: 41,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Ceramic Planter with Stand",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065363/plant_l5n06j.avif",
+                  price: '1500'
+            },
+            {
+                  id: 42,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Geometric Patterned Rug",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065431/rug_x3p19s.avif",
+                  price: '4500'
+            },
+            {
+                  id: 43,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Minimalist Wall Clock",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065495/clock_wxgp6d.avif",
+                  price: '1800'
+            },
+            {
+                  id: 44,
+                  category: 'HomeDecor',
+                  subCategory: 'Home Decor',
+                  name: "Set of Decorative Books",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065565/book_n6m9yv.avif",
+                  price: '700'
+            },
+            {
+                  id: 45,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Dinosaur Print T-Shirt",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745065961/kids1_v3t1p0.avif",
+                  price: '450'
+            },
+            {
+                  id: 46,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Unicorn Sequin Dress",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066020/kids2_c1y2z3.avif",
+                  price: '800'
+            },
+            {
+                  id: 47,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Striped Cotton Shorts",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066074/kids3_m4n5o6.avif",
+                  price: '300'
+            },
+            {
+                  id: 48,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Animal Ear Hoodie",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066129/kids4_p7q8r9.avif",
+                  price: '600'
+            },
+            {
+                  id: 49,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Character Print Pajama Set",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066185/kids5_s0t1u2.avif",
+                  price: '550'
+            },
+            {
+                  id: 50,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Floral Romper",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066236/kids6_v3w4x5.avif",
+                  price: '700'
+            },
+            {
+                  id: 51,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Denim Overalls",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066291/kids7_y6z7a8.avif",
+                  price: '900'
+            },
+            {
+                  id: 52,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Polka Dot Skirt",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066345/kids8_b9c0d1.avif",
+                  price: '400'
+            },
+            {
+                  id: 53,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Raincoat with Hood",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066400/kids9_e2f3g4.avif",
+                  price: '750'
+            },
+            {
+                  id: 54,
+                  category: 'kids',
+                  subCategory: 'Kids Wear',
+                  name: "Graphic Tee",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066455/kids10_h5i6j7.avif",
+                  price: '350'
+            },
+            {
+                  id: 55,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Wooden Building Blocks",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066607/toy1_k8l9m0.avif",
+                  price: '600'
+            },
+            {
+                  id: 56,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Plush Teddy Bear",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066670/toy2_n1o2p3.avif",
+                  price: '500'
+            },
+            {
+                  id: 57,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Remote Control Car",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066723/toy3_q4r5s6.avif",
+                  price: '1200'
+            },
+            {
+                  id: 58,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Art and Craft Kit",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066779/toy4_t7u8v9.avif",
+                  price: '800'
+            },
+            {
+                  id: 59,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Educational Robot Kit",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066835/toy5_w0x1y2.avif",
+                  price: '2500'
+            },
+            {
+                  id: 60,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Dolls House",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066904/toy6_z3a4b5.avif",
+                  price: '3000'
+            },
+            {
+                  id: 61,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Puzzle Game",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745066956/toy7_c6d7e8.avif",
+                  price: '350'
+            },
+            {
+                  id: 62,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Toy Kitchen Set",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067008/toy8_f9g0h1.avif",
+                  price: '1800'
+            },
+            {
+                  id: 63,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Action Figure Collection",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067064/toy9_i2j3k4.avif",
+                  price: '900'
+            },
+            {
+                  id: 64,
+                  category: 'toys',
+                  subCategory: 'Toys',
+                  name: "Musical Instrument Toy",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067116/toy10_l5m6n7.avif",
+                  price: '700'
+            },
+            {
+                  id: 65,
+                  category: 'jewelry',
+                  subCategory: 'Necklace',
+                  name: "Elegant Pearl Necklace",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067272/jewellery1_o8p9q0.avif",
+                  price: '2500'
+            },
+            {
+                  id: 66,
+                  category: 'jewelry',
+                  subCategory: 'Earrings',
+                  name: "Diamond Stud Earrings",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067333/jewellery2_r1s2t3.avif",
+                  price: '8000'
+            },
+            {
+                  id: 67,
+                  category: 'jewelry',
+                  subCategory: 'Bracelet',
+                  name: "Silver Charm Bracelet",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067401/jewellery3_u4v5w6.avif",
+                  price: '1500'
+            },
+            {
+                  id: 68,
+                  category: 'jewelry',
+                  subCategory: 'Ring',
+                  name: "Sapphire Engagement Ring",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067459/jewellery4_x7y8z9.avif",
+                  price: '15000'
+            },
+            {
+                  id: 69,
+                  category: 'jewelry',
+                  subCategory: 'Pendant',
+                  name: "Gold Heart Pendant",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067516/jewellery5_a0b1c2.avif",
+                  price: '3000'
+            },
+            {
+                  id: 70,
+                  category: 'jewelry',
+                  subCategory: 'Anklet',
+                  name: "Delicate Anklet with Beads",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067575/jewellery6_d3e4f5.avif",
+                  price: '700'
+            },
+            {
+                  id: 71,
+                  category: 'jewelry',
+                  subCategory: 'Bangle',
+                  name: "Traditional Gold Bangle",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067634/jewellery7_g6h7i8.avif",
+                  price: '10000'
+            },
+            {
+                  id: 72,
+                  category: 'jewelry',
+                  subCategory: 'Cufflinks',
+                  name: "Personalized Cufflinks",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067690/jewellery8_j9k0l1.avif",
+                  price: '1800'
+            },
+            {
+                  id: 73,
+                  category: 'jewelry',
+                  subCategory: 'Brooch',
+                  name: "Vintage Flower Brooch",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067746/jewellery9_m2n3o4.avif",
+                  price: '1200'
+            },
+            {
+                  id: 74,
+                  category: 'jewelry',
+                  subCategory: 'Set',
+                  name: "Bridal Jewelry Set",
+                  img: "https://res.cloudinary.com/dnevq4wek/image/upload/v1745067808/jewellery10_p5q6r7.avif",
+                  price: '25000'
+            },
+      ];
+
+      // Get references to elements
+      const allButton = document.getElementById('a');
+      const homeDecorButton = document.getElementById('b');
+      const jewelryButton = document.getElementById('c');
+      const womenButton = document.getElementById('d'); // Corrected ID for Women's Wear button
+      const menButton = document.getElementById('e');
+      const kidsButton = document.getElementById('f');
+      const toysButton = document.getElementById('e1'); // Note: 'e1' as per your HTML
+      const filterButton = document.getElementById('fill'); // If you plan to use a separate filter button
+      const productsContainer = document.getElementsByClassName('containers')[0]; // Get the first element with class 'containers'
+
+      // Function to render products
+      function renderProducts(productsToDisplay) {
+            productsContainer.innerHTML = ''; // Clear existing products
+
+            if (productsToDisplay.length === 0) {
+                  productsContainer.innerHTML = '<p style="text-align: center; color: #666;">No products found for this category.</p>';
+                  return;
+            }
+
+            productsToDisplay.forEach(product => {
+                  const productCard = document.createElement('div');
+                  productCard.classList.add('product-card'); // Add a class for styling
+                  productCard.innerHTML = `
+            <img src="${product.img}" alt="${product.name}">
+            <div class="product-card-content">
+                <h3>${product.name}</h3>
+                <p>₹${product.price}</p>
+            </div>
+        `;
+                  productsContainer.appendChild(productCard); // Append to the container
+            });
+      }
+
+      // Event Listeners for category buttons
+      allButton.addEventListener('click', () => {
+            renderProducts(products); // Display all products
+      });
+
+      womenButton.addEventListener('click', () => {
+            // Filter products where category is 'women'
+            const womenProducts = products.filter(product => product.category === 'women');
+            renderProducts(womenProducts);
+      });
+
+      menButton.addEventListener('click', () => {
+            // Filter products where category is 'men'
+            const menProducts = products.filter(product => product.category === 'men');
+            renderProducts(menProducts);
+      });
+
+      homeDecorButton.addEventListener('click', () => {
+            const homeDecorProducts = products.filter(product => product.category === 'HomeDecor');
+            renderProducts(homeDecorProducts);
+      });
+
+      jewelryButton.addEventListener('click', () => {
+            const jewelryProducts = products.filter(product => product.category === 'jewelry');
+            renderProducts(jewelryProducts);
+      });
+
+      kidsButton.addEventListener('click', () => {
+            const kidsProducts = products.filter(product => product.category === 'kids');
+            renderProducts(kidsProducts);
+      });
+
+      toysButton.addEventListener('click', () => {
+            const toysProducts = products.filter(product => product.category === 'toys');
+            renderProducts(toysProducts);
+      });
+
+      // Initial render of all products when the page loads
+      document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+      });
+</script>
+
+</html>

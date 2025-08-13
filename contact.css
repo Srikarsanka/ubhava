@@ -4,6 +4,10 @@
       box-sizing: border-box;
    
 }
+html {
+      scroll-behavior: smooth;
+    }
+    
 @font-face {
       font-family: 'MyCustomFont';
       src: url('fonts/GeosansLight.ttf') format('truetype');
@@ -70,13 +74,13 @@
 }
 #hero {
       position: relative;
-      height: 100vh;
+      height: 200vh;
       width: 100vw;
       overflow: hidden;
   }
   
   #hero img {
-      position: absolute;
+      position: absolute; 
       top: 0;
       left: 0;
       width: 100%;
@@ -87,11 +91,11 @@
   
   .hero-content {
       position: absolute;
-      top: 50%;
-      left: 80%;
+      top: 25%;
+      left: 75%;
       border: 1px solid #4a0101;
       height:100vh;
-      width:50vw;
+      width:0vw;
       border-top:none;
       transform: translate(-50%, -50%);
       /* text-align: center; */
