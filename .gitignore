@@ -1,1 +1,4 @@
-.vercel
+﻿.vercel
+.env
+server/.env
+db_export/
