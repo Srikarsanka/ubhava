@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const connectDB = async () => {
     try {
         if (!process.env.MONGO_URI) {
             console.warn("⚠️  WARNING: MONGO_URI is missing. Defaulting to Localhost (This will FAIL on Render/Cloud).");
