@@ -382,17 +382,25 @@ function showProductModal(container) {
       const nameLower = name.toLowerCase();
 
       // ---------------------------------------------------------
-      // DETECT CATEGORY & CONTEXT
+      // DETECT CATEGORY & CONTEXT (Robust Fallback)
       // ---------------------------------------------------------
-      const targetAudience = container.getAttribute("data-target-audience");
-      const isMens = targetAudience === 'men' || parentCat === 'men';
-      const isKids = targetAudience === 'kids' || parentCat === 'kids';
-      const isWomen = targetAudience === 'women' || parentCat === 'women'; 
+      const targetAudience = container.getAttribute("data-target-audience") || "";
+      const parentCat = product.category || "";
+      const subCat = product.subCategory || "";
+      const nameLower = name.toLowerCase();
+
+      // Helper for Name Matching
+      const isType = (keywords) => keywords.some(k => nameLower.includes(k) || subCat.toLowerCase().includes(k) || parentCat.toLowerCase().includes(k));
+
+      const isSaree = isType(['saree', 'sari']);
+      const isLehenga = isType(['lehenga', 'choli', 'ghagra']) && !isType(['men', 'sherwani', 'kurta']);
       
-      const isSaree = cat === 'saree' || nameLower.includes('saree') || nameLower.includes('sari');
-      const isLehenga = !isMens && !isKids && (cat === 'lehenga' || nameLower.includes('lehenga'));
-      const isHomeDecor = ['home', 'wallart', 'HomeDecor'].includes(cat);
-      const isToysJewelry = ['toys', 'jew', 'jewellary'].includes(cat);
+      const isKids = targetAudience === 'kids' || parentCat === 'kids' || isType(['kid', 'boy', 'girl', 'child']);
+      const isMens = (targetAudience === 'men' || parentCat === 'men' || isType(['men', 'kurta', 'sherwani', 'jacket'])) && !isKids;
+      const isWomen = (targetAudience === 'women' || parentCat === 'women' || isType(['women', 'lady', 'ladies', 'gown', 'dress'])) && !isKids && !isMens;
+      
+      const isHomeDecor = isType(['home', 'decor', 'wall', 'art']);
+      const isToysJewelry = isType(['toy', 'jewelry', 'necklace', 'earring', 'bangle']);
 
       // ---------------------------------------------------------
       // DESCRIPTION LOGIC (DB + Rich Fallback)
