@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
-const connectDB = async () => {
     try {
+        if (!process.env.MONGO_URI) {
+            console.warn("⚠️  WARNING: MONGO_URI is missing. Defaulting to Localhost (This will FAIL on Render/Cloud).");
+        }
         const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/pride-ecommerce');
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
