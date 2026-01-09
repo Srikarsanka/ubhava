@@ -365,70 +365,79 @@ function attachProductEvents() {
   });
 }
 
-// Modal Logic - Restored & Refactored for Dynamic Data
+// Modal Logic - Restored Size Charts & Care Instructions
 function showProductModal(container) {
       const productId = container.getAttribute("id");
-      
-      // Find the full product object from the global 'products' array (loaded from API)
       const product = products.find(p => p.id == productId);
 
-      if (!product) {
-          console.error("Product data not found for ID:", productId);
-          return;
-      }
+      if (!product) { console.error("Product not found"); return; }
 
-      const img = product.img; // Use object data, not DOM attributes where possible
+      const img = product.img;
       const name = product.name;
-      // Calculate prices dynamically if needed, or use stored attributes
       const disprice = parseInt(container.getAttribute("data-discounted-price"));
       const orgprice = parseInt(container.getAttribute("data-original-price"));
       
-      // Categories
       const cat = product.subCategory || "";
       const parentCat = product.category || "";
-      
-      // ---------------------------------------------------------
-      // DYNAMIC DESCRIPTION (Fixes "Not Updating" Issue)
-      // ---------------------------------------------------------
-      // Use the description from the database. 
-      // If empty, fallback to the old generic text logic only as a safety net.
-      let descriptionHTML = "";
-      
-      if (product.description && product.description.trim().length > 0) {
-          descriptionHTML = `
-            <h4 style='color:#800000;margin-bottom:5px'>Description</h4>
-            <p class="modal-description" style="white-space: pre-line;">${product.description}</p>
-          `;
-      } else {
-          // Fallback logic if DB has no description (preserving old generic text style)
-          descriptionHTML = getFallbackDescription(name, cat, parentCat);
-      }
-
+      const nameLower = name.toLowerCase();
 
       // ---------------------------------------------------------
-      // SIZE SELECTOR LOGIC
+      // DETECT CATEGORY & CONTEXT
       // ---------------------------------------------------------
       const targetAudience = container.getAttribute("data-target-audience");
       const isMens = targetAudience === 'men' || parentCat === 'men';
       const isKids = targetAudience === 'kids' || parentCat === 'kids';
       const isWomen = targetAudience === 'women' || parentCat === 'women'; 
-      const nameLower = name.toLowerCase();
-      const isSaree = cat === 'saree' || nameLower.includes('saree') || nameLower.includes('sari');
-
-      let sizeOptionsHTML = "";
       
-      // Show sizes for Clothing (Men, Women, Kids) but NOT Saree (Free Size)
-      const showSizeSelector = (isMens || isKids || isWomen) && !isSaree && !['home', 'HomeDecor', 'jewellary', 'toys'].includes(cat);
+      const isSaree = cat === 'saree' || nameLower.includes('saree') || nameLower.includes('sari');
+      const isLehenga = !isMens && !isKids && (cat === 'lehenga' || nameLower.includes('lehenga'));
+      const isHomeDecor = ['home', 'wallart', 'HomeDecor'].includes(cat);
+      const isToysJewelry = ['toys', 'jew', 'jewellary'].includes(cat);
+
+      // ---------------------------------------------------------
+      // DESCRIPTION LOGIC (DB + Rich Fallback)
+      // ---------------------------------------------------------
+      let mainDescription = "";
+      
+      // 1. Use DB Description if available
+      if (product.description && product.description.trim().length > 0) {
+          mainDescription = `<p style="white-space: pre-line;">${product.description}</p>`;
+      } else {
+          // 2. Fallback to basic details if DB is empty
+          const colorMatch = name.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+/);
+          const extractedColor = colorMatch ? colorMatch[1] : "Multi-color";
+          mainDescription = `<p><strong>Color:</strong> ${extractedColor}<br><strong>Category:</strong> ${cat || parentCat}</p>`;
+      }
+
+      // 3. Append Rich CARE INSTRUCTIONS (The "stuff" user missed)
+      let careInstructions = "";
+      if (isSaree || isLehenga || (isWomen && !isToysJewelry && !isHomeDecor)) {
+          careInstructions = `<br><h5 style='color:#800000;'>Care Instructions</h5><ul style="font-size:0.9rem; padding-left:20px; color:#555;"><li>Dry clean recommended.</li><li>Store in a cool, dry place.</li><li>Steam iron matches best results.</li></ul>`;
+      } else if (isMens) {
+          careInstructions = `<br><h5 style='color:#800000;'>Care Instructions</h5><ul style="font-size:0.9rem; padding-left:20px; color:#555;"><li>Machine wash cold or dry clean.</li><li>Iron on low heat.</li></ul>`;
+      }
+
+      const fullDescriptionHTML = `
+        <h4 style='color:#800000;margin-bottom:5px'>Product Details</h4>
+        <div class="modal-description">
+            ${mainDescription}
+            ${careInstructions}
+        </div>
+      `;
+
+      // ---------------------------------------------------------
+      // SIZE SELECTOR
+      // ---------------------------------------------------------
+      let sizeOptionsHTML = "";
+      const showSizeSelector = (isMens || isKids || isWomen) && !isSaree && !isHomeDecor && !isToysJewelry;
 
       if (showSizeSelector) {
            let sizes = ["XS", "S", "M", "L", "XL", "XXL"];
            let label = "Select Size:";
-           
            if (isKids) {
                sizes = ["2-3Y", "3-4Y", "4-5Y", "5-6Y", "6-7Y", "7-8Y", "8-9Y", "9-10Y"];
                label = "Select Age:";
            }
-
            sizeOptionsHTML = `
             <div class="size-selector-container">
               <strong style="color:#0f346c;">${label}</strong>
@@ -439,7 +448,23 @@ function showProductModal(container) {
       }
 
       // ---------------------------------------------------------
-      // CONSTRUCT MODAL
+      // SIZE CHART TABLE (Restored)
+      // ---------------------------------------------------------
+      let chartHTML = "";
+      const showChart = showSizeSelector;
+      
+      if (showChart) {
+          if (isKids) {
+              chartHTML = `<table class="size-chart-table"><thead><tr><th>Age</th><th>Height</th><th>Chest</th></tr></thead><tbody><tr><td>2-3Y</td><td>36"</td><td>21"</td></tr><tr><td>4-5Y</td><td>42"</td><td>23"</td></tr><tr><td>6-7Y</td><td>48"</td><td>25"</td></tr></tbody></table>`;
+          } else if (isMens) {
+              chartHTML = `<table class="size-chart-table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th></tr></thead><tbody><tr><td>S</td><td>38"</td><td>28"</td></tr><tr><td>M</td><td>40"</td><td>29"</td></tr><tr><td>L</td><td>42"</td><td>30"</td></tr><tr><td>XL</td><td>44"</td><td>31"</td></tr></tbody></table>`;
+          } else {
+               chartHTML = `<table class="size-chart-table"><thead><tr><th>Size</th><th>Bust</th><th>Waist</th></tr></thead><tbody><tr><td>S</td><td>34"</td><td>28"</td></tr><tr><td>M</td><td>36"</td><td>30"</td></tr><tr><td>L</td><td>38"</td><td>32"</td></tr><tr><td>XL</td><td>40"</td><td>34"</td></tr></tbody></table>`;
+          }
+      }
+
+      // ---------------------------------------------------------
+      // CONSTRUCT MODAL DOM
       // ---------------------------------------------------------
       const modalContainer = document.createElement("div");
       modalContainer.className = "product-modal-container";
@@ -454,16 +479,10 @@ function showProductModal(container) {
 
       document.body.style.overflow = "hidden";
 
-      // Wishlist State
       const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
       const isWishlisted = wishlist.some(item => item.name === name);
       const wishlistBtnText = isWishlisted ? "❤️ Wishlisted" : "♡ Wishlist";
       const wishlistBtnClass = isWishlisted ? "btn-secondary active" : "btn-secondary";
-
-      // Size Chart HTML (Simplified for now, can be expanded if users need it back)
-      const showChart = showSizeSelector;
-      const chartHTML = showChart ? `<div style="margin-top:10px; font-size:0.9rem; color:#0f346c; cursor:pointer; text-decoration:underline;">View Size Chart (Standard)</div>` : '';
-
 
       modalContainer.innerHTML = `
         <button class="close-modal-btn" id="closeModal">✕</button>
@@ -479,11 +498,18 @@ function showProductModal(container) {
                     <span style="color:green; font-weight:600; font-size:0.9rem;">${Math.round(((orgprice-disprice)/orgprice)*100)}% OFF</span>
                 </div>
                 
-                <div class="modal-desc-scroll-area" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
-                    ${descriptionHTML}
+                <div class="modal-desc-scroll-area" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                    ${fullDescriptionHTML}
                 </div>
 
                 ${sizeOptionsHTML}
+
+                ${showChart ? `
+                 <button class="btn-link" id="chartBtn" style="margin-top:10px;">View Size Chart</button>
+                 <div id="sizeChartDisplay" class="size-chart-container" style="display:none; margin-top:10px;">
+                    <div style="font-weight:bold; color:#0f346c; margin-bottom:5px;">Size Chart (Inches)</div>
+                    ${chartHTML}
+                 </div>` : ''}
 
                 <div class="action-buttons" style="margin-top: 20px;">
                     <button class="btn-primary" id="addToCart">Add to Cart</button>
@@ -507,6 +533,22 @@ function showProductModal(container) {
       
       modalContainer.querySelector("#closeModal").addEventListener("click", closeValues);
       overlay.addEventListener("click", closeValues);
+
+      // Chart Toggle
+      const chartBtn = modalContainer.querySelector("#chartBtn");
+      if(chartBtn) {
+          chartBtn.addEventListener("click", (e) => {
+              e.preventDefault();
+              const display = modalContainer.querySelector("#sizeChartDisplay");
+              if(display.style.display === "none") {
+                  display.style.display = "block";
+                  chartBtn.textContent = "Hide Size Chart";
+              } else {
+                  display.style.display = "none";
+                  chartBtn.textContent = "View Size Chart";
+              }
+          });
+      }
 
       // Size Selection
       let selectedSize = null;
@@ -565,7 +607,6 @@ function showProductModal(container) {
       
       // Wishlist
       modalContainer.querySelector("#addToWishlist").addEventListener("click", (e) => {
-          // ... (Existing wishlist logic logic, keeping it simple for now)
           const btn = e.target;
           let currentWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
           const existsIndex = currentWishlist.findIndex(item => item.name === name);
@@ -585,18 +626,6 @@ function showProductModal(container) {
       });
 }
 
-// Fallback Description Helper (Restoring the 'feeling' of the old descriptions if DB is empty)
-function getFallbackDescription(name, cat, parentCat) {
-    const nameLower = name.toLowerCase();
-    
-    if (cat === 'saree' || nameLower.includes('saree')) {
-        return `<p>Traditional Indian Saree matching the style of ${name}. Elegant, timeless, and perfect for special occasions.</p>`;
-    }
-    if (parentCat === 'men' || targetAudience === 'men') {
-        return `<p>Premium Men's wear. Crafted for comfort and style, suitable for festive and casual events.</p>`;
-    }
-    return `<p>High quality ${name}. Authentic Indian craftsmanship.</p>`;
-}
 
 
 
