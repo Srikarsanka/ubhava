@@ -35,7 +35,16 @@ const Auth = {
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
+            const contentType = response.headers.get("content-type");
+            let data;
+            
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                // If backend crashes/returns HTML (500/502), read as text
+                const text = await response.text();
+                throw new Error(`Server Error: ${response.status} ${response.statusText}\n${text.substring(0, 100)}...`);
+            }
 
             if (response.ok) {
                 this.user = data;
