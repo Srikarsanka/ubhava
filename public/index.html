@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>UDBHAVA - The Origin of Indian Handcraft</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="index.css">
+      <link rel="icon" href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+      <script src="https://js.puter.com/v2/"></script>
+</head>
+
+<body>
+
+      <!-- Navbar -->
+      <nav class="navbar">
+            <div class="logo">
+                  <a href="index.html">
+                        <h1>UDBHAVA</h1>
+                  </a>
+            </div>
+            <div class="nav-links">
+                  <a href="index.html">Home</a>
+                  <a href="shop.html">Shop</a>
+                  <a href="heritage.html">Heritage</a>
+                  <a href="contact.html">Contact</a>
+
+                  <a href="cart.html">Cart</a>
+                  <a id="nav-login-btn" href="#" style="font-weight: bold; color: #ff7b00;">Login</a>
+                  <span id="nav-user-display"
+                        style="display:none; color: #0f346c; margin-right: 10px; cursor: pointer; font-weight: 500;"
+                        title="View Profile"></span>
+                  <a id="nav-logout-btn" href="#" style="display:none; color: red;">Logout</a>
+            </div>
+      </nav>
+
+      <!-- Auth Modal -->
+      <div id="auth-modal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+            <div
+                  style="background: white; padding: 30px; border-radius: 10px; width: 400px; text-align: center; position: relative;">
+                  <span id="auth-modal-close"
+                        style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
+                  <h2 id="auth-modal-title" style="color: #800000; margin-bottom: 20px;">Login</h2>
+
+                  <!-- Login Form -->
+                  <div id="login-form-container">
+                        <form id="auth-login-form">
+                              <input type="email" name="email" placeholder="Email Address" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="password" name="password" placeholder="Password" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <button type="submit"
+                                    style="width: 100%; padding: 12px; background: #ff7b00; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">LOGIN</button>
+                        </form>
+                        <p style="margin-top: 15px;">New here? <a href="#" id="switch-to-register"
+                                    style="color: #0f346c; font-weight: bold;">Sign Up</a></p>
+                  </div>
+
+                  <!-- Register Form -->
+                  <div id="register-form-container" style="display: none;">
+                        <form id="auth-register-form">
+                              <input type="text" name="fullName" placeholder="Full Name" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="email" name="email" placeholder="Email Address" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="text" name="phone" placeholder="Phone Number"
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="password" name="password" placeholder="Password" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <button type="submit"
+                                    style="width: 100%; padding: 12px; background: #0f346c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">REGISTER</button>
+                        </form>
+                        <p style="margin-top: 15px;">Already have an account? <a href="#" id="switch-to-login"
+                                    style="color: #ff7b00; font-weight: bold;">Login</a></p>
+                  </div>
+            </div>
+      </div>
+
+      <!-- Hero Section -->
+      <header class="hero">
+            <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744261361/hero_msh6sm.png"
+                  alt="Heritage Texture" class="hero-bg">
+            <div class="hero-content">
+                  <h2>The Origin of Indian Handcraft</h2>
+                  <p>Timeless traditions, woven for the modern soul.</p>
+                  <a href="shop.html" class="btn-editorial">Explore Collection</a>
+            </div>
+      </header>
+
+      <!-- Dynamic Festival Layer (Injected via JS) -->
+      <div id="dynamic-content-layer"></div>
+
+      <!-- Editorial Collections -->
+      <section class="container">
+            <div class="spacer-md"></div>
+            <center>
+                  <h2 class="editorial-heading">Curated Categories</h2>
+            </center>
+
+            <div class="grid-gallery">
+                  <a href="shop.html#wed" class="gallery-item">
+                        <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744388117/weddingcollection_yegzng.jpg"
+                              alt="Wedding Collection">
+                        <div class="gallery-caption">
+                              <h3>Wedding Essentials</h3>
+                        </div>
+                  </a>
+                  <a href="shop.html#women" class="gallery-item">
+                        <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744387946/womenwear_trlaal.avif"
+                              alt="Women's Wear">
+                        <div class="gallery-caption">
+                              <h3>Women's Wear</h3>
+                        </div>
+                  </a>
+                  <a href="shop.html#men" class="gallery-item">
+                        <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744387943/meanswear_dafnpn.avif"
+                              alt="Men's Wear">
+                        <div class="gallery-caption">
+                              <h3>Men's Wear</h3>
+                        </div>
+                  </a>
+                  <a href="shop.html#decor" class="gallery-item">
+                        <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744387944/homedecor_a62e6u.jpg"
+                              alt="Home Decor">
+                        <div class="gallery-caption">
+                              <h3>Home Decor</h3>
+                        </div>
+                  </a>
+            </div>
+      </section>
+
+      <!-- Feature Block: Toys (Example of Editorial Layout) -->
+      <section class="feature-block">
+            <div class="feature-image">
+                  <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744388327/desbag_aw0oku.webp"
+                        alt="Handcrafted Process">
+            </div>
+            <div class="feature-text">
+                  <h2>Handcrafted Wonders</h2>
+                  <p>
+                        From pull-along turtles to rainbow stackers – every toy tells a story of tradition, color, and
+                        joy.
+                        Slow down and appreciate the imperfections of the human hand.
+                  </p>
+                  <br>
+                  <a href="shop.html#toy" class="btn-editorial">Shop Toys</a>
+            </div>
+      </section>
+
+      <!-- Feature Block: Jewellery -->
+      <section class="feature-block reverse">
+            <div class="feature-image">
+                  <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744646590/jewellarymain_mlfnov.png"
+                        alt="Jewellery Collection">
+            </div>
+            <div class="feature-text">
+                  <h2>Golden Heritage</h2>
+                  <p>
+                        Our 1gm gold jewelry blends ancient traditions with a modern touch.
+                        Perfect for weddings, parties, or simply celebrating yourself.
+                  </p>
+                  <br>
+                  <a href="shop.html#je" class="btn-editorial">View Treasures</a>
+            </div>
+      </section>
+
+      <!-- Value Proposition Banner -->
+      <section class="value-banner">
+            <div class="container">
+                  <div class="section-header">
+                        <h2>Why Choose UDBHAVA</h2>
+                        <span class="section-tagline">Authenticity in Every Thread</span>
+                  </div>
+                  <div class="value-grid">
+                        <div class="value-item scroll-reveal">
+                              <div class="value-icon"><i class="fas fa-paintbrush"></i></div>
+                              <h3>Handcrafted Excellence</h3>
+                              <p>Each piece is meticulously crafted by master artisans with generations of expertise.
+                              </p>
+                        </div>
+                        <div class="value-item scroll-reveal" style="transition-delay: 0.1s;">
+                              <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                              <h3>Sustainable Practices</h3>
+                              <p>We use eco-friendly materials and traditional techniques that respect nature.</p>
+                        </div>
+                        <div class="value-item scroll-reveal" style="transition-delay: 0.2s;">
+                              <div class="value-icon"><i class="far fa-gem"></i></div>
+                              <h3>Premium Quality</h3>
+                              <p>Superior materials and attention to detail ensure products that last a lifetime.</p>
+                        </div>
+                        <div class="value-item scroll-reveal" style="transition-delay: 0.3s;">
+                              <div class="value-icon"><i class="fas fa-hands-holding-circle"></i></div>
+                              <h3>Artisan Support</h3>
+                              <p>Your purchase directly supports traditional craftsmen and their communities.</p>
+                        </div>
+                  </div>
+            </div>
+      </section>
+
+      <!-- Testimonial Section -->
+      <section class="testimonial-section">
+            <div class="container">
+                  <div class="testimonial-slider">
+                        <div class="testimonial-text">
+                              "UDBHAVA has redefined my understanding of Indian craftsmanship. Each piece tells a story
+                              of tradition, passion, and unparalleled artistry."
+                        </div>
+                        <div class="testimonial-author">— Priya Sharma, Delhi</div>
+                  </div>
+            </div>
+      </section>
+
+      <!-- Newsletter Section -->
+      <section class="newsletter-section">
+            <div class="container">
+                  <div class="newsletter-content">
+                        <div class="section-header">
+                              <h2>Stay Updated</h2>
+                              <span class="section-tagline">Join Our Heritage Journey</span>
+                        </div>
+                        <p>Subscribe to receive stories of craftsmanship, new arrivals, and exclusive offers.</p>
+                        <form class="newsletter-form">
+                              <input type="email" placeholder="Your email address" class="newsletter-input" required>
+                              <button type="submit" class="btn-editorial">Subscribe</button>
+                        </form>
+                  </div>
+            </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+            <div class="container">
+                  <div class="footer-grid">
+                        <div class="footer-col footer-brand">
+                              <h4>UDBHAVA</h4>
+                              <p>Celebrating the origin of Indian handcraft. Where every thread weaves a story of
+                                    tradition, passion, and timeless beauty.</p>
+                              <div class="social-links">
+                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                    <a href="#"><i class="fab fa-youtube"></i></a>
+                              </div>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Collections</h4>
+                              <ul>
+                                    <li><a href="shop.html#wed"><i class="fas fa-chevron-right"></i> Wedding
+                                                Collection</a></li>
+                                    <li><a href="shop.html#women"><i class="fas fa-chevron-right"></i> Women's Wear</a>
+                                    </li>
+                                    <li><a href="shop.html#men"><i class="fas fa-chevron-right"></i> Men's Wear</a></li>
+                                    <li><a href="shop.html#decor"><i class="fas fa-chevron-right"></i> Home Decor</a>
+                                    </li>
+                                    <li><a href="shop.html#je"><i class="fas fa-chevron-right"></i> Heritage
+                                                Jewellery</a></li>
+                              </ul>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Discover</h4>
+                              <ul>
+                                    <li><a href="heritage.html"><i class="fas fa-chevron-right"></i> Our Story</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Artisan Stories</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Craftsmanship</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Sustainability</a></li>
+                                    <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                              </ul>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Support</h4>
+                              <ul>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Shipping & Returns</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Size Guide</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Care Instructions</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                              </ul>
+                        </div>
+                  </div>
+                  <div class="copyright">
+                        &copy; 2025 UDBHAVA - The Origin of Indian Handcraft. All rights reserved. Crafted with ❤️ in
+                        India.
+                  </div>
+            </div>
+      </footer>
+
+      <!-- Templates for Dynamic Injection (Used by festival_system.js) -->
+      <template id="tmpl-editorial-section">
+            <section class="editorial-section">
+                  <div class="editorial-text">
+                        <h4 class="festival-tag">Season's Edit</h4>
+                        <h2 class="festival-title"></h2>
+                        <p class="festival-desc"></p>
+                        <br>
+                        <a href="#" class="btn-editorial festival-cta">explore</a>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Festival Mood" class="festival-img">
+                  </div>
+            </section>
+      </template>
+
+      <script src="festival_system.js"></script>
+      <script src="js/auth.js"></script>
+      <script src="index.js"></script>
+</body>
+
+</html>

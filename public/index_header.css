@@ -1,0 +1,125 @@
+/* 
+  UDBHAVA - Editorial Heritage Design System 
+  Palette: #fffaf0 (Base), #800000 (Text/Accent), #ff7b00 (Highlight)
+*/
+
+@font-face {
+      font-family: 'GeosansLight';
+      src: url('fonts/GeosansLight.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+}
+
+:root {
+      --bg-color: #fffaf0;
+      --text-color: #800000;
+      --accent-color: #ff7b00;
+      --font-main: 'GeosansLight', sans-serif;
+      --font-serif: 'Times New Roman', serif;
+      --spacing-unit: 8px;
+      --container-width: 1400px;
+}
+
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+}
+
+body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+}
+
+a {
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.3s ease;
+}
+
+a:hover {
+      opacity: 0.7;
+}
+
+.container {
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 4vw;
+}
+
+.spacer-md {
+      height: 80px;
+}
+
+/* --- Premium Navbar --- */
+.navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4vw;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      background: transparent;
+      transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.navbar.scrolled {
+      background: rgba(255, 250, 240, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 1rem 4vw;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+      border-bottom: 1px solid rgba(128, 0, 0, 0.05);
+}
+
+.navbar .logo h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      letter-spacing: 0.2em;
+      color: var(--text-color);
+      font-weight: 400;
+}
+
+.nav-links {
+      display: flex;
+      gap: 3.5rem;
+}
+
+.nav-links a {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-color);
+      position: relative;
+      padding-bottom: 5px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+}
+
+.nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: 0;
+      left: 0;
+      background-color: var(--accent-color);
+      transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.nav-links a:hover {
+      color: var(--accent-color);
+      opacity: 1;
+}
+
+.nav-links a:hover::after {
+      width: 100%;
+}
+
+/* --- Enhanced Hero Section --- */

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>UDBHAVA - THE ORGIN OF INDIAN HANDCRAFT</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="shop.css">
+      <link rel=icon href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+<link rel="stylesheet" href="index.css">
+<script src="https://js.puter.com/v2/"></script>
+
+<body>
+
+
+      <!-- Navbar -->
+      <nav class="navbar">
+            <div class="logo">
+                  <a href="index.html">
+                        <h1>UDBHAVA</h1>
+                  </a>
+            </div>
+            <div class="nav-links">
+                  <a href="index.html">Home</a>
+                  <a href="shop.html">Shop</a>
+                  <a href="heritage.html">Heritage</a>
+                  <a href="contact.html">Contact</a>
+
+                  <a href="cart.html">Cart</a>
+
+                  <!-- Auth Links -->
+                  <a id="nav-login-btn" href="#" style="font-weight: bold; color: #ff7b00;">Login</a>
+                  <span id="nav-user-display"
+                        style="display:none; color: #0f346c; margin-right: 10px; cursor: pointer; font-weight: 500; border-bottom: 2px solid transparent;"
+                        onmouseover="this.style.color='#ff7b00'" onmouseout="this.style.color='#0f346c'"
+                        title="View Profile"></span>
+                  <a id="nav-logout-btn" href="#" style="display:none; color: red;">Logout</a>
+            </div>
+      </nav>
+
+      <!-- Auth Modal -->
+      <div id="auth-modal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+            <div
+                  style="background: white; padding: 30px; border-radius: 10px; width: 400px; text-align: center; position: relative;">
+                  <span id="auth-modal-close"
+                        style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
+                  <h2 id="auth-modal-title" style="color: #800000; margin-bottom: 20px;">Login</h2>
+
+                  <!-- Login Form -->
+                  <div id="login-form-container">
+                        <form id="auth-login-form">
+                              <input type="email" name="email" placeholder="Email Address" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="password" name="password" placeholder="Password" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <button type="submit"
+                                    style="width: 100%; padding: 12px; background: #ff7b00; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">LOGIN</button>
+                        </form>
+                        <p style="margin-top: 15px;">New here? <a href="#" id="switch-to-register"
+                                    style="color: #0f346c; font-weight: bold;">Sign Up</a></p>
+                  </div>
+
+                  <!-- Register Form -->
+                  <div id="register-form-container" style="display: none;">
+                        <form id="auth-register-form">
+                              <input type="text" name="fullName" placeholder="Full Name" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="email" name="email" placeholder="Email Address" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="text" name="phone" placeholder="Phone Number"
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="password" name="password" placeholder="Password" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <button type="submit"
+                                    style="width: 100%; padding: 12px; background: #0f346c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">REGISTER</button>
+                        </form>
+                        <p style="margin-top: 15px;">Already have an account? <a href="#" id="switch-to-login"
+                                    style="color: #ff7b00; font-weight: bold;">Login</a></p>
+                  </div>
+            </div>
+      </div>
+
+      <div id="hero">
+            <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744786622/SHOPHEADER_aw8fxs.png" alt="">
+      </div>
+      <br><br><br><br>
+      <center>
+            <h2>SHOP BY CATEGORIES</h2>
+      </center>
+      <div class="categories">
+            <button id="a">ALL</button>
+            <button id="b" cat="HomeDecor">HOME DECOR & WALL PAINTS</button>
+            <button id="c">JEWELRY</button>
+            <button id="d" cat="women">WOMEN'S WEAR</button>
+            <button id="e" cat="men">MEN'S WEAR</button>
+            <button id="f" cat="kids">KID'S WEAR</button>
+            <button id="e1" cat="toys">TOYS</button>
+            <button id="fill">filter</button>
+
+      </div>
+      <!-- Price Range Filter Section -->
+      <div class="price-filter-section"
+            style="text-align: center; margin: 20px 0; background: rgba(255, 123, 0, 0.05); border-radius: 15px; padding: 20px;">
+            <h3 style="color: #800000; margin-bottom: 15px;">Filter by Price Range</h3>
+            <div class="price-range-controls"
+                  style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+                  <label for="minPrice" style="color: #383838; font-weight: 500;">Min Price: ₹</label>
+                  <input type="number" id="minPrice" placeholder="0"
+                        style="width: 100px; padding: 8px; border: 1px solid #ff7b00; border-radius: 5px;">
+
+                  <label for="maxPrice" style="color: #383838; font-weight: 500;">Max Price: ₹</label>
+                  <input type="number" id="maxPrice" placeholder="50000"
+                        style="width: 100px; padding: 8px; border: 1px solid #ff7b00; border-radius: 5px;">
+
+                  <button id="applyPriceFilter"
+                        style="background: #ff7b00; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Apply</button>
+                  <button id="clearPriceFilter"
+                        style="background: transparent; color: #ff7b00; border: 1px solid #ff7b00; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Clear</button>
+            </div>
+      </div>
+
+      <!-- Dynamic Category Heading -->
+      <div id="categoryHeading" style="text-align: center; margin: 30px 0;">
+            <h2 id="categoryTitle"
+                  style="color: #0f346c; font-size: 2.5vw; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #ff7b00; display: inline-block;">
+                  All Products</h2>
+      </div>
+
+      <!-- Default Content Container (shown only when ALL is selected) -->
+      <div id="defaultContent" style="margin: 20px 0;">
+
+            <p style="text-align: center; color: #666; font-size: 1.2em;">Welcome to UDBHAVA - Discover our complete
+                  collection of handcrafted items</p>
+      </div>
+
+
+
+      <div class="containers">
+
+            <!-- WOMEN'S WEAR SECTION -->
+            <section class="category-section" data-category="women">
+                  <div class="category-main-header">
+                        <h1>WOMEN'S WEAR</h1>
+                  </div>
+
+                  <!-- Sarees Subsection -->
+                  <div class="subcategory-section" data-subcategory="saree">
+                        <h2 class="subcategory-title">Sarees</h2>
+                        <div class="category-image-wrapper">
+                              <img src="assets/state_kerala.png" alt="Sarees Collection">
+                        </div>
+                        <div class="container" id="saree"></div>
+                  </div>
+
+                  <!-- Lehengas Subsection -->
+                  <div class="subcategory-section" data-subcategory="lehenga">
+                        <h2 class="subcategory-title">Lehengas</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://www.manyavar.com/on/demandware.static/-/Library-Sites-ManyavarSharedLibrary/default/dw82b72dcf/images/sbm.jpg"
+                                    alt="Lehengas Collection">
+                        </div>
+                        <div class="container" id="lehenga"></div>
+                  </div>
+
+                  <!-- Stitched Suit Subsection -->
+                  <div class="subcategory-section" data-subcategory="Stitched Suit">
+                        <h2 class="subcategory-title">Stitched Suit</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://manyavar.scene7.com/is/image/manyavar/MOHEY_WOMEN%20LANDING%20PAGE_Desktop_2500x1042-01_17-09-2024-07-09?$WT_HP%2FMLP%2FWLP_Hero_D$"
+                                    alt="Stitched Suits Collection">
+                        </div>
+                        <div class="container" id="Stitched Suit"></div>
+                  </div>
+            </section>
+
+            <!-- MEN'S WEAR SECTION -->
+            <section class="category-section" data-category="men">
+                  <div class="category-main-header">
+                        <h1>MEN'S WEAR</h1>
+                  </div>
+
+                  <!-- Kurta Pajama Subsection -->
+                  <div class="subcategory-section" data-subcategory="Kurta Pajama">
+                        <h2 class="subcategory-title">Kurta Pajama</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://manyavar.scene7.com/is/image/manyavar/Men_s_Page_Redefine_Celebrations_D?$WT_MLP%2FWLP_Redefine%2FTrending_D$"
+                                    alt="Kurta Pajama Collection">
+                        </div>
+                        <div class="container" id="Kurta Pajama"></div>
+                  </div>
+
+                  <!-- Kurta Jacket Subsection -->
+                  <div class="subcategory-section" data-subcategory="Kurta Jacket">
+                        <h2 class="subcategory-title">Kurta Jacket</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://static3.azafashions.com/uploads/landing_page_section_content_image/1744960441356tarun-tahiliani-top.jpg"
+                                    alt="Kurta Jacket Collection">
+                        </div>
+                        <div class="container" id="Kurta Jacket"></div>
+                  </div>
+
+                  <!-- Sherwani Subsection -->
+                  <div class="subcategory-section" data-subcategory="sherwani">
+                        <h2 class="subcategory-title">Sherwani</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://www.manyavar.com/on/demandware.static/-/Library-Sites-ManyavarSharedLibrary/default/dwedc2408f/Blogs-Images/How%20to%20Style%20Printed%20Kurtas%20for%20Different%20Wedding%20Functions_D.jpg"
+                                    alt="Sherwani Collection">
+                        </div>
+                        <div class="container" id="sherwani"></div>
+                  </div>
+            </section>
+
+            <!-- WEDDING COLLECTION SECTION -->
+            <section class="category-section" data-category="wedding">
+                  <div class="category-main-header">
+                        <h1 style="color:rgb(56, 2, 2)">WEDDING COLLECTION</h1>
+                  </div>
+                  <div class="category-image-wrapper">
+                        <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744916416/men_s_wedding_mt5csz.png"
+                              alt="Wedding Collection">
+                  </div>
+                  <div class="container" id="weding-w"></div>
+            </section>
+
+            <!-- KIDS WEAR SECTION -->
+            <section class="category-section" data-category="kids">
+                  <div class="subcategory-section" data-subcategory="kids">
+                        <h2 class="subcategory-title">Kid's Wear</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://static3.azafashions.com/uploads/landing_page_section_content_image/1740145787038ready-to-ship-top.jpg"
+                                    alt="Kids Wear Collection">
+                        </div>
+                        <div class="container" id="kids"></div>
+                  </div>
+            </section>
+
+            <!-- HOME DECOR SECTION -->
+            <section class="category-section" data-category="HomeDecor">
+                  <div class="subcategory-section" data-subcategory="home">
+                        <h2 class="subcategory-title">Home Decor</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://cms.landmarkshops.in/cdn-cgi/image/w=1232,q=85,fit=cover/Home-Centre/Test-UI/Desktop-5-2-Decor-816x400-Block1-04Apr2025.jpg"
+                                    alt="Home Decor Collection">
+                        </div>
+                        <div class="container" id="home"></div>
+                  </div>
+
+                  <!-- Wall Accents Subsection -->
+                  <div class="subcategory-section" data-subcategory="wallart">
+                        <h2 class="subcategory-title">Wall Accents</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1745065771/wallaccentmain_ecw1wv.png"
+                                    alt="Wall Accents Collection">
+                        </div>
+                        <div class="container" id="wallart"></div>
+                  </div>
+            </section>
+
+            <!-- JEWELRY SECTION -->
+            <section class="category-section" data-category="jewellary">
+                  <div class="subcategory-section" data-subcategory="jew">
+                        <h2 class="subcategory-title">Jewellery</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1745218687/cardsopjewellary_mymsfz.webp"
+                                    alt="Jewellery Collection">
+                        </div>
+                        <div class="container" id="jew"></div>
+                  </div>
+            </section>
+
+            <!-- TOYS SECTION -->
+            <section class="category-section" data-category="toys">
+                  <div class="subcategory-section" data-subcategory="toys">
+                        <h2 class="subcategory-title">Toys</h2>
+                        <div class="category-image-wrapper">
+                              <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1745219810/toysmain_tso1c4.png"
+                                    alt="Toys Collection">
+                        </div>
+                        <div class="container" id="toys"></div>
+                  </div>
+            </section>
+
+      </div>
+      <!-- Footer Section -->
+      <!-- Footer -->
+      <footer>
+            <div class="container">
+                  <div class="footer-grid">
+                        <div class="footer-col footer-brand">
+                              <h4>UDBHAVA</h4>
+                              <p>Celebrating the origin of Indian handcraft. Where every thread weaves a story of
+                                    tradition, passion, and timeless beauty.</p>
+                              <div class="social-links">
+                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                                    <a href="#"><i class="fab fa-youtube"></i></a>
+                              </div>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Collections</h4>
+                              <ul>
+                                    <li><a href="shop.html#wed"><i class="fas fa-chevron-right"></i> Wedding
+                                                Collection</a></li>
+                                    <li><a href="shop.html#women"><i class="fas fa-chevron-right"></i> Women's Wear</a>
+                                    </li>
+                                    <li><a href="shop.html#men"><i class="fas fa-chevron-right"></i> Men's Wear</a></li>
+                                    <li><a href="shop.html#decor"><i class="fas fa-chevron-right"></i> Home Decor</a>
+                                    </li>
+                                    <li><a href="shop.html#je"><i class="fas fa-chevron-right"></i> Heritage
+                                                Jewellery</a></li>
+                              </ul>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Discover</h4>
+                              <ul>
+                                    <li><a href="heritage.html"><i class="fas fa-chevron-right"></i> Our Story</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Artisan Stories</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Craftsmanship</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Sustainability</a></li>
+                                    <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                              </ul>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Support</h4>
+                              <ul>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Shipping & Returns</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Size Guide</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Care Instructions</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                              </ul>
+                        </div>
+                  </div>
+                  <div class="copyright">
+                        &copy; 2025 UDBHAVA - The Origin of Indian Handcraft. All rights reserved. Crafted with ❤️ in
+                        India.
+                  </div>
+            </div>
+      </footer>
+</body>
+
+<!-- Import Auth Script -->
+<script src="js/auth.js"></script>
+
+<script src="products_data.js"></script>
+<script src="products_data.js"></script>
+<!-- index.js removed to avoid conflict with shop.js and old Auth logic -->
+<script src="shop.js"></script>
+
+</html>

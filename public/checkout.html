@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <title>UDBHAVA - Secure Checkout</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+      <link rel="stylesheet" href="index.css">
+      <link rel="stylesheet" href="checkout.css">
+      <style>
+            /* Additional specific styles for dynamic content */
+            .summary-item {
+                  display: flex;
+                  gap: 15px;
+                  margin-bottom: 15px;
+                  border-bottom: 1px solid #eee;
+                  padding-bottom: 15px;
+            }
+
+            .summary-img img {
+                  width: 60px;
+                  height: 80px;
+                  object-fit: cover;
+                  border-radius: 4px;
+            }
+
+            .summary-details h4 {
+                  margin: 0 0 5px 0;
+                  color: #0f346c;
+                  font-size: 1rem;
+            }
+
+            .summary-details p {
+                  margin: 0;
+                  color: #555;
+                  font-size: 0.9rem;
+            }
+
+            .summary-details .price {
+                  font-weight: bold;
+                  color: #800000;
+                  margin-top: 5px;
+            }
+
+            .total-row {
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 1.2rem;
+                  font-weight: bold;
+                  margin-top: 20px;
+                  padding-top: 10px;
+                  border-top: 2px solid #800000;
+                  color: #0f346c;
+            }
+
+            .place-order-btn {
+                  width: 100%;
+                  background-color: #800000;
+                  color: white;
+                  padding: 15px;
+                  border: none;
+                  border-radius: 5px;
+                  font-size: 1.1rem;
+                  cursor: pointer;
+                  margin-top: 20px;
+            }
+
+            .place-order-btn:disabled {
+                  background-color: #ccc;
+                  cursor: not-allowed;
+            }
+      </style>
+</head>
+
+<body>
+
+      <!-- Navbar -->
+      <nav class="navbar">
+            <div class="logo">
+                  <a href="index.html">
+                        <h1>UDBHAVA</h1>
+                  </a>
+            </div>
+            <div class="nav-links">
+                  <a href="index.html">Home</a>
+                  <a href="shop.html">Shop</a>
+                  <a href="heritage.html">Heritage</a>
+                  <a href="contact.html">Contact</a>
+                  <a href="cart.html">Cart</a>
+            </div>
+      </nav>
+
+      <div class="checkout-container" style="max-width: 1200px; margin: 120px auto 50px; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                  <h1
+                        style="color: #800000; border-bottom: 3px solid #ff7b00; display: inline-block; padding-bottom: 10px;">
+                        Secure Checkout
+                  </h1>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+
+                  <!-- Left: Shipping Form -->
+                  <div class="form-section">
+                        <h2 style="color: #0f346c; margin-bottom: 20px;">Shipping Details</h2>
+                        <form id="order-form">
+                              <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; color: #555;">Full Name</label>
+                                    <input type="text" id="fullName" required
+                                          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                              </div>
+                              <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; color: #555;">Phone Number</label>
+                                    <input type="tel" id="phone" required
+                                          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                              </div>
+                              <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; color: #555;">Street
+                                          Address</label>
+                                    <textarea id="street" required
+                                          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; height: 80px;"></textarea>
+                              </div>
+                              <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                    <div>
+                                          <label style="display: block; margin-bottom: 5px; color: #555;">City</label>
+                                          <input type="text" id="city" required
+                                                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
+                                    <div>
+                                          <label style="display: block; margin-bottom: 5px; color: #555;">State</label>
+                                          <input type="text" id="state" required
+                                                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                                    </div>
+                              </div>
+                              <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 5px; color: #555;">Pincode</label>
+                                    <input type="text" id="pincode" required
+                                          style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                              </div>
+
+                              <!-- Payment Options -->
+                              <div style="margin-bottom: 25px; border-top: 1px solid #eee; padding-top: 15px;">
+                                    <h3 style="color: #0f346c; margin-bottom: 15px;">Payment Method</h3>
+
+                                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                          <label
+                                                style="cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
+                                                <input type="radio" name="paymentMethod" value="Card">
+                                                <span><i class="far fa-credit-card"></i> Card</span>
+                                          </label>
+
+                                          <label
+                                                style="cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
+                                                <input type="radio" name="paymentMethod" value="UPI">
+                                                <span><i class="fas fa-mobile-alt"></i> UPI</span>
+                                          </label>
+
+                                          <label
+                                                style="cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; flex: 1;">
+                                                <input type="radio" name="paymentMethod" value="COD" checked>
+                                                <span><i class="fas fa-money-bill-wave"></i> Cash on Delivery</span>
+                                          </label>
+                                    </div>
+
+                                    <!-- Mock Card Details (Hidden by default) -->
+                                    <div id="card-details"
+                                          style="display: none; margin-top: 15px; background: #f9f9f9; padding: 15px; border-radius: 5px;">
+                                          <input type="text" placeholder="Card Number"
+                                                style="width: 100%; margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                          <div style="display: flex; gap: 10px;">
+                                                <input type="text" placeholder="MM/YY"
+                                                      style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                                <input type="text" placeholder="CVV"
+                                                      style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                          </div>
+                                    </div>
+                                    <!-- UPI Details with QR Code -->
+                                    <div id="upi-details"
+                                          style="display: none; margin-top: 15px; background: #f9f9f9; padding: 20px; border-radius: 5px; text-align: center; border: 1px solid #ddd;">
+                                          <h4 style="color: #0f346c; margin-bottom: 15px;">Udbhava Enterprise</h4>
+                                          <div
+                                                style="background: white; padding: 10px; display: inline-block; border-radius: 8px; border: 1px solid #eee;">
+                                                <!-- Placeholder for the generated QR Code -->
+                                                <img src="upi_qr_code.png" alt="Scan to Pay"
+                                                      style="width: 150px; height: 150px;">
+                                          </div>
+                                          <p style="margin-top: 10px; color: #555; font-size: 0.9rem;">Scan this QR code
+                                                with any UPI App</p>
+
+                                          <div style="margin-top: 15px; text-align: left;">
+                                                <label
+                                                      style="display: block; margin-bottom: 5px; color: #555; font-size: 0.9rem;">Enter
+                                                      Transaction ID / UTR:</label>
+                                                <input type="text" placeholder="e.g., 123456789012"
+                                                      style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                          </div>
+                                    </div>
+                              </div>
+
+                              <button type="submit" id="place-order-btn" class="place-order-btn">
+                                    Place Order
+                              </button>
+                        </form>
+                  </div>
+
+                  <!-- Right: Order Summary -->
+                  <div class="summary-section"
+                        style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.05); height: fit-content;">
+                        <h2
+                              style="color: #0f346c; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                              Order Summary</h2>
+
+                        <div id="checkout-items">
+                              <!-- Items populated by JS -->
+                              <p>Loading items...</p>
+                        </div>
+
+                        <div id="checkout-total">
+                              <!-- Total populated by JS -->
+                        </div>
+                  </div>
+
+            </div>
+      </div>
+
+      <!-- Scripts -->
+      <script src="js/auth.js"></script>
+      <script src="js/checkout.js"></script>
+
+      <!-- Footer -->
+      <footer>
+            <div class="container">
+                  <div class="copyright">
+                        &copy; 2025 UDBHAVA. Secure Payments.
+                  </div>
+            </div>
+      </footer>
+</body>
+
+</html>

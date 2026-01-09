@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Admin Dashboard - UDBHAVA</title>
+      <link rel="stylesheet" href="shop.css">
+      <link rel="stylesheet" href="admin.css">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!-- Export Libraries -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+      <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap"
+            rel="stylesheet">
+      <!-- FontAwesome for Icons -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+      <div class="admin-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                  <div class="sidebar-header">
+                        <h2>UDBHAVA</h2>
+                        <p>Admin Panel</p>
+                  </div>
+                  <nav class="sidebar-nav">
+                        <button class="nav-btn active" data-tab="dashboard">
+                              <i class="fas fa-home"></i> Dashboard
+                        </button>
+                        <button class="nav-btn" data-tab="orders">
+                              <i class="fas fa-shopping-cart"></i> Orders
+                        </button>
+                        <button class="nav-btn" data-tab="inventory">
+                              <i class="fas fa-boxes"></i> Inventory
+                        </button>
+                        <button class="nav-btn" data-tab="analysis">
+                              <i class="fas fa-chart-pie"></i> Analysis
+                        </button>
+                        <button class="nav-btn" data-tab="add-product">
+                              <i class="fas fa-plus-circle"></i> Add Product
+                        </button>
+                  </nav>
+                  <div class="sidebar-footer">
+                        <button id="adminLogoutBtn" class="nav-btn logout">
+                              <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                  </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+
+                  <!-- DASHBOARD SECTION -->
+                  <section id="dashboard" class="content-section active">
+                        <header class="section-header">
+                              <h1>Dashboard Overview</h1>
+                              <p class="date-display" id="currentDate"></p>
+                        </header>
+
+                        <!-- Stats Cards -->
+                        <div class="stats-grid">
+                              <div class="stat-card">
+                                    <div class="icon-box revenue"><i class="fas fa-rupee-sign"></i></div>
+                                    <div class="stat-info">
+                                          <h3>Total Revenue</h3>
+                                          <p id="statTotalRevenue">₹0</p>
+                                    </div>
+                              </div>
+                              <div class="stat-card">
+                                    <div class="icon-box sales"><i class="fas fa-chart-line"></i></div>
+                                    <div class="stat-info">
+                                          <h3>Monthly Sales</h3>
+                                          <p id="statMonthlyRevenue">₹0</p>
+                                    </div>
+                              </div>
+                              <div class="stat-card">
+                                    <div class="icon-box orders"><i class="fas fa-shopping-bag"></i></div>
+                                    <div class="stat-info">
+                                          <h3>Total Orders</h3>
+                                          <p id="statTotalOrders">0</p>
+                                    </div>
+                              </div>
+                        </div>
+
+                        <div class="dashboard-split">
+                              <!-- Best Sellers -->
+                              <div class="dash-panel">
+                                    <h3>🏆 Best Selling Products</h3>
+                                    <div id="bestSellersList" class="compact-list">
+                                          <!-- Populated via JS -->
+                                          <p class="loading-text">Loading...</p>
+                                    </div>
+                              </div>
+
+                              <!-- Low Stock Alerts -->
+                              <div class="dash-panel">
+                                    <h3>⚠️ Low Stock Alerts (<= 5)</h3>
+                                                <div id="lowStockList" class="compact-list">
+                                                      <!-- Populated via JS -->
+                                                      <p class="loading-text">Loading...</p>
+                                                </div>
+                              </div>
+                        </div>
+                  </section>
+
+                  <!-- ANALYSIS SECTION -->
+                  <section id="analysis" class="content-section">
+                        <div class="section-header">
+                              <h1>Business Analytics</h1>
+                              <div style="display:flex; gap:10px;">
+                                    <button class="btn-refresh" onclick="exportReport('pdf')"
+                                          style="background:#e74c3c; color:white; border:none;">Download PDF 📄</button>
+                                    <button class="btn-refresh" onclick="exportReport('excel')"
+                                          style="background:#2ecc71; color:white; border:none;">Download Excel
+                                          📊</button>
+                                    <button class="btn-refresh" onclick="loadAnalytics()">Refresh</button>
+                              </div>
+                        </div>
+
+                        <!-- 1. Revenue Trend (Line Chart) -->
+                        <div class="dashboard-card" style="margin-bottom: 20px;">
+                              <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <h3>📈 Revenue Growth</h3>
+                                    <select id="timeFilter" onchange="updateTimeChart()"
+                                          style="padding:5px; border-radius:5px; border:1px solid #ddd;">
+                                          <option value="daily">Daily (Last 30 Days)</option>
+                                          <option value="monthly">Monthly (Last 12 Months)</option>
+                                          <option value="quarterly">Quarterly (This Year)</option>
+                                          <option value="yearly">Yearly (All Time)</option>
+                                    </select>
+                              </div>
+                              <div class="chart-wrapper" style="position: relative; height: 350px; width: 100%;">
+                                    <canvas id="salesTimeChart"></canvas>
+                              </div>
+                        </div>
+
+                        <!-- 2. Split View: Categories & Payment -->
+                        <div class="dashboard-split" style="margin-bottom: 20px;">
+                              <div class="dashboard-card">
+                                    <h3>🛍️ Sales by Category</h3>
+                                    <div class="chart-wrapper" style="position: relative; height: 300px; width: 100%;">
+                                          <canvas id="categoryChart"></canvas> <!-- Doughnut -->
+                                    </div>
+                              </div>
+                              <div class="dashboard-card">
+                                    <h3>💳 Payment Methods</h3>
+                                    <div class="chart-wrapper" style="position: relative; height: 300px; width: 100%;">
+                                          <canvas id="paymentChart"></canvas> <!-- Pie -->
+                                    </div>
+                              </div>
+                        </div>
+
+                        <!-- 3. Top Products (Horizontal Bar) -->
+                        <div class="dashboard-card">
+                              <h3>🏆 Top 5 Best Selling Products</h3>
+                              <div class="chart-wrapper" style="position: relative; height: 300px; width: 100%;">
+                                    <canvas id="topProductsChart"></canvas>
+                              </div>
+                        </div>
+                  </section>
+
+                  <!-- ORDERS SECTION -->
+                  <section id="orders" class="content-section">
+                        <header class="section-header">
+                              <h1>Order Management</h1>
+                        </header>
+                        <div class="table-container">
+                              <table class="data-table">
+                                    <thead>
+                                          <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
+                                          </tr>
+                                    </thead>
+                                    <tbody id="ordersTableBody">
+                                          <!-- Populated via JS -->
+                                    </tbody>
+                              </table>
+                        </div>
+                  </section>
+
+                  <!-- INVENTORY SECTION -->
+                  <section id="inventory" class="content-section">
+                        <header class="section-header">
+                              <h1>Inventory Status</h1>
+                              <button class="btn-refresh" id="refreshInventory"><i class="fas fa-sync"></i>
+                                    Refresh</button>
+                        </header>
+                        <div class="table-container">
+                              <table class="data-table">
+                                    <thead>
+                                          <tr>
+                                                <th>Image</th>
+                                                <th>Product Name</th>
+                                                <th>Category</th>
+                                                <th>Price</th>
+                                                <th>Stock</th>
+                                                <th>Status</th>
+                                          </tr>
+                                    </thead>
+                                    <tbody id="inventoryTableBody">
+                                          <!-- Populated via JS -->
+                                    </tbody>
+                              </table>
+                        </div>
+                  </section>
+
+                  <!-- ADD PRODUCT SECTION (Existing Form) -->
+                  <section id="add-product" class="content-section">
+                        <header class="section-header">
+                              <h1>Add New Product</h1>
+                        </header>
+                        <div class="form-container">
+                              <form id="addProductForm">
+                                    <!-- Reusing existing form fields, styled cleaner -->
+                                    <div class="form-grid">
+                                          <div class="form-group">
+                                                <label>Product Name</label>
+                                                <input type="text" id="name" required
+                                                      placeholder="e.g. Royal Silk Saree">
+                                          </div>
+                                          <div class="form-group">
+                                                <label>Price (₹)</label>
+                                                <input type="number" id="price" required min="1">
+                                          </div>
+                                          <div class="form-group">
+                                                <label>Category</label>
+                                                <select id="category" required>
+                                                      <option value="" disabled selected>Select Category</option>
+                                                      <option value="women">Women's Wear</option>
+                                                      <option value="men">Men's Wear</option>
+                                                      <option value="kids">Kid's Wear</option>
+                                                      <option value="HomeDecor">Home Decor</option>
+                                                      <option value="jewellary">Jewelry</option>
+                                                      <option value="toys">Toys</option>
+                                                </select>
+                                          </div>
+                                          <div class="form-group">
+                                                <label>Sub-Category</label>
+                                                <select id="subCategory" required>
+                                                      <option value="" disabled selected>Select Sub-Category</option>
+                                                </select>
+                                          </div>
+                                          <div class="form-group">
+                                                <label>Stock Quantity</label>
+                                                <input type="number" id="stock" value="10" min="1">
+                                          </div>
+                                          <div class="form-group">
+                                                <label>Size (Optional)</label>
+                                                <input type="text" id="size" placeholder="e.g. Free Size">
+                                          </div>
+                                          <div class="form-group full-width">
+                                                <label>Image URL</label>
+                                                <input type="url" id="image" required
+                                                      placeholder="https://example.com/image.jpg">
+                                          </div>
+                                          <div class="form-group full-width">
+                                                <label>Video URL</label>
+                                                <input type="url" id="video"
+                                                      placeholder="https://example.com/video.mp4">
+                                          </div>
+                                          <div class="form-group full-width">
+                                                <label>Description</label>
+                                                <textarea id="description" rows="3"></textarea>
+                                          </div>
+                                          <div class="form-group checkbox-wrapper">
+                                                <input type="checkbox" id="isTrending">
+                                                <label for="isTrending">Mark as Trending</label>
+                                          </div>
+                                    </div>
+                                    <button type="submit" class="btn-submit">Add Product</button>
+                                    <p id="message" class="message"></p>
+                              </form>
+                        </div>
+                  </section>
+
+            </main>
+      </div>
+
+      <!-- Order Details Modal -->
+      <div id="orderModal" class="modal">
+            <div class="modal-content">
+                  <span class="close-modal">&times;</span>
+                  <div id="orderModalBody">
+                        <!-- Details injected here -->
+                  </div>
+            </div>
+      </div>
+
+      <script src="js/auth.js"></script>
+      <script src="admin.js"></script>
+</body>
+
+</html>

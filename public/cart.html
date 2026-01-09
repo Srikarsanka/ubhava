@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>UDBHAVA - Shopping Cart</title>
+      <link rel="icon" href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+      <link rel="stylesheet" href="index.css">
+      <style>
+            /* Modern Cart Styles */
+            :root {
+                  --primary-color: #800000;
+                  --secondary-color: #ff7b00;
+                  --text-dark: #0f346c;
+                  --bg-light: #fffaf0;
+            }
+
+            body {
+                  background-color: var(--bg-light);
+                  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .cart-page-wrapper {
+                  max-width: 1200px;
+                  margin: 120px auto 50px;
+                  /* Top margin for fixed navbar */
+                  padding: 20px;
+                  display: grid;
+                  grid-template-columns: 1fr 350px;
+                  gap: 30px;
+            }
+
+            @media (max-width: 900px) {
+                  .cart-page-wrapper {
+                        grid-template-columns: 1fr;
+                  }
+            }
+
+            .cart-header {
+                  grid-column: 1 / -1;
+                  margin-bottom: 20px;
+                  border-bottom: 2px solid var(--secondary-color);
+                  padding-bottom: 10px;
+            }
+
+            h1.page-title {
+                  color: var(--primary-color);
+                  font-size: 2.5rem;
+                  font-weight: 300;
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+            }
+
+            /* Cart Table */
+            .cart-table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  background: white;
+                  border-radius: 8px;
+                  overflow: hidden;
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            }
+
+            .cart-table th {
+                  background: #f8f8f8;
+                  color: var(--text-dark);
+                  padding: 15px;
+                  text-align: left;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  font-size: 0.9rem;
+            }
+
+            .cart-table td {
+                  padding: 20px 15px;
+                  border-bottom: 1px solid #eee;
+                  vertical-align: middle;
+            }
+
+            /* Product Column */
+            .product-info-flex {
+                  display: flex;
+                  align-items: center;
+                  gap: 15px;
+            }
+
+            .product-info-flex img {
+                  width: 80px;
+                  height: 100px;
+                  object-fit: cover;
+                  border-radius: 4px;
+            }
+
+            .product-text h4 {
+                  margin: 0;
+                  color: var(--text-dark);
+                  font-size: 1.1rem;
+            }
+
+            .product-text .meta {
+                  font-size: 0.9rem;
+                  color: #666;
+            }
+
+            /* Quantity Controls */
+            .qty-controls {
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                  border: 1px solid #ddd;
+                  padding: 5px 10px;
+                  border-radius: 20px;
+                  width: fit-content;
+            }
+
+            .qty-controls button {
+                  background: none;
+                  border: none;
+                  color: var(--text-dark);
+                  font-weight: bold;
+                  cursor: pointer;
+                  font-size: 1.1rem;
+            }
+
+            .qty-controls span {
+                  min-width: 20px;
+                  text-align: center;
+            }
+
+            .price-col,
+            .total-col {
+                  font-weight: 600;
+                  color: var(--text-dark);
+                  font-size: 1.1rem;
+            }
+
+            .remove-btn {
+                  background: none;
+                  border: none;
+                  color: #cc0000;
+                  cursor: pointer;
+                  font-size: 1.2rem;
+                  opacity: 0.7;
+                  transition: 0.3s;
+            }
+
+            .remove-btn:hover {
+                  opacity: 1;
+                  transform: scale(1.1);
+            }
+
+            /* Summary Card */
+            .cart-summary-card {
+                  background: white;
+                  padding: 25px;
+                  border-radius: 8px;
+                  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+                  height: fit-content;
+                  position: sticky;
+                  top: 100px;
+            }
+
+            .cart-summary-card h3 {
+                  margin-top: 0;
+                  color: var(--primary-color);
+                  border-bottom: 1px solid #eee;
+                  padding-bottom: 15px;
+                  margin-bottom: 20px;
+            }
+
+            .summary-row {
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 15px;
+                  color: #555;
+            }
+
+            .summary-row.total {
+                  font-weight: bold;
+                  color: var(--text-dark);
+                  font-size: 1.4rem;
+                  margin-top: 20px;
+            }
+
+            .checkout-btn {
+                  width: 100%;
+                  background: var(--primary-color);
+                  color: white;
+                  padding: 15px;
+                  border: none;
+                  border-radius: 5px;
+                  font-size: 1.1rem;
+                  font-weight: bold;
+                  text-transform: uppercase;
+                  cursor: pointer;
+                  margin-top: 20px;
+                  transition: 0.3s;
+            }
+
+            .checkout-btn:hover {
+                  background: #a00000;
+                  box-shadow: 0 5px 15px rgba(128, 0, 0, 0.3);
+            }
+
+            /* Empty State */
+            .empty-cart-state {
+                  text-align: center;
+                  padding: 50px;
+                  grid-column: 1 / -1;
+            }
+
+            .empty-cart-state i {
+                  font-size: 4rem;
+                  color: #ccc;
+                  margin-bottom: 20px;
+            }
+
+            .continue-btn {
+                  display: inline-block;
+                  margin-top: 20px;
+                  padding: 10px 25px;
+                  background: var(--secondary-color);
+                  color: white;
+                  text-decoration: none;
+                  border-radius: 25px;
+            }
+      </style>
+</head>
+
+<body>
+      <!-- Navbar -->
+      <nav class="navbar">
+            <div class="logo">
+                  <a href="index.html">
+                        <h1>UDBHAVA</h1>
+                  </a>
+            </div>
+            <div class="nav-links">
+                  <a href="index.html">Home</a>
+                  <a href="shop.html">Shop</a>
+                  <a href="heritage.html">Heritage</a>
+                  <a href="contact.html">Contact</a>
+                  <a href="cart.html">Cart</a>
+                  <!-- Auth Placeholders -->
+                  <a id="nav-login-btn" href="#" style="font-weight: bold; color: #ff7b00; display:none;">Login</a>
+                  <span id="nav-user-display"
+                        style="display:none; color: #0f346c; margin-right: 10px; cursor: pointer; font-weight: 500;"></span>
+                  <a id="nav-logout-btn" href="#" style="display:none; color: red;">Logout</a>
+            </div>
+      </nav>
+
+      <!-- Main Layout -->
+      <div class="cart-page-wrapper">
+            <div class="cart-header">
+                  <h1 class="page-title">Your Cart</h1>
+            </div>
+
+            <!-- Cart Items Section -->
+            <div id="cart-container" class="cart-items-section">
+                  <!-- Loading State -->
+                  <div style="text-align:center; padding: 40px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #800000;"></i>
+                        <p>Loading your cart...</p>
+                  </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div id="cart-summary" class="cart-summary-card">
+                  <!-- Will be populated by JS -->
+            </div>
+      </div>
+
+      <!-- Footer -->
+      <footer>
+            <div class="container">
+                  <div class="footer-grid">
+                        <div class="footer-col footer-brand">
+                              <h4>UDBHAVA</h4>
+                              <p>Celebrating the origin of Indian handcraft.</p>
+                        </div>
+                        <div class="footer-col">
+                              <h4>Support</h4>
+                              <ul>
+                                    <li><a href="#">Shipping & Returns</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                              </ul>
+                        </div>
+                  </div>
+                  <div class="copyright">
+                        &copy; 2025 UDBHAVA. All rights reserved.
+                  </div>
+            </div>
+      </footer>
+
+      <!-- Scripts -->
+      <script src="js/auth.js"></script> <!-- Auth Logic -->
+      <script src="js/cart.js"></script> <!-- Cart Logic -->
+</body>
+
+</html>

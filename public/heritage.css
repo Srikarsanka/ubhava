@@ -1,0 +1,531 @@
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+      background-color: #fffaf0;
+      /* Matches index.css */
+      color: #2c2c2c;
+      width: 100vw;
+      overflow-x: hidden;
+}
+
+/* Navbar styles removed - using global index.css */
+
+.hero-section {
+      margin-top: 6rem;
+      padding: 2rem 5%;
+      text-align: center;
+      position: relative;
+}
+
+.peacock-animation {
+      width: 120px;
+      position: absolute;
+      top: -30px;
+      left: 10%;
+      animation: peacock 15s infinite alternate ease-in-out;
+}
+
+/* @keyframes peacock {
+                  0% {
+                        transform: translateX(0) rotate(0);
+                  }
+
+                  50% {
+                        transform: translateX(300%) rotate(5deg);
+                  }
+
+                  100% {
+                        transform: translateX(600%) rotate(0);
+                  }
+            } */
+
+.hero-title {
+      font-size: 2.8rem;
+      color: rgb(82, 2, 2);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+}
+
+.hero-description {
+      max-width: 800px;
+      margin: 2rem auto;
+      font-size: 1.3rem;
+      text-align: center;
+      line-height: 2;
+      color: #5a4a4a;
+}
+
+.hero-content-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+}
+
+.state-section {
+      width: 100%;
+      min-height: 100vh;
+      padding: 4rem 5%;
+      display: flex;
+      flex-direction: column;
+}
+
+.section-title {
+      display: inline-block;
+      font-size: 1.8rem;
+      border-bottom: 2px solid maroon;
+      padding-bottom: 0.5rem;
+      margin-bottom: 2rem;
+      margin-left: 2rem;
+      position: relative;
+      font-weight: 300;
+      color: rgb(82, 2, 2);
+}
+
+.ap-icon {
+      position: absolute;
+      width: 70px;
+      /* top: -20px;
+                  left: -80px; */
+      animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+
+      0%,
+      100% {
+            transform: translateY(0);
+      }
+
+      50% {
+            transform: translateY(-10px);
+      }
+}
+
+.state-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3rem;
+}
+
+.state-image {
+      flex: 1;
+      min-width: 300px;
+      height: auto;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 500px;
+}
+
+.floating-img {
+      position: absolute;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      transition: all 0.5s ease;
+      width: 260px;
+      height: 360px;
+      object-fit: cover;
+      background: white;
+      padding: 10px;
+}
+
+.img-1 {
+      transform: rotate(-10deg) translate(-40px, 0);
+      z-index: 2;
+}
+
+.img-2 {
+      transform: rotate(0deg);
+      z-index: 3;
+}
+
+.img-3 {
+      transform: rotate(10deg) translate(40px, 20px);
+      z-index: 1;
+}
+
+.floating-img:hover {
+      z-index: 5;
+      transform: scale(1.05) rotate(0deg);
+}
+
+
+.state-info {
+      flex: 1;
+      min-width: 300px;
+      padding: 2rem;
+}
+
+.state-info h3 {
+      color: maroon;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+}
+
+.state-info p {
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      text-align: justify;
+      margin-left: 30px;
+}
+
+.artisans-section {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: rgba(128, 0, 0, 0.05);
+      border-radius: 12px;
+}
+
+.artisan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+}
+
+.artisan-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+}
+
+.artisan-card:hover {
+      transform: translateY(-5px);
+}
+
+.artisan-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1rem;
+      border: 3px solid maroon;
+}
+
+.artisan-name {
+      color: maroon;
+      margin-bottom: 0.5rem;
+}
+
+.artisan-craft {
+      font-style: italic;
+      color: #666;
+}
+
+.explore-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background: maroon;
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+}
+
+.explore-btn:hover {
+      background: rgb(102, 0, 0);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(128, 0, 0, 0.2);
+}
+
+.states-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+      padding: 2rem 5%;
+}
+
+.state-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+}
+
+.state-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.state-card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+}
+
+.state-card-content {
+      padding: 1.5rem;
+}
+
+.state-card-title {
+      color: maroon;
+      margin-bottom: 0.8rem;
+      font-size: 1.3rem;
+}
+
+.state-card-desc {
+      color: #666;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+}
+
+.state-card-link {
+      color: maroon;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+}
+
+.state-card-link:hover {
+      text-decoration: underline;
+}
+
+/* Animations */
+.scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+}
+
+.scroll-reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+}
+
+/* --- Editorial Enhancements --- */
+
+.editorial-section {
+      padding: 6rem 5%;
+      text-align: center;
+      background-color: #fffaf0;
+      position: relative;
+      overflow: hidden;
+      /* Prevent spillover */
+}
+
+.philosophy-grid,
+.material-grid {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: left;
+      /* Reset center align for grid text */
+}
+
+.material-grid {
+      flex-direction: row-reverse;
+      /* Alternate layout */
+}
+
+.philosophy-text,
+.material-text {
+      flex: 1;
+}
+
+.philosophy-image,
+.material-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+}
+
+.editorial-img {
+      max-width: 100%;
+      width: 450px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(128, 0, 0, 0.15);
+      /* Soft maroon shadow */
+}
+
+@media (max-width: 900px) {
+
+      .philosophy-grid,
+      .material-grid {
+            flex-direction: column;
+            gap: 2rem;
+            text-align: center;
+      }
+
+      .material-grid {
+            flex-direction: column;
+            /* Revert reverse on mobile */
+      }
+}
+
+.philosophy-bg {
+      background-image: radial-gradient(#800000 0.5px, transparent 0.5px), radial-gradient(#800000 0.5px, #fffaf0 0.5px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      background-blend-mode: multiply;
+      opacity: 0.9;
+}
+
+/* Ensure text stands out on pattern */
+.philosophy-bg .editorial-heading,
+.philosophy-bg .editorial-text-block,
+.philosophy-bg .editorial-overline {
+      background: rgba(255, 250, 240, 0.9);
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+}
+
+.editorial-overline {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: maroon;
+      margin-bottom: 1rem;
+      display: block;
+}
+
+.editorial-heading {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: #2c2c2c;
+      margin-bottom: 2rem;
+      font-family: 'MyCustomFont', serif;
+}
+
+.editorial-text-block {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 1.2rem;
+      line-height: 2;
+      color: #555;
+}
+
+/* Process Highlight (Inset Box) */
+.process-highlight {
+      margin: 3rem 0;
+      padding: 0;
+      /* Remove internal padding, let grid handle it */
+      background: rgba(128, 0, 0, 0.03);
+      border-radius: 8px;
+      overflow: hidden;
+}
+
+.process-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+}
+
+.process-text {
+      flex: 2;
+      padding: 2rem;
+      border-left: 3px solid maroon;
+}
+
+.process-img {
+      flex: 1;
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      /* Image on right side */
+}
+
+@media (max-width: 768px) {
+      .process-content {
+            flex-direction: column-reverse;
+      }
+
+      .process-img {
+            height: 200px;
+      }
+
+      .process-text {
+            border-left: none;
+            border-top: 3px solid maroon;
+      }
+}
+
+.process-highlight h4 {
+      color: maroon;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+}
+
+.process-highlight p {
+      font-size: 1rem;
+      font-style: italic;
+      margin: 0 !important;
+      /* Override generic p margins */
+      color: #444;
+}
+
+/* Cultural Context (Full Width Mood) */
+.cultural-context-section {
+      width: 100%;
+      padding: 4rem 5%;
+      background-color: #f7f1e3;
+      /* Slightly darker/warmer than body */
+      display: flex;
+      justify-content: center;
+      margin: 4rem 0;
+      border-top: 1px solid rgba(128, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(128, 0, 0, 0.1);
+}
+
+.context-content {
+      max-width: 800px;
+      text-align: center;
+}
+
+.context-content h3 {
+      font-size: 1.8rem;
+      color: maroon;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+}
+
+.context-content p {
+      font-size: 1.2rem;
+      line-height: 1.9;
+      font-style: italic;
+      font-family: 'Georgia', serif;
+      /* Or keep generic serif */
+      color: #4a4a4a;
+}
+
+.section-subtitle {
+      text-align: center;
+      font-style: italic;
+      color: #777;
+      margin: -1.5rem 0 3rem 0;
+      /* Pull closer to title */
+      font-size: 1.1rem;
+}
+
+.material-philosophy {
+      background-color: #fff;
+      /* Contrast with footer/body */
+}
+
+/* Footer styles removed - using global index.css */

@@ -1,0 +1,301 @@
+/* -------------------------------------------------- */
+/*         Category Section Structure & Styling       */
+/* -------------------------------------------------- */
+
+/* Main category sections */
+.category-section {
+      margin: 80px 0;
+      padding: 0 20px;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Category main headers (e.g., WOMEN'S WEAR, MEN'S WEAR) */
+.category-main-header {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+}
+
+.category-main-header h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: maroon;
+      margin: 0;
+      padding-bottom: 20px;
+      position: relative;
+      display: inline-block;
+}
+
+.category-main-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #ff7b00, transparent);
+}
+
+/* Subcategory sections */
+.subcategory-section {
+      margin: 60px 0;
+}
+
+/* Subcategory titles (e.g., Sarees, Lehengas, Kurta Pajama) */
+.subcategory-title {
+      font-size: 2.2rem;
+      color: #0f346c;
+      text-transform: capitalize;
+      margin: 40px 0 30px 0;
+      padding-left: 40px;
+      border-left: 5px solid #ff7b00;
+      font-weight: 500;
+      letter-spacing: 1px;
+}
+
+/* Category image wrapper - Premium styling */
+.category-image-wrapper {
+      width: 100%;
+      max-width: 1400px;
+      margin: 30px auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      position: relative;
+}
+
+.category-image-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.1));
+      pointer-events: none;
+      z-index: 1;
+}
+
+.category-image-wrapper img {
+      width: 100%;
+      height: auto;
+      min-height: 400px;
+      max-height: 600px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+}
+
+.category-image-wrapper:hover img {
+      transform: scale(1.02);
+}
+
+/* Containers wrapper */
+.containers {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 40px 20px;
+}
+
+/* -------------------------------------------------- */
+/*         Filter-Based Visibility Control             */
+/* -------------------------------------------------- */
+
+/* Hide sections by default when filtering is active */
+body.filtering .category-section {
+      display: none;
+}
+
+/* Show only the active category section */
+body.filtering .category-section.active {
+      display: block;
+      animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+      from {
+            opacity: 0;
+            transform: translateY(20px);
+      }
+
+      to {
+            opacity: 1;
+            transform: translateY(0);
+      }
+}
+
+/* -------------------------------------------------- */
+/*         Navbar & Hero Improvements                  */
+/* -------------------------------------------------- */
+
+.navbar {
+      background-color: #fffaf0;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: box-shadow 0.3s ease;
+}
+
+.navbar.shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.navbar h1 {
+      font-size: 2rem;
+      margin: 0;
+      letter-spacing: 3px;
+}
+
+.nav-links {
+      display: flex;
+      gap: 35px;
+      align-items: center;
+}
+
+.nav-links a {
+      text-decoration: none;
+      color: #383838;
+      font-weight: 500;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      padding: 8px 0;
+      border-bottom: 2px solid transparent;
+}
+
+.nav-links a:hover {
+      color: #ff7b00;
+      border-bottom-color: #ff7b00;
+}
+
+#hero {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+}
+
+#hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+}
+
+/* -------------------------------------------------- */
+/*         Category Filter Buttons Enhancement         */
+/* -------------------------------------------------- */
+
+.categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 40px auto;
+      padding: 30px 20px;
+      max-width: 1200px;
+      background: rgba(255, 123, 0, 0.03);
+      border-radius: 15px;
+}
+
+.categories button {
+      padding: 14px 28px;
+      border: 2px solid #ff7b00;
+      background-color: transparent;
+      color: #ff7b00;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      border-radius: 30px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 2px 8px rgba(255, 123, 0, 0.1);
+}
+
+.categories button:hover {
+      background-color: #ff7b00;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 123, 0, 0.25);
+}
+
+.categories button.active {
+      background-color: #ffa500;
+      color: white;
+      border-color: #ffa500;
+      box-shadow: 0 6px 20px rgba(255, 165, 0, 0.3);
+}
+
+/* -------------------------------------------------- */
+/*         Responsive Adjustments                      */
+/* -------------------------------------------------- */
+
+@media (max-width: 1024px) {
+      .category-main-header h1 {
+            font-size: 2.5rem;
+      }
+
+      .subcategory-title {
+            font-size: 1.8rem;
+            padding-left: 25px;
+      }
+
+      .category-image-wrapper img {
+            min-height: 300px;
+            max-height: 450px;
+      }
+}
+
+@media (max-width: 768px) {
+      .category-section {
+            margin: 50px 0;
+      }
+
+      .category-main-header h1 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+      }
+
+      .subcategory-title {
+            font-size: 1.5rem;
+            padding-left: 15px;
+            border-left-width: 3px;
+      }
+
+      .category-image-wrapper {
+            border-radius: 12px;
+      }
+
+      .category-image-wrapper img {
+            min-height: 250px;
+            max-height: 350px;
+      }
+
+      .navbar {
+            padding: 15px 20px;
+      }
+
+      .nav-links {
+            gap: 20px;
+            font-size: 0.9rem;
+      }
+
+      .categories {
+            gap: 10px;
+            padding: 20px 15px;
+      }
+
+      .categories button {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+      }
+}
