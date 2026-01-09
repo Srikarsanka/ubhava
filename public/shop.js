@@ -384,22 +384,47 @@ function showProductModal(container) {
       // ---------------------------------------------------------
       // 1. DETERMINISTIC CATEGORY DETECTION
       // ---------------------------------------------------------
-      // Helper to check if text contains any keyword
+      // STRATEGY: Prioritize database category (parentCat) over keyword matching
+      // This prevents false keyword matches from overriding correct DB data
+      
       const has = (text, keywords) => keywords.some(k => text.includes(k));
-      const checkAll = (keywords) => has(nameLower, keywords) || has(cat, keywords) || has(parentCat, keywords);
+      const checkName = (keywords) => has(nameLower, keywords);
+      const checkCat = (keywords) => has(cat, keywords) || has(parentCat, keywords);
 
-      const isSaree = checkAll(['saree', 'sari', 'drape']);
-      const isHomeDecor = checkAll(['home', 'decor', 'wall', 'art', 'gift', 'hamper']);
-      const isToysJewelry = checkAll(['toy', 'jewel', 'necklace', 'earring', 'bangle', 'set']);
-      
-      const isKids = !isToysJewelry && !isHomeDecor && (parentCat === 'kids' || checkAll(['kid', 'boy', 'girl', 'child']));
-      
-      // Men's: explicit men category OR keywords (Added 'groom', 'waistcoat', 'bandhgala' for Wedding)
-      const isMens = !isKids && !isToysJewelry && !isHomeDecor && (parentCat === 'men' || checkAll(['men', 'kurta', 'sherwani', 'jacket', 'pajama', 'groom', 'waistcoat', 'bandhgala']));
-      
-      // Women's: Everything else that looks like clothing (Added 'bride', 'bridal' to be safe, though it's the fallback)
-      // Explicitly check for lehenga or stitched suit as per requirements, or general fallback for women's wear
-      const isWomen = !isKids && !isMens && !isSaree && !isHomeDecor && !isToysJewelry;
+      // STEP 1: Check database category FIRST (highest priority)
+      let isSaree = parentCat === 'saree' || cat === 'saree' || checkName(['saree', 'sari']);
+      let isMens = parentCat === 'men';
+      let isWomen = parentCat === 'women';
+      let isKids = parentCat === 'kids';
+      let isHomeDecor = parentCat === 'home' || parentCat === 'homedecor';
+      let isToysJewelry = parentCat === 'toys' || parentCat === 'jewelry';
+
+      // STEP 2: If no DB category match, use keyword detection (fallback)
+      if (!isSaree && !isMens && !isWomen && !isKids && !isHomeDecor && !isToysJewelry) {
+          // Specific categories first
+          isSaree = checkName(['saree', 'sari', 'drape']);
+          
+          if (!isSaree) {
+              isToysJewelry = checkName(['toy', 'jewel', 'necklace', 'earring', 'bangle', 'bracelet']);
+          }
+          
+          if (!isSaree && !isToysJewelry) {
+              isKids = checkName(['kid', 'boy', 'girl', 'child']);
+          }
+          
+          if (!isSaree && !isToysJewelry && !isKids) {
+              isMens = checkName(['kurta', 'sherwani', 'dhoti', 'jacket', 'pajama', 'groom', 'waistcoat', 'bandhgala']);
+          }
+          
+          if (!isSaree && !isToysJewelry && !isKids && !isMens) {
+              isWomen = checkName(['lehenga', 'gown', 'dress', 'suit', 'bride', 'bridal', 'lady', 'ladies']);
+          }
+          
+          if (!isSaree && !isToysJewelry && !isKids && !isMens && !isWomen) {
+              isHomeDecor = checkName(['homedecor', 'wallart', 'decor']);
+          }
+      }
+
 
       // ---------------------------------------------------------
       // 2. DEFINE UI ELEMENTS BASED ON CATEGORY
@@ -503,14 +528,117 @@ function showProductModal(container) {
       
       // A. Main Description (DB + specific text)
       let descriptionHTML = "";
-      if (product.description && product.description.trim().length > 0) {
-          descriptionHTML = `<p style="white-space: pre-line;">${product.description}</p>`;
-      } else {
-          // Fallback if DB empty
-          descriptionHTML = `<p>${name}</p>`;
+      
+      // Material based on category
+      let material = "Premium quality fabric";
+      if (isMens) {
+          material = "Cotton blend / Silk blend";
+      } else if (isWomen) {
+          material = "Cotton blend / Silk blend";
+      } else if (isSaree) {
+          material = "Pure silk / Cotton silk blend";
+      } else if (isKids) {
+          material = "Soft cotton blend";
+      } else if (isHomeDecor) {
+          material = "Premium quality materials";
+      } else if (isToysJewelry) {
+          material = "Safe, high-quality materials";
       }
+      
+      // Care instructions summary
+      let careShort = "Handle with care for longevity."; // Default fallback
+      if (isSaree) {
+          careShort = "Dry clean recommended. Hand wash in cold water if needed.";
+      } else if (isWomen) {
+          careShort = "Dry clean recommended. Hand wash in cold water if needed.";
+      } else if (isMens) {
+          careShort = "Machine washable at 30°C gentle cycle or hand wash.";
+      } else if (isKids) {
+          careShort = "Machine washable. Safe for frequent washing.";
+      } else if (isHomeDecor) {
+          careShort = "Wipe clean with soft cloth. Avoid harsh chemicals.";
+      } else if (isToysJewelry) {
+          careShort = "Keep away from water. Store in dry place.";
+      }
+      
+      // Build enhanced description (always shown)
+      const categoryInfo = cat || parentCat || 'Traditional Wear';
+      
+      if (product.description && product.description.trim().length > 0) {
+          // If DB has description, show it first, then add enhanced details
+          descriptionHTML = `
+            <div style="line-height: 1.6;">
+              <p style="white-space: pre-line; margin-bottom: 12px;">${product.description}</p>
+              <p><strong>Material:</strong> ${material}</p>
+              <p style="margin-top: 8px; color: #666; font-size: 0.9rem;">
+                <strong>Quick Care:</strong> ${careShort}
+              </p>
+            </div>
+          `;
+      } else {
+          // If no DB description, show full enhanced format
+          descriptionHTML = `
+            <div style="line-height: 1.6;">
+              <p><strong>Product:</strong> ${name}</p>
+              <p><strong>Category:</strong> ${categoryInfo}</p>
+              <p><strong>Material:</strong> ${material}</p>
+              <p style="margin-top: 10px; color: #555; font-size: 0.95rem;">
+                Premium quality ${categoryInfo.toLowerCase()} crafted with attention to detail. 
+                Perfect for special occasions and celebrations.
+              </p>
+              <p style="margin-top: 8px; color: #666; font-size: 0.9rem;">
+                <strong>Quick Care:</strong> ${careShort}
+              </p>
+            </div>
+          `;
+      }
+      
       // Append specific text (Lengths, etc.)
       descriptionHTML += specificText;
+
+      // B. Care Instructions (Category-Based)
+      let careInstructionsHTML = "";
+      
+      if (isSaree || isWomen) {
+          // Silk/Delicate Fabric Care (Sarees, Lehengas, Women's Wear)
+          careInstructionsHTML = `
+            <div style="margin-top:15px; padding:12px; background:#fef9f3; border-left:3px solid #800000; border-radius:5px;">
+              <h5 style="color:#800000; margin:0 0 8px 0; font-size:0.95rem;">🧵 Care Instructions</h5>
+              <ul style="margin:0; padding-left:18px; font-size:0.85rem; color:#555; line-height:1.6;">
+                <li><strong>Washing:</strong> Dry clean only recommended for best results. Hand wash in cold water if needed.</li>
+                <li><strong>Drying:</strong> Line dry in shade. Do not wring. Avoid direct sunlight to prevent color fading.</li>
+                <li><strong>Ironing:</strong> Steam iron on low heat. Use cloth between iron and fabric.</li>
+                <li><strong>Storage:</strong> Store folded in a cool, dry place. Use muslin cloth for sarees.</li>
+                <li><strong>Tips:</strong> Avoid contact with perfumes/deodorants. Wash dark colors separately.</li>
+              </ul>
+            </div>`;
+      } else if (isMens) {
+          // Cotton/Formal Wear Care (Kurtas, Sherwanis)
+          careInstructionsHTML = `
+            <div style="margin-top:15px; padding:12px; background:#f0f4ff; border-left:3px solid #0f346c; border-radius:5px;">
+              <h5 style="color:#0f346c; margin:0 0 8px 0; font-size:0.95rem;">🧵 Care Instructions</h5>
+              <ul style="margin:0; padding-left:18px; font-size:0.85rem; color:#555; line-height:1.6;">
+                <li><strong>Washing:</strong> Machine washable at 30°C (gentle cycle) or hand wash recommended.</li>
+                <li><strong>Drying:</strong> Line dry or tumble dry on low. Cotton may shrink slightly after first wash.</li>
+                <li><strong>Ironing:</strong> Warm iron while slightly damp for best results. Steam iron for stubborn wrinkles.</li>
+                <li><strong>Storage:</strong> Store folded or hang on padded hanger to maintain shape.</li>
+                <li><strong>Tips:</strong> Turn inside out before washing. Use mild detergent for longevity.</li>
+              </ul>
+            </div>`;
+      } else if (isKids) {
+          // Kids Wear Care
+          careInstructionsHTML = `
+            <div style="margin-top:15px; padding:12px; background:#fff4e6; border-left:3px solid #ff9800; border-radius:5px;">
+              <h5 style="color:#ff9800; margin:0 0 8px 0; font-size:0.95rem;">🧵 Care Instructions</h5>
+              <ul style="margin:0; padding-left:18px; font-size:0.85rem; color:#555; line-height:1.6;">
+                <li><strong>Washing:</strong> Machine washable at 30°C. Safe for frequent washing.</li>
+                <li><strong>Drying:</strong> Tumble dry low or line dry. Fabric softener safe.</li>
+                <li><strong>Ironing:</strong> Warm iron if needed. Most fabrics are wrinkle-resistant.</li>
+                <li><strong>Storage:</strong> Store folded. Easy to maintain for active kids.</li>
+                <li><strong>Tips:</strong> Pre-wash before first use. Wash with similar colors.</li>
+              </ul>
+            </div>`;
+      }
 
 
       // B. Size Selector HTML
@@ -544,10 +672,10 @@ function showProductModal(container) {
       if (showChart && chartData) {
           chartDisplayBtn = `<button class="btn-link" id="chartBtn" style="margin-top:10px; text-decoration: underline; color: #0f346c; background: none; border: none; cursor: pointer; padding: 0; font-size: 0.95rem;">View Size Chart</button>`;
           chartDisplayContainer = `
-             <div id="sizeChartDisplay" class="size-chart-container" style="display:none; margin-top:15px; border:1px solid #eee; padding:10px; border-radius:8px; background:#fff;">
+             <div id="sizeChartDisplay" class="size-chart-container hidden">
                 <h5 style="color:#800000; margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">Size Chart (Inches)</h5>
-                <div style="overflow-x:auto;">
-                    <table class="size-chart-table" style="width:100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+                <div style="overflow-x:auto; display: block; width: 100%;">
+                    <table class="size-chart-table" style="display: table; width: 100%; visibility: visible;">
                         ${chartData}
                     </table>
                 </div>
@@ -590,9 +718,10 @@ function showProductModal(container) {
                     <span style="color:green; font-weight:600; font-size:0.9rem;">${Math.round(((orgprice-disprice)/orgprice)*100)}% OFF</span>
                 </div>
                 
-                <div class="modal-desc-scroll-area" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                <div class="modal-desc-scroll-area" style="max-height: 500px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; scrollbar-width: none; -ms-overflow-style: none;">
                     <h4 style='color:#800000;margin-bottom:5px'>Product Details</h4>
                     <div class="modal-description">${descriptionHTML}</div>
+                    ${careInstructionsHTML}
                 </div>
 
                 ${sizeOptionsHTML}
@@ -628,11 +757,13 @@ function showProductModal(container) {
           btnChart.addEventListener("click", (e) => {
               e.preventDefault();
               const display = modalContainer.querySelector("#sizeChartDisplay");
-              if(display.style.display === "none") {
-                  display.style.display = "block";
+              if(display.classList.contains('hidden')) {
+                  display.classList.remove('hidden');
+                  display.style.display = 'block';
                   btnChart.textContent = "Hide Size Chart";
               } else {
-                  display.style.display = "none";
+                  display.classList.add('hidden');
+                  display.style.display = 'none';
                   btnChart.textContent = "View Size Chart";
               }
           });
@@ -669,7 +800,7 @@ function showProductModal(container) {
           btn.disabled = true;
 
          try {
-             const response = await fetch('/api/cart/add', {
+             const response = await fetch('/api/cart/', {
                  method: 'POST',
                  headers: { 'Content-Type': 'application/json' },
                  body: JSON.stringify({ productId: productId, quantity: 1, size: cartSize })

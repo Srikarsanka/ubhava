@@ -254,44 +254,81 @@ h2 {
 /* -------------------------------------------------- */
 /*               Size Chart Table Styles               */
 /* -------------------------------------------------- */
+/* -------------------------------------------------- */
+/*               Size Chart Table Styles               */
+/* -------------------------------------------------- */
+.size-chart-container {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  margin-top: 15px;
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  background: #fff;
+  min-height: 500px;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.size-chart-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari/Opera */
+}
+
+.size-chart-container.hidden {
+  display: none;
+}
+
 .size-chart-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
   font-size: 0.9rem;
+  table-layout: auto;
+  border: 1px solid #ddd;
 }
 
 .size-chart-table th {
   background-color: #f5f5f5;
-  color: #0f346c;
-  font-weight: 600;
-  padding: 8px;
-  border-bottom: 2px solid #ddd;
+  color: #800000;
+  font-weight: 700;
+  padding: 12px 10px;
+  border: 1px solid #ddd;
   text-align: left;
+  white-space: nowrap;
 }
 
 .size-chart-table td {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-  color: #555;
+  padding: 10px;
+  border: 1px solid #eee;
+  color: #333;
+  white-space: nowrap;
 }
 
 .size-chart-table tr:last-child td {
-  border-bottom: none;
+  border-bottom: 1px solid #ddd;
 }
 
 .modal-info-side {
   width: 55%;
-  /* More space for content */
   padding: 50px;
   padding-bottom: 80px;
-  /* Extra space at bottom for scrolling */
   overflow-y: auto;
+  overflow-x: visible;
   display: flex;
   flex-direction: column;
-  /* Custom Scrollbar for Firefox */
   scrollbar-width: thin;
   scrollbar-color: #d1d5db transparent;
+  position: relative;
+}
+
+.modal-desc-scroll-area::-webkit-scrollbar {
+  display: none;
+  /* Hide scrollbar for Chrome/Safari/Opera */
 }
 
 /* Custom Scrollbar for Chrome/Safari/Edge */
