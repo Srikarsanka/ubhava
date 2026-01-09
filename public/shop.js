@@ -388,13 +388,16 @@ function showProductModal(container) {
       const has = (text, keywords) => keywords.some(k => text.includes(k));
       const checkAll = (keywords) => has(nameLower, keywords) || has(cat, keywords) || has(parentCat, keywords);
 
-      const isSaree = checkAll(['saree', 'sari']);
-      const isHomeDecor = checkAll(['home', 'decor', 'wall', 'art']);
-      const isToysJewelry = checkAll(['toy', 'jewel', 'necklace', 'earring', 'bangle']);
+      const isSaree = checkAll(['saree', 'sari', 'drape']);
+      const isHomeDecor = checkAll(['home', 'decor', 'wall', 'art', 'gift', 'hamper']);
+      const isToysJewelry = checkAll(['toy', 'jewel', 'necklace', 'earring', 'bangle', 'set']);
+      
       const isKids = !isToysJewelry && !isHomeDecor && (parentCat === 'kids' || checkAll(['kid', 'boy', 'girl', 'child']));
-      // Men's: explicit men category OR keywords, but exclude kids
-      const isMens = !isKids && !isToysJewelry && !isHomeDecor && (parentCat === 'men' || checkAll(['men', 'kurta', 'sherwani', 'jacket', 'pajama']));
-      // Women's: Everything else that looks like clothing
+      
+      // Men's: explicit men category OR keywords (Added 'groom', 'waistcoat', 'bandhgala' for Wedding)
+      const isMens = !isKids && !isToysJewelry && !isHomeDecor && (parentCat === 'men' || checkAll(['men', 'kurta', 'sherwani', 'jacket', 'pajama', 'groom', 'waistcoat', 'bandhgala']));
+      
+      // Women's: Everything else that looks like clothing (Added 'bride', 'bridal' to be safe, though it's the fallback)
       // Explicitly check for lehenga or stitched suit as per requirements, or general fallback for women's wear
       const isWomen = !isKids && !isMens && !isSaree && !isHomeDecor && !isToysJewelry;
 
