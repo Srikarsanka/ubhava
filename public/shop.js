@@ -365,15 +365,239 @@ function attachProductEvents() {
   });
 }
 
-// Modal Logic -> Redirect to Product Details Page
+// Modal Logic - Restored & Refactored for Dynamic Data
 function showProductModal(container) {
       const productId = container.getAttribute("id");
-      if (productId) {
-          window.location.href = `product.html?id=${productId}`;
-      } else {
-          console.error("Product ID missing");
+      
+      // Find the full product object from the global 'products' array (loaded from API)
+      const product = products.find(p => p.id == productId);
+
+      if (!product) {
+          console.error("Product data not found for ID:", productId);
+          return;
       }
+
+      const img = product.img; // Use object data, not DOM attributes where possible
+      const name = product.name;
+      // Calculate prices dynamically if needed, or use stored attributes
+      const disprice = parseInt(container.getAttribute("data-discounted-price"));
+      const orgprice = parseInt(container.getAttribute("data-original-price"));
+      
+      // Categories
+      const cat = product.subCategory || "";
+      const parentCat = product.category || "";
+      
+      // ---------------------------------------------------------
+      // DYNAMIC DESCRIPTION (Fixes "Not Updating" Issue)
+      // ---------------------------------------------------------
+      // Use the description from the database. 
+      // If empty, fallback to the old generic text logic only as a safety net.
+      let descriptionHTML = "";
+      
+      if (product.description && product.description.trim().length > 0) {
+          descriptionHTML = `
+            <h4 style='color:#800000;margin-bottom:5px'>Description</h4>
+            <p class="modal-description" style="white-space: pre-line;">${product.description}</p>
+          `;
+      } else {
+          // Fallback logic if DB has no description (preserving old generic text style)
+          descriptionHTML = getFallbackDescription(name, cat, parentCat);
+      }
+
+
+      // ---------------------------------------------------------
+      // SIZE SELECTOR LOGIC
+      // ---------------------------------------------------------
+      const targetAudience = container.getAttribute("data-target-audience");
+      const isMens = targetAudience === 'men' || parentCat === 'men';
+      const isKids = targetAudience === 'kids' || parentCat === 'kids';
+      const isWomen = targetAudience === 'women' || parentCat === 'women'; 
+      const nameLower = name.toLowerCase();
+      const isSaree = cat === 'saree' || nameLower.includes('saree') || nameLower.includes('sari');
+
+      let sizeOptionsHTML = "";
+      
+      // Show sizes for Clothing (Men, Women, Kids) but NOT Saree (Free Size)
+      const showSizeSelector = (isMens || isKids || isWomen) && !isSaree && !['home', 'HomeDecor', 'jewellary', 'toys'].includes(cat);
+
+      if (showSizeSelector) {
+           let sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+           let label = "Select Size:";
+           
+           if (isKids) {
+               sizes = ["2-3Y", "3-4Y", "4-5Y", "5-6Y", "6-7Y", "7-8Y", "8-9Y", "9-10Y"];
+               label = "Select Age:";
+           }
+
+           sizeOptionsHTML = `
+            <div class="size-selector-container">
+              <strong style="color:#0f346c;">${label}</strong>
+              <div class="size-options-grid">
+                ${sizes.map(s => `<div class="size-btn">${s}</div>`).join('')}
+              </div>
+            </div>`;
+      }
+
+      // ---------------------------------------------------------
+      // CONSTRUCT MODAL
+      // ---------------------------------------------------------
+      const modalContainer = document.createElement("div");
+      modalContainer.className = "product-modal-container";
+      
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.top = "0"; overlay.style.left = "0";
+      overlay.style.width = "100vw"; overlay.style.height = "100vh";
+      overlay.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+      overlay.style.zIndex = "9999";
+      overlay.style.backdropFilter = "blur(5px)";
+
+      document.body.style.overflow = "hidden";
+
+      // Wishlist State
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      const isWishlisted = wishlist.some(item => item.name === name);
+      const wishlistBtnText = isWishlisted ? "❤️ Wishlisted" : "♡ Wishlist";
+      const wishlistBtnClass = isWishlisted ? "btn-secondary active" : "btn-secondary";
+
+      // Size Chart HTML (Simplified for now, can be expanded if users need it back)
+      const showChart = showSizeSelector;
+      const chartHTML = showChart ? `<div style="margin-top:10px; font-size:0.9rem; color:#0f346c; cursor:pointer; text-decoration:underline;">View Size Chart (Standard)</div>` : '';
+
+
+      modalContainer.innerHTML = `
+        <button class="close-modal-btn" id="closeModal">✕</button>
+        <div class="modal-split-view">
+            <div class="modal-image-side">
+                <img src="${img}" alt="${name}" />
+            </div>
+            <div class="modal-info-side">
+                <h2 class="modal-title">${name}</h2>
+                <div class="modal-price-row">
+                    <span class="current-price" style="font-size:1.8rem;">₹${disprice}</span>
+                    <span class="original-price" style="font-size:1.2rem;">₹${orgprice}</span>
+                    <span style="color:green; font-weight:600; font-size:0.9rem;">${Math.round(((orgprice-disprice)/orgprice)*100)}% OFF</span>
+                </div>
+                
+                <div class="modal-desc-scroll-area" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                    ${descriptionHTML}
+                </div>
+
+                ${sizeOptionsHTML}
+
+                <div class="action-buttons" style="margin-top: 20px;">
+                    <button class="btn-primary" id="addToCart">Add to Cart</button>
+                    <button class="${wishlistBtnClass}" id="addToWishlist">${wishlistBtnText}</button>
+                </div>
+            </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+      document.body.appendChild(modalContainer);
+
+      // ---------------------------------------------------------
+      // EVENT LISTENERS
+      // ---------------------------------------------------------
+      const closeValues = () => {
+          modalContainer.remove();
+          overlay.remove();
+          document.body.style.overflow = "auto";
+      };
+      
+      modalContainer.querySelector("#closeModal").addEventListener("click", closeValues);
+      overlay.addEventListener("click", closeValues);
+
+      // Size Selection
+      let selectedSize = null;
+      modalContainer.querySelectorAll(".size-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+              modalContainer.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+              btn.classList.add("active");
+              selectedSize = btn.textContent;
+          });
+      });
+
+      // Add to Cart
+      modalContainer.querySelector("#addToCart").addEventListener("click", async () => {
+          if (!Auth.user) {
+             alert("Please login to add items to cart.");
+             closeValues();
+             Auth.showLoginModal();
+             return;
+          }
+
+          if (showSizeSelector && !selectedSize) {
+              alert("Please select a size first.");
+              return;
+          }
+         
+          const cartSize = selectedSize || (isSaree ? 'Free Size' : 'Standard');
+          const btn = modalContainer.querySelector("#addToCart");
+          const originalText = btn.textContent;
+          btn.textContent = "Adding...";
+          btn.disabled = true;
+
+         try {
+             const response = await fetch('/api/cart/add', {
+                 method: 'POST',
+                 headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify({ productId: productId, quantity: 1, size: cartSize })
+             });
+
+             if (response.ok) {
+                 btn.textContent = "Added ✓";
+                 btn.style.backgroundColor = "#2e7d32";
+                 setTimeout(() => { closeValues(); }, 500);
+             } else {
+                const err = await response.json();
+                alert(`Error: ${err.message || 'Failed'}`);
+                btn.textContent = originalText;
+                btn.disabled = false;
+             }
+         } catch (error) {
+             console.error(error);
+             alert("Network error.");
+             btn.textContent = originalText;
+             btn.disabled = false;
+         }
+      });
+      
+      // Wishlist
+      modalContainer.querySelector("#addToWishlist").addEventListener("click", (e) => {
+          // ... (Existing wishlist logic logic, keeping it simple for now)
+          const btn = e.target;
+          let currentWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+          const existsIndex = currentWishlist.findIndex(item => item.name === name);
+
+          if (existsIndex > -1) {
+              currentWishlist.splice(existsIndex, 1);
+              btn.textContent = "♡ Wishlist";
+              btn.classList.remove("active");
+              alert("Removed from Wishlist");
+          } else {
+              currentWishlist.push({ name, img, disprice, id: productId });
+              btn.textContent = "❤️ Wishlisted";
+              btn.classList.add("active");
+              alert("Added to Wishlist!");
+          }
+          localStorage.setItem("wishlist", JSON.stringify(currentWishlist));
+      });
 }
+
+// Fallback Description Helper (Restoring the 'feeling' of the old descriptions if DB is empty)
+function getFallbackDescription(name, cat, parentCat) {
+    const nameLower = name.toLowerCase();
+    
+    if (cat === 'saree' || nameLower.includes('saree')) {
+        return `<p>Traditional Indian Saree matching the style of ${name}. Elegant, timeless, and perfect for special occasions.</p>`;
+    }
+    if (parentCat === 'men' || targetAudience === 'men') {
+        return `<p>Premium Men's wear. Crafted for comfort and style, suitable for festive and casual events.</p>`;
+    }
+    return `<p>High quality ${name}. Authentic Indian craftsmanship.</p>`;
+}
+
 
 
 // --------------------------------------------------------
