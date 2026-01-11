@@ -20,43 +20,23 @@ async function fetchFestivalContext() {
         
         // Check if image_url is missing (which it will be now, as we removed backend gen)
         if (!data.editorial_content.image_url && data.image_prompt) {
+             console.log("🎨 Fetching dynamic image from Unsplash...");
              
-             // DISABLED: Puter.js image generation (was causing login modal)
-             // Using fallback image instead
-             console.log("🎨 Using fallback image (Puter.js disabled)");
-             data.editorial_content.image_url = "/assets/minimal_earthen_pottery_1767951596489.png";
+             // Extract keywords from image prompt for better search
+             const keywords = data.festival_name 
+                 ? data.festival_name.toLowerCase().replace(/\s+/g, ',') + ',indian,festival,heritage'
+                 : 'indian,heritage,handcraft,traditional';
              
-             /* ORIGINAL PUTER.JS CODE - DISABLED
-             // Client-Side Random Variance (To ensure variety even if backend is cached)
-             const styles = [
-                "Cinematic Wide Shot, environmental context",
-                "Extreme Macro Detail, texture focus",
-                "Flat Lay composition from above",
-                "Soft focus natural light portrait style (no faces)"
-             ];
-             const randomStyle = styles[Math.floor(Math.random() * styles.length)];
-             const variedPrompt = `${data.image_prompt}. Visual Style: ${randomStyle}. Random Seed: ${Math.random()}`;
-
-             console.log("🎨 Frontend: Generating Image via Puter.js for prompt:", variedPrompt);
              try {
-                // Primary: Flux.1 Schnell
-                const imageElement = await puter.ai.txt2img(variedPrompt, { model: "black-forest-labs/FLUX.1-schnell" });
-                data.editorial_content.image_url = imageElement.src;
-                console.log("✅ Image Generated Successfully via Puter.js (Flux)");
+                 // Using Unsplash Source API (no API key required!)
+                 // This gives us random high-quality images based on keywords
+                 const unsplashUrl = `https://source.unsplash.com/1600x900/?${keywords}`;
+                 data.editorial_content.image_url = unsplashUrl;
+                 console.log(`✅ Dynamic image loaded: ${keywords}`);
              } catch (err) {
-                console.warn("⚠️ Flux Gen Failed, retrying with SDXL...", err);
-                try {
-                    // Fallback: SDXL
-                    const imageElement = await puter.ai.txt2img(variedPrompt, { model: "stabilityai/stable-diffusion-xl-base-1.0" });
-                    data.editorial_content.image_url = imageElement.src;
-                    console.log("✅ Image Generated Successfully via Puter.js (SDXL)");
-                } catch(e2) {
-                    console.error("❌ All Image Gen Failed:", e2);
-                     // Fallback to local asset
-                    data.editorial_content.image_url = "/assets/minimal_earthen_pottery_1767951596489.png"; 
-                }
+                 console.warn("⚠️ Unsplash fetch failed, using fallback", err);
+                 data.editorial_content.image_url = "/assets/minimal_earthen_pottery_1767951596489.png";
              }
-             */
         }
 
         return data;
