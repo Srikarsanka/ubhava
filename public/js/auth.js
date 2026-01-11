@@ -11,8 +11,8 @@ const Auth = {
             } else {
                 this.user = null;
                 this.updateUI(false);
-                // Enforce Login on Page Load
-                this.openModal('login');
+                // DISABLED: Don't force login on page load - let users browse freely
+                // this.openModal('login');
                 return null;
             }
         } catch (error) {
