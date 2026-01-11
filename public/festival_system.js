@@ -21,6 +21,12 @@ async function fetchFestivalContext() {
         // Check if image_url is missing (which it will be now, as we removed backend gen)
         if (!data.editorial_content.image_url && data.image_prompt) {
              
+             // DISABLED: Puter.js image generation (was causing login modal)
+             // Using fallback image instead
+             console.log("🎨 Using fallback image (Puter.js disabled)");
+             data.editorial_content.image_url = "/assets/minimal_earthen_pottery_1767951596489.png";
+             
+             /* ORIGINAL PUTER.JS CODE - DISABLED
              // Client-Side Random Variance (To ensure variety even if backend is cached)
              const styles = [
                 "Cinematic Wide Shot, environmental context",
@@ -50,6 +56,7 @@ async function fetchFestivalContext() {
                     data.editorial_content.image_url = "/assets/minimal_earthen_pottery_1767951596489.png"; 
                 }
              }
+             */
         }
 
         return data;
