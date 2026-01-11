@@ -4,6 +4,9 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /usr/src/app
 
+# Set production environment
+ENV NODE_ENV=production
+
 # Copy package files first (cache optimization)
 COPY package*.json ./
 
@@ -13,8 +16,8 @@ RUN npm ci --only=production
 # Copy application source code
 COPY . .
 
-# Expose the API port
+# Expose the API port (Render will override with $PORT)
 EXPOSE 3000
 
 # Start the server
-CMD ["npm", "start"]
+CMD ["node", "server/index.js"]

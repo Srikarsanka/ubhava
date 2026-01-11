@@ -52,8 +52,8 @@ async function getFestivalContext(dateString) {
 
       try {
         const genAI = new GoogleGenerativeAI(currentKey);
-        // Default to Flash
-        let model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Use stable Gemini Pro model
+        let model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
         // Calculate specific date window for the LLM
         const today = new Date(dateString);
@@ -107,21 +107,9 @@ Output STRICT JSON only (no markdown, no comments):
 }
 `;
         
-        // EXECUTE GENERATION (Safely handle 404 here)
-        let response;
-        try {
-             const result = await model.generateContent(prompt);
-             response = await result.response;
-        } catch(genError) {
-             console.log(`⚠️ Flash Model failed (${genError.message}). Retrying with Gemini Pro...`);
-             try {
-                 const fallbackModel = genAI.getGenerativeModel({ model: "gemini-pro" });
-                 const result = await fallbackModel.generateContent(prompt);
-                 response = await result.response;
-             } catch(proError) {
-                 throw genError; // Use original error if fallback also fails
-             }
-        }
+        // EXECUTE GENERATION
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
 
         let text = response.text();
 

@@ -16,7 +16,9 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // Update if frontend port differs
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://ubhava-com.onrender.com', 'http://localhost:3000']
+        : 'http://localhost:3000',
     credentials: true 
 }));
 app.use(express.json());
@@ -25,9 +27,6 @@ app.use(cookieParser());
 
 // Serve Static Files (The "Frontend")
 app.use(express.static(path.join(__dirname, '../public')));
-
-// Serve Artifacts (Generated Images)
-app.use('/artifacts', express.static('C:/Users/sanka/.gemini/antigravity/brain/dca690f2-6f6f-4e54-b3ab-00e682a963fe'));
 
 // API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -53,6 +52,6 @@ app.get('/api/status', (req, res) => {
     res.json({ status: 'active', message: 'Backend is running with MongoDB' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
 });
