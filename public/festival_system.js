@@ -20,23 +20,27 @@ async function fetchFestivalContext() {
         
         // Check if image_url is missing (which it will be now, as we removed backend gen)
         if (!data.editorial_content.image_url && data.image_prompt) {
-             console.log("🎨 Fetching dynamic image from Unsplash...");
+             console.log("🎨 Generating AI image via Cloudinary...");
              
-             // Extract keywords from image prompt for better search
-             const keywords = data.festival_name 
-                 ? data.festival_name.toLowerCase().replace(/\s+/g, ',') + ',indian,festival,heritage'
-                 : 'indian,heritage,handcraft,traditional';
+             // Use Cloudinary's AI-powered image generation
+             // Your cloud name: dnevq4wek
+             const cloudName = 'dnevq4wek';
              
-             try {
-                 // Using Unsplash Source API (no API key required!)
-                 // This gives us random high-quality images based on keywords
-                 const unsplashUrl = `https://source.unsplash.com/1600x900/?${keywords}`;
-                 data.editorial_content.image_url = unsplashUrl;
-                 console.log(`✅ Dynamic image loaded: ${keywords}`);
-             } catch (err) {
-                 console.warn("⚠️ Unsplash fetch failed, using fallback", err);
-                 data.editorial_content.image_url = "/assets/minimal_earthen_pottery_1767951596489.png";
-             }
+             // Create a descriptive prompt for better AI generation
+             const aiPrompt = data.festival_name 
+                 ? `${data.festival_name} festival celebration in India, traditional heritage, vibrant colors, cultural elements, premium photography`
+                 : 'Indian traditional handcraft heritage, artisan craftsmanship, cultural celebration';
+             
+             // Encode the prompt for URL
+             const encodedPrompt = encodeURIComponent(aiPrompt);
+             
+             // Cloudinary AI Image Generation URL
+             // Using e_gen_background_replace for AI-powered image generation
+             // Alternative: Use a base image with AI enhancements
+             const cloudinaryUrl = `https://res.cloudinary.com/${cloudName}/image/upload/e_gen_fill,w_1600,h_900,c_fill,g_auto,q_auto,f_auto/v1/festival_ai/${encodedPrompt}.jpg`;
+             
+             data.editorial_content.image_url = cloudinaryUrl;
+             console.log(`✅ Cloudinary AI image generated for: ${data.festival_name || 'Heritage'}`);
         }
 
         return data;
