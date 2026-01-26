@@ -2,3 +2,6 @@
 .env
 server/.env
 db_export/
+node_modules/
+dist/
+.DS_Store
