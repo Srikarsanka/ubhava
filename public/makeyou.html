@@ -25,10 +25,58 @@
                   <a href="shop.html">Shop</a>
                   <a href="heritage.html">Heritage</a>
                   <a href="contact.html">Contact</a>
-                  <a id="profile-btn" style="cursor: pointer;">Profile</a>
                   <a href="cart.html">Cart</a>
+                  <a id="nav-login-btn" href="#" style="font-weight: bold; color: #ff7b00;">Login</a>
+                  <span id="nav-user-display"
+                        style="display:none; color: #0f346c; margin-right: 10px; cursor: pointer; font-weight: 500;"
+                        title="View Profile"></span>
+                  <a id="nav-logout-btn" href="#" style="display:none; color: red;">Logout</a>
             </div>
       </nav>
+
+      <!-- Auth Modal -->
+      <div id="auth-modal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+            <div
+                  style="background: white; padding: 30px; border-radius: 10px; width: 400px; text-align: center; position: relative;">
+                  <span id="auth-modal-close"
+                        style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
+                  <h2 id="auth-modal-title" style="color: #800000; margin-bottom: 20px;">Login</h2>
+
+                  <!-- Login Form -->
+                  <div id="login-form-container">
+                        <form id="auth-login-form">
+                              <input type="email" name="email" placeholder="Email Address" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="password" name="password" placeholder="Password" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <button type="submit"
+                                    style="width: 100%; padding: 12px; background: #ff7b00; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">LOGIN</button>
+                        </form>
+                        <p style="margin-top: 15px;">New here? <a href="#" id="switch-to-register"
+                                    style="color: #0f346c; font-weight: bold;">Sign Up</a></p>
+                  </div>
+
+                  <!-- Register Form -->
+                  <div id="register-form-container" style="display: none;">
+                        <form id="auth-register-form">
+                              <input type="text" name="fullName" placeholder="Full Name" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="email" name="email" placeholder="Email Address" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="text" name="phone" placeholder="Phone Number"
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <input type="password" name="password" placeholder="Password" required
+                                    style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;">
+                              <button type="submit"
+                                    style="width: 100%; padding: 12px; background: #0f346c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">REGISTER</button>
+                        </form>
+                        <p style="margin-top: 15px;">Already have an account? <a href="#" id="switch-to-login"
+                                    style="color: #ff7b00; font-weight: bold;">Login</a></p>
+                  </div>
+            </div>
+      </div>
+
       <div class="container" style="padding-top: 120px;">
             <h2>Upload Your Photo</h2>
             <input type="file" id="imageUpload" accept="image/*" onchange="uploadImage(event)">
@@ -257,9 +305,12 @@
                               <h4>Discover</h4>
                               <ul>
                                     <li><a href="heritage.html"><i class="fas fa-chevron-right"></i> Our Story</a></li>
-                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Artisan Stories</a></li>
-                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Craftsmanship</a></li>
-                                    <li><a href="#"><i class="fas fa-chevron-right"></i> Sustainability</a></li>
+                                    <li><a href="heritage.html"><i class="fas fa-chevron-right"></i> Artisan Stories</a>
+                                    </li>
+                                    <li><a href="heritage.html"><i class="fas fa-chevron-right"></i> Craftsmanship</a>
+                                    </li>
+                                    <li><a href="heritage.html"><i class="fas fa-chevron-right"></i> Sustainability</a>
+                                    </li>
                                     <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
                               </ul>
                         </div>
@@ -280,6 +331,7 @@
                   </div>
             </div>
       </footer>
+      <script src="js/auth.js"></script>
       <script src="index.js"></script>
 </body>
 

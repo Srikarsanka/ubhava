@@ -1,0 +1,85 @@
+{
+      "festivals": [
+            {
+                  "name": "Makar Sankranti / Pongal / Lohri",
+                  "startDate": "2026-01-09",
+                  "endDate": "2026-01-17",
+                  "mood": [
+                        "festive",
+                        "vibrant",
+                        "harvest"
+                  ],
+                  "prompt": "Vibrant Indian harvest festival celebration with colorful kites flying in the sky, traditional women in bright sarees with flower garlands, golden sunlight, joyful atmosphere, premium editorial photography, 16:9 aspect ratio",
+                  "title": "The Harvest Symphony",
+                  "description": "Celebrating the harvest with the thrill of kite flying, the vigor of village sports, and the sweetness of til-gud.",
+                  "cta": "Shop the Harvest Collection"
+            },
+            {
+                  "name": "Holi",
+                  "startDate": "2026-03-08",
+                  "endDate": "2026-03-15",
+                  "mood": [
+                        "festive",
+                        "vibrant",
+                        "colorful"
+                  ],
+                  "prompt": "Joyful Holi festival celebration with vibrant colored powders in the air, people in traditional white clothes, rainbow colors, spring atmosphere, premium editorial photography, 16:9 aspect ratio",
+                  "title": "Festival of Colors",
+                  "description": "Embrace the spirit of Holi with vibrant hues and traditional elegance.",
+                  "cta": "Explore Holi Collection"
+            },
+            {
+                  "name": "Ugadi / Gudi Padwa",
+                  "startDate": "2026-03-20",
+                  "endDate": "2026-03-25",
+                  "mood": [
+                        "festive",
+                        "fresh",
+                        "new beginnings"
+                  ],
+                  "prompt": "Indian New Year celebration with decorated doorways, fresh mango leaves, traditional rangoli, women in elegant silk sarees, auspicious atmosphere, premium editorial photography, 16:9 aspect ratio",
+                  "title": "New Beginnings",
+                  "description": "Welcome the New Year with traditional grace and festive elegance.",
+                  "cta": "Shop New Year Collection"
+            },
+            {
+                  "name": "Diwali",
+                  "startDate": "2026-10-15",
+                  "endDate": "2026-10-25",
+                  "mood": [
+                        "festive",
+                        "luminous",
+                        "celebratory"
+                  ],
+                  "prompt": "Diwali festival of lights with traditional oil lamps (diyas), women in luxurious silk sarees and gold jewelry, warm golden lighting, elegant celebration, premium editorial photography, 16:9 aspect ratio",
+                  "title": "Festival of Lights",
+                  "description": "Illuminate your celebrations with timeless elegance and traditional splendor.",
+                  "cta": "Discover Diwali Collection"
+            },
+            {
+                  "name": "Navratri / Durga Puja",
+                  "startDate": "2026-09-25",
+                  "endDate": "2026-10-05",
+                  "mood": [
+                        "festive",
+                        "vibrant",
+                        "devotional"
+                  ],
+                  "prompt": "Navratri celebration with women in colorful chaniya cholis performing garba dance, traditional dandiya sticks, vibrant colors, energetic atmosphere, premium editorial photography, 16:9 aspect ratio",
+                  "title": "Nine Nights of Devotion",
+                  "description": "Dance through the festivities with vibrant traditional attire.",
+                  "cta": "Shop Navratri Collection"
+            }
+      ],
+      "branding": {
+            "title": "Curated Heritage",
+            "description": "Celebrating the enduring traditions of Indian craftsmanship shaped by generations.",
+            "cta": "Explore Collection",
+            "prompt": "Elegant Indian heritage craftsmanship, traditional handloom textiles, artisan hands weaving, warm earthy tones, premium editorial photography, cultural authenticity, 16:9 aspect ratio",
+            "mood": [
+                  "calm",
+                  "heritage",
+                  "timeless"
+            ]
+      }
+}

@@ -1,187 +1,255 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const axios = require('axios');
+const Festival = require('./models/Festival');
+const FestivalContext = require('./models/FestivalContext');
 require("dotenv").config();
 
-// Load multiple keys
-// Load split keys
-// Load multiple keys
-const promptKey = process.env.GEMINI_PROMPT_KEY || "";
-const imageKeysString = process.env.GEMINI_IMAGE_KEYS || "";
-const imageKeys = imageKeysString ? imageKeysString.split(',').map(k => k.trim()) : [];
+const allKeys = [process.env.GEMINI_PROMPT_KEY, ...(process.env.GEMINI_IMAGE_KEYS || "").split(',')].filter(k => k && k.length > 0);
 
-// Combine all keys into a single pool for valid rotation
-const allKeys = [promptKey, ...imageKeys].filter(k => k.length > 0);
-
-console.log(`🔑 Loaded ${allKeys.length} API Keys for Rotation`);
-
-// Helper: Get a Random Key
-function getRandomKey() {
-    if (allKeys.length === 0) return null;
-    return allKeys[Math.floor(Math.random() * allKeys.length)];
-}
-
-
-
-let festivalCache = {
-    date: null,
-    data: null
-};
+const Product = require('./models/Product'); // Ensure Product model is available
 
 async function getFestivalContext(dateString) {
-  // 1. Check Cache - DISABLED temporarily to force fresh detection of Sankranti
-  // if (festivalCache.data && festivalCache.date === dateString) {
-  //    console.log("⚡ Serving Festival Context from Cache");
-  //    return festivalCache.data;
-  // }
+    const today = new Date(dateString);
+    const tenDaysLater = new Date(today);
+    tenDaysLater.setDate(today.getDate() + 10);
 
-  // Retry Logic: Try up to 3 different keys if we hit Rate Limits
-  let attempts = 0;
-  const maxAttempts = 3;
-  let lastError = null;
+    try {
+        // 1. Find the most relevant active festival (Today is within the 10-day window)
+        const upcomingFestival = await Festival.findOne({
+            startDate: { $lte: today },
+            endDate: { $gte: today }
+        }).sort({ eventDate: 1 }); 
 
-  while (attempts < maxAttempts) {
-      attempts++;
-      const currentKey = getRandomKey();
-      
-      if (!currentKey) {
-          console.error("❌ No API Keys available.");
-          break;
-      }
+        // 2. If no festival window is active, try to DISCOVER one via AI
+        if (!upcomingFestival) {
+            console.log(`🔍 No festival in DB for ${dateString}. Launching AI Discovery...`);
+            await discoverNewFestivals(today);
+            
+            // Re-check after discovery
+            const discoveredFestival = await Festival.findOne({
+                startDate: { $lte: today },
+                endDate: { $gte: today }
+            }).sort({ eventDate: 1 });
 
-      console.log(`🤖 Intelligence Request (Attempt ${attempts}/${maxAttempts}) using Key: ...${currentKey.slice(-4)}`);
+            if (!discoveredFestival) {
+                // Return Branding Mode
+                return {
+                    detected: false,
+                    templateType: 'standard',
+                    festival_name: "UDBHAVA Heritage",
+                    mood: ["heritage", "timeless", "artisan"],
+                    editorial_content: {
+                        title: "UDBHAVA - The Origin of Indian Handcraft",
+                        description: "Celebrating the enduring traditions of Indian craftsmanship shaped by generations.",
+                        cta_text: "Explore Our Story",
+                        image_url: "/images/promotional/bridal_heritage.png"
+                    },
+                    special_offers: [],
+                    related_products: []
+                };
+            }
+            upcomingFestival = discoveredFestival;
+        }
 
-      try {
-        const genAI = new GoogleGenerativeAI(currentKey);
-        // Use stable Gemini Pro model
-        let model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        // ... existing logic for found festival ...
+        // 3. If festival found, check if we already have a generated context
+        const existingContext = await FestivalContext.findOne({
+            festival_name: upcomingFestival.name,
+            expires_at: { $gt: today }
+        });
 
-        // Calculate specific date window for the LLM
-        const today = new Date(dateString);
-        const nextWeek = new Date(today);
-        nextWeek.setDate(today.getDate() + 7);
+        if (existingContext) {
+            console.log(`🏠 Restoring Persistent Festival: ${existingContext.festival_name} with ${existingContext.related_products?.length || 0} products`);
+            return existingContext.toObject();
+        }
 
-        const prompt = `
-Role: Cultural Intelligence System for a premium Indian heritage website.
+        // 4. Generate New Context using AI (Text Only)
+        console.log(`🤖 Generating AI Context for: ${upcomingFestival.name}`);
+        const festivalData = await generateFestivalText(upcomingFestival);
 
-Task:
-Determine the cultural or festival context in India based on the given date info.
+        // 5. Select static image
+        const image_url = (upcomingFestival.suggestedImages && upcomingFestival.suggestedImages.length > 0) 
+            ? upcomingFestival.suggestedImages[0] 
+            : "/images/promotional/festival_celebration.jpg";
 
-Date Information:
-- Current Date: ${today.toDateString()}
-- Shopping Window: ${today.toDateString()} to ${nextWeek.toDateString()} (Next 7 Days)
-Region: India
+        festivalData.editorial_content.image_url = image_url;
 
-Instructions:
-1. CRITICAL: We are an E-commerce site. Users shop *before* the festival.
-2. LOOK AHEAD: If a major festival (like Makar Sankranti, Pongal, Lohri, Holi, Diwali) is strictly within the "Shopping Window" (next 7 days), **DECLARE IT DETECTED**.
-3. DO NOT wait for the exact festival date. If it's Jan 9 and Sankranti is Jan 14, DETECT IT.
-4. If a festival is detected, return its specific cultural details (History, Significance).
-5. If truly no festival is near, return a standard "Curated Heritage" context.
+        // 6. PERSISTENT PRODUCT GENERATION (NEW TECHNIQUE)
+        // Find matching products based on keywords and store in DB
+        let related_products = [];
+        if (festivalData.product_keywords && festivalData.product_keywords.length > 0) {
+            console.log(`🔍 Pre-calculating product list for ${upcomingFestival.name}`);
+            const searchTerms = festivalData.product_keywords.flatMap(kw => kw.split(' ')).filter(w => w.length > 2);
+            const query = {
+                $or: searchTerms.map(term => ({
+                    $or: [
+                        { name: { $regex: term, $options: 'i' } },
+                        { category: { $regex: term, $options: 'i' } },
+                        { description: { $regex: term, $options: 'i' } }
+                    ]
+                }))
+            };
 
-Image Prompt Rules (CRITICAL: VARY THE OUTPUT):
-- Visual Style: Randomly pick ONE of these styles for the prompt:
-  1. "Cinematic Wide Shot" (Environmental, scene-setting)
-  2. "Macro Detail" (Extreme close-up of texture/material)
-  3. "Human Connection" (Hands working, holding, or crafting - no faces)
-  4. "Flat Lay Composition" (Arranged objects from above)
-- Lighting: Warm, natural, cinematic lighting.
-- Palette: Rich, earthy, heritage colors (Saffron, Terracotta, Teal, Gold).
-- Aesthetic: Premium, Editorial, Vogue India style.
-- NO Text, NO Banners.
-- Subject: Focus strictly on elements related to the festival.
-  - For Sankranti: USE "Harvest Crops", "Flying Kites in Village", "Rooster/Cock Fight", "Sugarcane Fields".
-- Random Variance Seed: ${Math.random()} (Use this to fundamentally change the composition)
+            let productMatches = await Product.find(query).limit(12);
+            if (productMatches.length === 0) productMatches = await Product.find({ isTrending: true }).limit(12);
 
-Output STRICT JSON only (no markdown, no comments):
+            let highestDiscount = 0;
+            if (festivalData.special_offers && festivalData.special_offers.length > 0) {
+                highestDiscount = Math.max(...festivalData.special_offers.map(o => o.discount_percentage));
+            }
 
-{
-  "detected": true | false,
-  "festival_name": string | null,
-  "mood": ["calm", "earthy", "heritage"],
-  "editorial_content": {
-    "title": string,
-    "description": string,
-    "cta_text": string | null
-  },
-  "image_prompt": string
-}
-`;
-        
-        // EXECUTE GENERATION
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
+            related_products = productMatches.map(p => {
+                const productObj = p.toObject();
+                if (highestDiscount > 0) {
+                    productObj.original_price = productObj.price;
+                    productObj.festive_price = Math.round(productObj.price * (1 - highestDiscount / 100));
+                    productObj.discount_applied = highestDiscount;
+                }
+                return productObj;
+            });
+        }
 
-        let text = response.text();
+        // 7. Save to DB with persistent multi-coupons and product list
+        const contextExpiry = upcomingFestival.endDate;
+        const newContext = await FestivalContext.create({
+            ...festivalData,
+            detected: true, // Crucial for frontend logic
+            festival_name: upcomingFestival.name,
+            templateType: upcomingFestival.templateType,
+            vfx_type: Array.isArray(festivalData.vfx_type) ? festivalData.vfx_type : [festivalData.vfx_type || 'standard'],
+            applicable_date: dateString,
+            related_products: related_products,
+            expires_at: contextExpiry
+        });
 
-        // Clean Gemini formatting
-        text = text.replace(/```json|```/g, "").trim();
+        return newContext.toObject();
 
-        // Safety: ensure valid JSON
-        let parsed = JSON.parse(text);
-
-        // Update Cache
-        festivalCache = {
-            date: dateString,
-            data: parsed
+    } catch (err) {
+        console.error("Festival Intelligence Error:", err);
+        // Minimum safe fallback
+        return {
+            detected: false,
+            festival_name: "UDBHAVA",
+            editorial_content: { title: "UDBHAVA Heritage", description: "Indian Handcrafts", image_url: "/images/promotional/bridal_heritage.png" }
         };
+    }
+}
 
-        return parsed;
+async function generateFestivalText(festival) {
+    const shuffledKeys = [...allKeys].sort(() => 0.5 - Math.random());
+    
+    for (const key of shuffledKeys) {
+        try {
+            const genAI = new GoogleGenerativeAI(key);
+            const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-      } catch (error) {
-        console.error(`❌ Attempt ${attempts} Failed (Key ...${currentKey.slice(-4)}):`, error.message);
-        lastError = error;
-        // If it's a 429 (Quota), the loop will try another key. 
-        // If it's another error, we might still retry just in case.
-      }
+            const prompt = `
+Role: Cultural Editor for UDBHAVA (Premium Indian Heritage Shop).
+Festival: ${festival.name}
+Details: ${festival.description}
+
+Task: Generate festive marketing content. No AI imagery needed. Just text.
+Return STRICT JSON:
+{
+  "detected": true,
+  "festival_wishes": "Warm greeting...",
+  "product_keywords": ["keyword1", "keyword2"...],
+  "special_offers": [
+    {
+      "label": "Festive Offer",
+      "discount_percentage": 20,
+      "discount_code": "CODE1",
+      "min_spend": 2000,
+      "expires_at": "${festival.endDate.toISOString().split('T')[0]}"
+    },
+    {
+       "label": "Premium Pack",
+       "discount_percentage": 25,
+       "discount_code": "CODE2",
+       "min_spend": 5000,
+       "expires_at": "${festival.endDate.toISOString().split('T')[0]}"
+    }
+  ],
+  "editorial_content": {
+    "title": "Short catchy title",
+    "description": "Luxurious 2-sentence description of the festival's craft significance",
+    "cta_text": "Discover Collection"
+  },
+  "mood": ["cultural", "vibrant"],
+  "vfx_type": ["diyas", "fireworks"] 
+}
+Note: Select the most culturally appropriate VFX array for ${festival.name}. 
+- For Diwali, ALWAYS include both "fireworks" and "diyas".
+- For Republic Day/Independence Day, ALWAYS include "airshow" and NEVER "fireworks".
+- Options: diyas, flowers, fireworks, lanterns, airshow, standard.
+`;
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            let text = response.text().replace(/```json|```/g, "").trim();
+            return JSON.parse(text);
+
+        } catch (e) {
+            console.warn(`Key ...${key.slice(-4)} failed, trying next.`);
+        }
+    }
+    throw new Error("All AI keys failed for text generation.");
+}
+
+async function discoverNewFestivals(targetDate) {
+    const year = targetDate.getFullYear();
+    const shuffledKeys = [...allKeys].sort(() => 0.5 - Math.random());
+    
+    for (const key of shuffledKeys) {
+        try {
+            const genAI = new GoogleGenerativeAI(key);
+            const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+
+            const prompt = `
+Role: Specialized Cultural Researcher for UDBHAVA (Premium Telugu Heritage & Handcraft Brand).
+Target Year: ${year}
+Current Date: ${targetDate.toISOString().split('T')[0]}
+
+Task: Identify major Indian festivals for the year ${year}, with a HEAVY FOCUS on Telugu Culture and Heritage (Andhra Pradesh & Telangana). 
+Include festivals like: Ugadi, Sankranti, Vinayaka Chavithi, Varalakshmi Vratham, Bonalu, Bathukamma, Dussehra, Deepavali, Sri Rama Navami.
+
+For each festival, determine the EXACT date for ${year} based on the Hindu Lunar Calendar (Panchangam).
+
+Return STRICT JSON array for the "Festival" schema:
+[
+  {
+    "name": "Festival Name (e.g. Ugadi 2026)",
+    "eventDate": "YYYY-MM-DD",
+    "startDate": "YYYY-MM-DD", // Exactly 10 days before eventDate
+    "endDate": "YYYY-MM-DD",   // 1 day after eventDate
+    "description": "2-sentence cultural significance focusing on handcraft/heritage",
+    "keywords": ["saree", "silk", "handloom", "puja", "tradition"],
+    "templateType": "harvest" // Options: patriotic, harvest, spring, spiritual, standard
   }
+]
+- Use 'harvest' for Sankranti.
+- Use 'spiritual' for Puja festivals (Ganesh, Varalakshmi, Dussehra).
+- Use 'spring' for Holi/Ugadi.
+`;
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            let text = response.text().replace(/```json|```/g, "").trim();
+            const festivalList = JSON.parse(text);
 
-  // If we reach here, all attempts failed
-  console.error("🚨 All API retries exhausted. Attempting Local Smart Fallback.");
-  
-  // LOCAL DETERMINISTIC CHECK (Failsafe)
-  const today = new Date(dateString);
-  const month = today.getMonth(); // 0 = Jan
-  const day = today.getDate();
+            for (const fest of festivalList) {
+                // Only insert if it doesn't exist
+                await Festival.findOneAndUpdate(
+                    { name: fest.name },
+                    fest,
+                    { upsert: true, new: true }
+                );
+            }
+            console.log(`✅ AI Discovery complete. Learned ${festivalList.length} festivals for ${year}.`);
+            return;
 
-  // JANUARY: Makar Sankranti / Pongal / Lohri (Approx Jan 10 - Jan 17)
-  if (month === 0 && day >= 9 && day <= 17) {
-       console.log("✅ Local Fallback: Explicitly detecting Makar Sankranti/Pongal");
-       
-       // Randomly pick a fallback theme for variety
-       const themes = [
-           "Cinematic shot of colorful kites flying over an Indian village rooftop at sunset, golden hour lighting.",
-           "Action shot of a traditional rooster fight/cock fight in a rustic village setting, dynamic motion, dust rising, cinematic lighting.",
-           "Bountiful harvest of new crops, sugarcane, and turmeric heaps in a village courtyard, warm earthy tones.",
-           "A rustic brass plate filled with sesame ladoos (til-gud) and sugarcane pieces, placed on a sunlit stone floor."
-       ];
-       const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-
-       return {
-          detected: true,
-          festival_name: "Makar Sankranti / Pongal / Lohri",
-          mood: ["festive", "vibrant", "harvest"],
-          editorial_content: {
-            title: "The Harvest Symphony",
-            description: "Celebrating the harvest with the thrill of kite flying, the vigor of village sports, and the sweetness of til-gud.",
-            cta_text: "Shop the Harvest Collection"
-          },
-          image_prompt: `Editorial photography, Sankranti festival. ${randomTheme} Premium heritage aesthetic.`
-       };
-  }
-
-  // DEFAULT FALLBACK
-  return {
-      detected: false,
-      festival_name: null,
-      mood: ["calm", "heritage", "timeless"],
-      editorial_content: {
-        title: "Curated Heritage",
-        description:
-          "Celebrating the enduring traditions of Indian craftsmanship shaped by generations.",
-        cta_text: null
-      },
-      image_prompt: "Calm heritage texture"
-  };
+        } catch (e) {
+            console.warn(`Discovery Key fail: ${e.message}`);
+        }
+    }
 }
 
 module.exports = { getFestivalContext };

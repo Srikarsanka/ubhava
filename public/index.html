@@ -8,6 +8,15 @@
       <link rel="stylesheet" href="index.css">
       <link rel="icon" href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Premium Typography -->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+            rel="stylesheet">
+
+      <!-- Puter.js - Browser-based AI (No API keys needed) -->
+      <script src="https://js.puter.com/v2/"></script>
 </head>
 
 <body>
@@ -33,6 +42,15 @@
                   <a id="nav-logout-btn" href="#" style="display:none; color: red;">Logout</a>
             </div>
       </nav>
+
+      <!-- Festival Discovery Loader Overlay -->
+      <div id="festival-loader" class="festival-loader-overlay">
+            <div class="loader-content">
+                  <div class="loader-logo">UDBHAVA</div>
+                  <div class="loader-line"></div>
+                  <p class="loader-text">Curating your heritage experience...</p>
+            </div>
+      </div>
 
       <!-- Auth Modal -->
       <div id="auth-modal"
@@ -78,7 +96,7 @@
       </div>
 
       <!-- Hero Section -->
-      <header class="hero">
+      <!-- <header class="hero">
             <img src="https://res.cloudinary.com/dnevq4wek/image/upload/v1744261361/hero_msh6sm.png"
                   alt="Heritage Texture" class="hero-bg">
             <div class="hero-content">
@@ -86,7 +104,7 @@
                   <p>Timeless traditions, woven for the modern soul.</p>
                   <a href="shop.html" class="btn-editorial">Explore Collection</a>
             </div>
-      </header>
+      </header> -->
 
       <!-- Dynamic Festival Layer (Injected via JS) -->
       <div id="dynamic-content-layer"></div>
@@ -289,20 +307,207 @@
       </footer>
 
       <!-- Templates for Dynamic Injection (Used by festival_system.js) -->
+
+      <!-- 1. Standard / Branding Template -->
       <template id="tmpl-editorial-section">
             <section class="editorial-section">
                   <div class="editorial-text">
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
                         <h4 class="festival-tag">Season's Edit</h4>
                         <h2 class="festival-title"></h2>
                         <p class="festival-desc"></p>
-                        <br>
-                        <a href="shop.html" class="btn-editorial festival-cta">explore</a>
+                        <div class="festival-offer-badge" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
                   </div>
                   <div class="editorial-image-wrapper">
                         <img src="" alt="Festival Mood" class="festival-img">
                   </div>
             </section>
       </template>
+
+      <!-- 2. Patriotic Template (Republic Day / Independence Day) -->
+      <template id="tmpl-patriotic-section">
+            <section class="editorial-section patriotic-theme">
+                  <div class="editorial-text">
+                        <div class="patriotic-badge">🇮🇳 National Celebration</div>
+                        <h2 class="festival-title" style="color: #000080; font-size: 3.5rem;"></h2>
+                        <p class="festival-wishes-text" style="font-weight: 500; font-style: italic; color: #666;"></p>
+                        <p class="festival-desc" style="max-width: 500px;"></p>
+                        <div class="festival-offer-badge patriotic" style="display:none; margin-top: 30px;">
+                              <span class="offer-label">Special Offer</span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Festival Mood" class="festival-img">
+
+                        <!-- VFX Review Container (Silk Ribbons) -->
+                        <div class="patriotic-vfx-container">
+                              <div class="silk-ribbon ribbon-saffron"></div>
+                              <div class="silk-ribbon ribbon-white"></div>
+                              <div class="silk-ribbon ribbon-green"></div>
+                        </div>
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Heroic Collections</h2>
+                              <span class="section-tagline">Crafted for the pride of the nation</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- 3. Harvest Template (Sankranti / Pongal) -->
+      <template id="tmpl-harvest-section">
+            <section class="editorial-section harvest-theme">
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Festival Mood" class="festival-img">
+                  </div>
+                  <div class="editorial-text">
+                        <div class="harvest-badge">🌾 Bountiful Season</div>
+                        <h2 class="festival-title"></h2>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge harvest" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Harvest Picks</h2>
+                              <span class="section-tagline">Exclusively picked for the occasion</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- 4. Spring Template (Holi / Vasant Panchami) -->
+      <template id="tmpl-spring-section">
+            <section class="editorial-section spring-theme">
+                  <div class="editorial-text">
+                        <div class="spring-badge">🌸 Spring Bloom</div>
+                        <h2 class="festival-title"></h2>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge spring" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Festival Mood" class="festival-img">
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Spring Curations</h2>
+                              <span class="section-tagline">Exclusively picked for the occasion</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- 5. Spiritual Template (Maha Shivaratri / Diwali / Temple Festivals) -->
+      <template id="tmpl-spiritual-section">
+            <section class="editorial-section spiritual-theme">
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Festival Mood" class="festival-img">
+                  </div>
+                  <div class="editorial-text">
+                        <div class="spiritual-badge">✨ Sacred Heritage</div>
+                        <h2 class="festival-title"></h2>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge spiritual" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none; background: #111; color: #fff;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2 style="color: #fff;">Devotional Edit</h2>
+                              <span class="section-tagline" style="color: #888;">Sacred weaves with timeless
+                                    essence</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- 6. Monsoon Template (Teej / Varalakshmi) -->
+      <template id="tmpl-monsoon-section">
+            <section class="editorial-section monsoon-theme" style="background: #f0f8ff;">
+                  <div class="editorial-text">
+                        <div class="monsoon-badge" style="color: #008080;">🌧️ Verdant Season</div>
+                        <h2 class="festival-title" style="color: #2f4f4f;"></h2>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge monsoon" style="display:none; border-color: #008080;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount" style="background: #008080;"></div>
+                        </div>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Festival Mood" class="festival-img"
+                              style="filter: saturate(1.2) hue-rotate(-10deg);">
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Emerald Weaves</h2>
+                              <span class="section-tagline">Cool silks for the rainy breeze</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+
+      <section class="festival-product-showcase" style="display:none;">
+            <div class="container">
+                  <div class="section-header center">
+                        <h2>Festive Curations</h2>
+                        <span class="section-tagline">Exclusively picked for the occasion</span>
+                  </div>
+                  <div class="festival-products-grid">
+                        <!-- Products injected here -->
+                  </div>
+            </div>
+      </section>
+      </template>
+
+      <template id="tmpl-festival-product-card">
+            <div class="product-card">
+                  <div class="product-image">
+                        <img src="" alt="" class="p-img">
+                        <div class="festive-badge">Festive Selection</div>
+                        <div class="quick-add-overlay">
+                              <button class="btn-quick-add">Add to Bag</button>
+                        </div>
+                  </div>
+                  <div class="product-info">
+                        <h3 class="p-name"></h3>
+                        <div class="p-price-container">
+                              <span class="p-price-original"></span>
+                              <span class="p-price-festive"></span>
+                        </div>
+                  </div>
+            </div>
+      </template>
+
+
 
       <script src="festival_system.js"></script>
       <script src="js/auth.js"></script>

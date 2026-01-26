@@ -109,12 +109,15 @@ function renderCart(cart) {
     renderSummary(subtotal, cart.items.length);
 }
 
+let appliedDiscount = 0;
+let appliedCode = "";
+
 function renderSummary(subtotal, count) {
     if(!cartSummary) return;
     
-    // Simple summary logic
-    const shipping = 0; // Free shipping for now, or logic
-    const total = subtotal + shipping;
+    const shipping = 0;
+    const discountAmount = Math.round(subtotal * (appliedDiscount / 100));
+    const total = subtotal + shipping - discountAmount;
 
     cartSummary.innerHTML = `
         <h3>Order Summary</h3>
@@ -122,10 +125,29 @@ function renderSummary(subtotal, count) {
             <span>Subtotal (${count} items)</span>
             <span>₹${subtotal}</span>
         </div>
+        ${appliedDiscount > 0 ? `
+        <div class="summary-row" style="color: #2e7d32; font-weight: 600;">
+            <span>Discount (${appliedDiscount}%)</span>
+            <span>-₹${discountAmount}</span>
+        </div>
+        ` : ''}
         <div class="summary-row">
             <span>Shipping</span>
             <span>Free</span>
         </div>
+        
+        <!-- Coupon Section -->
+        <div class="coupon-section">
+            <div id="available-toggle" class="available-coupons-title" onclick="showAvailableCoupons()">
+                <i class="fas fa-ticket-alt"></i> View Available Offers
+            </div>
+            <div class="coupon-input-group">
+                <input type="text" id="coupon-input" placeholder="ENTER CODE" value="${appliedCode}">
+                <button class="apply-coupon-btn" onclick="applyCoupon(${subtotal})">APPLY</button>
+            </div>
+            <div id="coupon-feedback" class="coupon-feedback"></div>
+        </div>
+
         <hr>
         <div class="summary-row total">
             <span>Total</span>
@@ -135,7 +157,85 @@ function renderSummary(subtotal, count) {
             PROCEED TO CHECKOUT
         </button>
     `;
+
+    // Re-check coupon if it was already applied (in case items changed and min-spend no longer met)
+    if (appliedCode && appliedDiscount > 0) {
+        validateThreshold(subtotal);
+    }
 }
+
+async function showAvailableCoupons() {
+    try {
+        const res = await fetch('/api/festival-context');
+        if (!res.ok) return;
+        const context = await res.json();
+        
+        if (context.special_offers && context.special_offers.length > 0) {
+            const feedback = document.getElementById('coupon-feedback');
+            feedback.innerHTML = context.special_offers.map(offer => `
+                <div style="border: 1px dashed var(--secondary-color); padding: 10px; margin-top: 10px; border-radius: 4px;">
+                    <strong style="color: var(--primary-color);">${offer.discount_code}</strong>: 
+                    ${offer.discount_percentage}% OFF on orders above ₹${offer.min_spend || 0}.
+                    <br><small>Valid until ${new Date(offer.expires_at).toLocaleDateString()}</small>
+                </div>
+            `).join('');
+            feedback.className = 'coupon-feedback success';
+            feedback.style.display = 'block';
+        } else {
+            alert("No active festival coupons today. Check back soon!");
+        }
+    } catch (e) { console.error(e); }
+}
+
+async function applyCoupon(currentAmount) {
+    const input = document.getElementById('coupon-input');
+    const feedback = document.getElementById('coupon-feedback');
+    const code = input.value.trim();
+
+    if (!code) return;
+
+    try {
+        const res = await fetch('/api/coupons/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, amount: currentAmount })
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            appliedDiscount = result.discount;
+            appliedCode = result.code;
+            feedback.textContent = result.message;
+            feedback.className = 'coupon-feedback success';
+            // Reload summary to reflect discount
+            loadCart(); 
+        } else {
+            feedback.textContent = result.message;
+            feedback.className = 'coupon-feedback error';
+        }
+    } catch (e) {
+        feedback.textContent = "Error validating coupon.";
+        feedback.className = 'coupon-feedback error';
+    }
+}
+
+function validateThreshold(amount) {
+    // Silent check to ensure current cart still meets coupon requirements
+    // If not, we reset discount
+    fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: appliedCode, amount: amount })
+    }).then(res => {
+        if (!res.ok) {
+            appliedDiscount = 0;
+            appliedCode = "";
+            loadCart(); 
+        }
+    });
+}
+
 
 function showEmptyState(msg, showLoginBtn = false) {
     let html = `

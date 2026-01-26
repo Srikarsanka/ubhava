@@ -1,113 +1,550 @@
 /**
- * UDBHAVA - Heritage Intelligence System
- * Simulates an LLM API to fetch context-aware festival data and injects editorial content.
+ * UDBHAVA - Festival Intelligence System
+ * Dynamic AI-powered content using Gemini + Promotional Images
  */
 
-// 1. REAL LLM API (Via Backend Proxy)
-async function fetchFestivalContext() {
-    try {
-        // Can optionally pass ?date=2026-01-14 to debug specific dates
-        const response = await fetch('/api/festival-context');
-        const data = await response.json();
-        
-        // Ensure image logic is handled.
-        // If the backend provides an image_url (generated), use it.
-        // If not, use the prompt to pick a simulated asset (since we don't have a real image-gen API key active in backend yet, 
-        // we might rely on the backend to fall back or frontend to map).
-        
-        // For this implementation, the backend generates the image.
-        // We trust the backend's image_url if provided.
-        
-        // Generate dynamic image using Cloudinary AI if no image_url provided
-        if (!data.editorial_content.image_url && data.image_prompt) {
-             console.log("🎨 Generating AI image via Cloudinary...");
-             
-             // Use Cloudinary with a curated base image + AI enhancements
-             const cloudName = 'dnevq4wek';
-             
-             // Use one of your existing heritage images as base
-             // Apply AI-powered transformations for variety
-             const baseImages = [
-                 'hero_msh6sm',  // Your existing hero image
-                 'minimal_earthen_pottery_1767951596489',
-                 'weddingcollection_yegzng'
-             ];
-             
-             const randomBase = baseImages[Math.floor(Math.random() * baseImages.length)];
-             
-             // Apply AI color grading and effects based on festival mood
-             const cloudinaryUrl = `https://res.cloudinary.com/${cloudName}/image/upload/w_1600,h_900,c_fill,g_auto,q_auto,f_auto,e_improve,e_vibrance:30/${randomBase}.jpg`;
-             
-             data.editorial_content.image_url = cloudinaryUrl;
-             console.log(`✅ Cloudinary image generated for: ${data.festival_name || 'Heritage'}`);
-        }
-
-        return data;
-
-    } catch (err) {
-        console.error("System Error - Festival Intelligence:", err);
-        return { detected: false };
-    }
-}
-
-// 2. RENDERER (The "Agent" that modifies the DOM)
+// Main initialization
 async function initHeritageSystem() {
     console.log("🌸 Initializing Heritage Intelligence...");
+    const loader = document.getElementById('festival-loader');
     
+    // 1. Show loader and Lock Scroll
+    if (loader) {
+        loader.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
     try {
-        const context = await fetchFestivalContext();
+        // Fetch dynamic festival context from backend (Gemini AI)
+        const response = await fetch('/api/festival-context');
+        const context = await response.json();
         
-        // Always inject if content exists, even for "Default/Calm" mode (detected: false)
-        if (context.editorial_content) {
-            console.log(`🎉 Heritage Context Loaded: ${context.festival_name || 'Standard Heritage'}`);
+        // Backend provides everything - dynamic text + promotional images
+        if (context && context.editorial_content) {
             injectEditorialLayer(context);
         } else {
-            console.warn("🌿 No editorial content available.");
+            console.warn("⚠️ API returned valid JSON but missing content. Using fallback.");
+            showFallbackContent();
         }
-
+        
     } catch (err) {
-        console.error("Error fetching festival context:", err);
+        console.error("Error loading festival content:", err);
+        showFallbackContent();
+    } finally {
+        // 2. Hide loader and Unlock Scroll (with slight delay for injection finish)
+        setTimeout(() => {
+            if (loader) {
+                loader.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }, 800);
     }
 }
 
-// 3. INJECTOR (Manages the DOM manipulation)
+// Fallback if backend is completely down
+async function showFallbackContent() {
+    console.log("🔄 engaging fallback content system...");
+    const fallbackData = await getPromotionalContent();
+    
+    // data is guaranteed to exist now (either from JSON or hardcoded backup)
+    const context = {
+        detected: false,
+        festival_name: null,
+        mood: ["heritage"], 
+        editorial_content: {
+            title: fallbackData.title,
+            description: fallbackData.description,
+            cta_text: fallbackData.cta_text,
+            image_url: fallbackData.image_url
+        }
+    };
+    injectEditorialLayer(context);
+}
+
+// Layer 3 Fallback - Load promotional content from JSON
+let promotionalData = null;
+
+async function loadPromotionalContent() {
+    if (promotionalData) return promotionalData;
+    
+    try {
+        const response = await fetch('/promotional-content.json');
+        promotionalData = await response.json();
+        return promotionalData;
+    } catch (error) {
+        console.error('Failed to load promotional content:', error);
+        return null;
+    }
+}
+
+async function getPromotionalContent() {
+    const data = await loadPromotionalContent();
+    
+    if (!data || !data.promotional_content) {
+        // Fallback if JSON fails to load
+        return {
+            image_url: '/images/promotional/bridal_heritage.png',
+            title: "Discover UDBHAVA",
+            description: "Experience the timeless beauty of Indian handcraft",
+            cta_text: "Explore Collection"
+        };
+    }
+    
+    // Select random promotional content
+    const promos = data.promotional_content;
+    const promo = promos[Math.floor(Math.random() * promos.length)];
+    
+    console.log(`📢 Using promotional content: ${promo.title}`);
+    
+    return {
+        image_url: promo.image,
+        title: promo.title,
+        description: promo.description,
+        cta_text: promo.cta_text
+    };
+}
+
+// Layer 3 Fallback - Local Promotional Images
+function getCloudinaryFallback(mood = []) {
+    // Local promotional images stored in public/images/promotional/
+    const promotionalContent = [
+        {
+            url: '/images/promotional/heritage_celebration.png',
+            title: "Celebrate Heritage",
+            description: "Discover the timeless beauty of Indian handcraft with UDBHAVA"
+        },
+        {
+            url: 'https://res.cloudinary.com/dnevq4wek/image/upload/w_1600,h_900,c_fill,g_auto,q_auto:best,f_auto,e_improve,e_sharpen:50/weddingcollection_yegzng',
+            title: "Wedding Collection",
+            description: "Exquisite traditional wear for your special celebrations"
+        },
+        {
+            url: 'https://res.cloudinary.com/dnevq4wek/image/upload/w_1600,h_900,c_fill,g_auto,q_auto:best,f_auto,e_improve,e_sharpen:50/desbag_aw0oku',
+            title: "Handcrafted Wonders",
+            description: "Traditional toys and crafts made with love and heritage"
+        }
+    ];
+    
+    // Select a random promotional content
+    const promo = promotionalContent[Math.floor(Math.random() * promotionalContent.length)];
+    
+    console.log(`📢 Using promotional content: ${promo.title}`);
+    
+    return promo.url;
+}
+
+// Helper: Add to Cart (Shared Logic)
+async function addToCart(productId) {
+    if (!Auth.user) {
+        alert("Please login to add items to bag.");
+        if (typeof Auth.showLoginModal === 'function') Auth.showLoginModal();
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/cart/', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${Auth.token}`
+            },
+            body: JSON.stringify({ productId: productId, quantity: 1, size: 'Standard' })
+        });
+
+        if (response.ok) {
+            alert("Added to Bag ✓");
+            // Optional: update cart count if exists
+        } else {
+            const err = await response.json();
+            alert(`Error: ${err.message || 'Failed to add'}`);
+        }
+    } catch (error) {
+        console.error("Cart Error:", error);
+        alert("Network error. Please try again.");
+    }
+}
+
+// DOM Injection
 function injectEditorialLayer(context) {
     const container = document.getElementById('dynamic-content-layer');
-    const template = document.getElementById('tmpl-editorial-section');
+    
+    // Pick Template based on context.templateType
+    const templateId = `tmpl-${context.templateType || 'standard'}-section`;
+    const template = document.getElementById(templateId) || document.getElementById('tmpl-editorial-section');
 
     if (!container || !template) return;
 
-    // Clone the template
+    // Reset container
+    container.innerHTML = '';
+    
+    // Work with the clone
     const clone = template.content.cloneNode(true);
+    const content = context.editorial_content;
     const section = clone.querySelector('.editorial-section');
 
-    // Populate Data
-    const content = context.editorial_content;
-    section.querySelector('.festival-title').textContent = content.title;
-    section.querySelector('.festival-desc').textContent = content.description;
-    
-    const img = section.querySelector('.festival-img');
+    // 1. Text Content Mapping (Handles different selector names across templates)
+    const titleEl = clone.querySelector('.festival-title');
+    if (titleEl) titleEl.textContent = content.title;
+
+    const descEl = clone.querySelector('.festival-desc');
+    if (descEl) descEl.textContent = content.description;
+
+    const wishesEl = clone.querySelector('.festival-wishes-text');
+    if (wishesEl) {
+        wishesEl.textContent = context.festival_wishes || "";
+        const banner = clone.querySelector('.festival-wishes-banner');
+        if (banner) banner.style.display = context.festival_wishes ? 'inline-block' : 'none';
+    }
+
+    // 2. Image
+    const img = clone.querySelector('.festival-img');
     if (img) img.src = content.image_url;
 
-    const cta = section.querySelector('.festival-cta');
-    if (cta) {
-        cta.textContent = content.cta_text;
-        // Fix: Handle case where festival_name is null (Fallback Mode)
-        const collectionSlug = context.festival_name ? 
-                               context.festival_name.toLowerCase().replace(/ /g, '-') : 
-                               "all"; 
-        cta.href = "shop.html?collection=" + collectionSlug;
+    // 3. Social Offer Badge
+    const offerBadge = clone.querySelector('.festival-offer-badge');
+    if (context.special_offers && context.special_offers.length > 0 && offerBadge) {
+        const offer = context.special_offers[0];
+        offerBadge.style.display = 'inline-flex';
+        const labelEl = offerBadge.querySelector('.offer-label');
+        if (labelEl) labelEl.textContent = offer.label || "Festival Special";
+        
+        const codeEl = offerBadge.querySelector('.offer-code');
+        if (codeEl) {
+            const minSpend = offer.min_spend;
+            codeEl.textContent = minSpend ? `${offer.discount_code} (Above ₹${minSpend})` : offer.discount_code;
+        }
+
+        const discEl = offerBadge.querySelector('.offer-discount');
+        if (discEl) discEl.textContent = `${offer.discount_percentage}% OFF`;
+    } else if (offerBadge) {
+        offerBadge.style.display = 'none';
+    }
+
+    // 4. Products & Theme Polish
+    const vfx = Array.isArray(context.vfx_type) ? context.vfx_type : [context.vfx_type];
+    
+    // Explicitly add theme classes if they are missing
+    if (context.templateType === 'spiritual') section.classList.add('spiritual-theme');
+    if (context.templateType === 'patriotic') section.classList.add('patriotic-theme');
+    if (context.templateType === 'harvest') section.classList.add('harvest-theme');
+    if (context.templateType === 'spring') section.classList.add('spring-theme');
+    if (context.templateType === 'monsoon') section.classList.add('monsoon-theme');
+
+    // DIWALI CHECK: If it's spiritual and has both fireworks + diyas, it's a Diwali Vibe
+    if (context.templateType === 'spiritual' && vfx.includes('fireworks') && vfx.includes('diyas')) {
+        section.classList.add('diwali-vibe');
+    }
+
+    // ABUNDANCE VFX: Specialized falling elements for Harvest and Spring
+    if (vfx.includes('harvest-goodness') || context.templateType === 'harvest') {
+        createFallingAbundance('harvest');
+    }
+    if (vfx.includes('spring-goodness') || context.templateType === 'spring') {
+        createFallingAbundance('spring');
+        // Add Mango Toran to editorial section
+        const toran = document.createElement('div');
+        toran.className = 'mango-toran';
+        section.prepend(toran);
+    }
+
+    const showcase = clone.querySelector('.festival-product-showcase');
+    const grid = clone.querySelector('.festival-products-grid');
+    const productTemplate = document.getElementById('tmpl-festival-product-card');
+
+    if (context.related_products && context.related_products.length > 0 && showcase && grid && productTemplate) {
+        showcase.style.display = 'block';
+        context.related_products.forEach(product => {
+            const productClone = productTemplate.content.cloneNode(true);
+            const card = productClone.querySelector('.product-card');
+            card.querySelector('.p-img').src = product.images[0] || '';
+            card.querySelector('.p-name').textContent = product.name;
+            const origPrice = card.querySelector('.p-price-original');
+            const festPrice = card.querySelector('.p-price-festive');
+            if (product.festive_price) {
+                origPrice.textContent = `₹${product.original_price}`;
+                festPrice.textContent = `₹${product.festive_price}`;
+            } else {
+                origPrice.style.display = 'none';
+                festPrice.textContent = `₹${product.price}`;
+            }
+            card.querySelector('.product-image').addEventListener('click', () => {
+                window.location.href = `product-details.html?id=${product._id}`;
+            });
+            const btnQuickAdd = card.querySelector('.btn-quick-add');
+            if (btnQuickAdd) {
+                btnQuickAdd.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addToCart(product._id);
+                });
+            }
+            grid.appendChild(productClone);
+        });
+    } else if (showcase) {
+        showcase.style.display = 'none';
     }
 
     // Append to DOM
-    container.innerHTML = ''; // Clear previous if any
-    container.appendChild(section);
+    container.appendChild(clone);
 
-    // Trigger Animation (Force reflow)
+    // Orchestrate Entrance
     setTimeout(() => {
-        section.classList.add('visible');
+        const injectedSection = container.querySelector('.editorial-section');
+        if (injectedSection) {
+            injectedSection.classList.add('visible');
+
+            
+
+            // 2. Dynamic Ambient VFX (Diyas, Flowers, etc.)
+            if (context.vfx_type && context.vfx_type !== 'standard') {
+                injectAmbientVFX(injectedSection, context.vfx_type);
+            }
+        }
+        
+        const wishes = container.querySelector('.festival-wishes-banner');
+        if (wishes) wishes.style.opacity = '1';
     }, 100);
 }
 
-// Initialize on load
+function injectAmbientVFX(section, vfxTypes) {
+    if (!section) return;
+
+    const vfxContainer = document.createElement('div');
+    vfxContainer.className = 'ambient-vfx-container';
+    
+    // Position full-width across the entire editorial section
+    section.style.position = 'relative'; 
+    section.appendChild(vfxContainer);
+
+    const types = Array.isArray(vfxTypes) ? vfxTypes : [vfxTypes];
+    
+    // Patriotic Check: If airshow is present, suppress fireworks (user request)
+    const filteredTypes = types.includes('airshow') ? types.filter(t => t !== 'fireworks') : types;
+
+    filteredTypes.forEach(type => {
+        if (type === 'fireworks') initFireworks(vfxContainer);
+        if (type === 'diyas') initDiyas(vfxContainer);
+        if (type === 'flowers') initFlowers(vfxContainer);
+        if (type === 'lanterns') initLanterns(vfxContainer);
+        if (type === 'airshow') initAirShow(vfxContainer);
+    });
+}
+
+// 1. ELITE VIBRANT CANVAS FIREWORKS
+function initFireworks(container) {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'fireworks-canvas';
+    container.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    
+    function resize() {
+        // Track the full width of the editorial section (Text + Image)
+        const parent = container.parentElement;
+        canvas.width = parent.offsetWidth;
+        canvas.height = parent.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor(x, y, hue) {
+            this.x = x; this.y = y;
+            this.hue = hue;
+            this.brightness = 50 + Math.random() * 50;
+            this.alpha = 1;
+            this.decay = 0.01 + Math.random() * 0.02;
+            
+            const speed = 2 + Math.random() * 8;
+            const angle = Math.random() * Math.PI * 2;
+            this.velocity = {
+                x: Math.cos(angle) * speed,
+                y: Math.sin(angle) * speed
+            };
+            this.friction = 0.96;
+            this.gravity = 0.15;
+            this.history = []; // For realistic trails
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            if (this.history.length > 0) {
+                const last = this.history[this.history.length - 1];
+                ctx.lineTo(last.x, last.y);
+            }
+            ctx.strokeStyle = `hsla(${this.hue}, 100%, ${this.brightness}%, ${this.alpha})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        update() {
+            this.history.push({x: this.x, y: this.y});
+            if (this.history.length > 5) this.history.shift();
+            
+            this.velocity.x *= this.friction;
+            this.velocity.y *= this.friction;
+            this.velocity.y += this.gravity;
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            this.alpha -= this.decay;
+        }
+    }
+
+    function createFirework() {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * (canvas.height * 0.7);
+        const hue = Math.random() * 360;
+        
+        // Flash the background slightly
+        container.style.backgroundColor = `hsla(${hue}, 30%, 20%, 0.05)`;
+        setTimeout(() => container.style.backgroundColor = 'transparent', 100);
+
+        for (let i = 0; i < 40; i++) particles.push(new Particle(x, y, hue));
+    }
+
+    function animate() {
+        if (!document.body.contains(canvas)) return;
+        
+        // Motion Blur Effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'lighter'; // Additive blending for "glow"
+
+        particles.forEach((p, i) => {
+            if (p.alpha <= 0) particles.splice(i, 1);
+            else { p.update(); p.draw(); }
+        });
+        
+        if (Math.random() < 0.04) createFirework();
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+// 2. ROYAL GOLD MINIMAL FRAMING DIYAS (Exactly 4 near Text)
+function initDiyas(container) {
+    const section = container.parentElement;
+    const textSection = section.querySelector('.editorial-text');
+    if (!textSection) return;
+
+    // We'll create 4 anchors relative to the text section
+    const positions = [
+        { top: '-10px', left: '-10px' },  // Top Left
+        { top: '-10px', right: '-10px' }, // Top Right
+        { bottom: '-10px', left: '-10px' }, // Bottom Left
+        { bottom: '-10px', right: '-10px' } // Bottom Right
+    ];
+
+    positions.forEach((pos, i) => {
+        const diya = document.createElement('div');
+        diya.className = 'diya-wrap blinking';
+        
+        // Apply position relative to the text section
+        Object.keys(pos).forEach(key => diya.style[key] = pos[key]);
+        
+        diya.style.animationDelay = `${i * 0.8}s`;
+        
+        diya.innerHTML = `
+            <svg viewBox="0 0 100 60" class="diya-svg">
+                <path class="diya-base" d="M10,30 Q10,50 50,55 Q90,50 90,30 Q90,20 50,25 Q10,20 10,30 Z" />
+                <path fill="#a0522d" d="M45,25 L55,25 L52,15 L48,15 Z" />
+            </svg>
+            <div class="flame-container">
+                <div class="flame-layer flame-outer"></div>
+                <div class="flame-layer flame-inner"></div>
+            </div>
+        `;
+        textSection.appendChild(diya); // Attach directly to textSection for perfect anchoring
+    });
+}
+
+function createDiya(container, config) {
+    const diya = document.createElement('div');
+    diya.className = 'diya-wrap';
+    if (config.left) diya.style.left = config.left;
+    if (config.right) diya.style.right = config.right;
+    if (config.bottom) diya.style.bottom = config.bottom;
+    
+    diya.style.transform = `scale(${config.scale || 1})`;
+    diya.style.animationDelay = `${config.delay || 0}s`;
+    
+    diya.innerHTML = `
+        <svg viewBox="0 0 100 60" class="diya-svg">
+            <path class="diya-base" d="M10,30 Q10,50 50,55 Q90,50 90,30 Q90,20 50,25 Q10,20 10,30 Z" />
+            <path fill="#a0522d" d="M45,25 L55,25 L52,15 L48,15 Z" />
+        </svg>
+        <div class="flame-container">
+            <div class="flame-layer flame-outer"></div>
+            <div class="flame-layer flame-inner"></div>
+        </div>
+    `;
+    container.appendChild(diya);
+}
+
+// 3. 3D FLUTTERING PETALS
+function initFlowers(container) {
+    for (let i = 0; i < 20; i++) {
+        const petal = document.createElement('div');
+        petal.className = `petal petal-type-${Math.floor(Math.random() * 3) + 1}`;
+        petal.style.left = `${Math.random() * 100}%`;
+        petal.style.animationDelay = `${Math.random() * 10}s`;
+        petal.style.animationDuration = `${8 + Math.random() * 7}s`;
+        container.appendChild(petal);
+    }
+}
+
+// --- Falling Abundance VFX (Harvest/Spring) ---
+function createFallingAbundance(mode) {
+    const layer = document.getElementById('dynamic-content-layer');
+    if (!layer) return;
+
+    const count = 30;
+    for (let i = 0; i < count; i++) {
+        const item = document.createElement('div');
+        item.className = mode === 'harvest' ? 'particle-grain' : 'particle-flower';
+        
+        // Randomize
+        item.style.position = 'absolute';
+        item.style.left = Math.random() * 100 + 'vw';
+        item.style.top = '-20px';
+        item.style.animationDuration = (5 + Math.random() * 5) + 's';
+        item.style.animationDelay = Math.random() * 5 + 's';
+        item.style.opacity = 0.4 + Math.random() * 0.4;
+        
+        layer.appendChild(item);
+    }
+}
+
+function initLanterns(container) {
+    // Basic implementation for now, similar to petals but rising
+    for (let i = 0; i < 10; i++) {
+        const lantern = document.createElement('div');
+        lantern.className = 'particle-lantern';
+        lantern.style.left = `${Math.random() * 100}%`;
+        lantern.style.animationDelay = `${Math.random() * 10}s`;
+        container.appendChild(lantern);
+    }
+}
+
+
+function initAirShow(container) {
+    const flypast = document.createElement('div');
+    flypast.className = 'flypast-container';
+    
+    // Squadron A: Top-Left to Bottom-Right
+    // Squadron B: Top-Right to Bottom-Left
+    flypast.innerHTML = `
+        <!-- Squadron A -->
+        <div class="jet jet-1 jet-ltr" style="left: 10%"><div class="smoke-trail"></div></div>
+        <div class="jet jet-2 jet-ltr" style="left: 20%; animation-delay: 0.5s"><div class="smoke-trail"></div></div>
+        <div class="jet jet-3 jet-ltr" style="left: 30%; animation-delay: 1s"><div class="smoke-trail"></div></div>
+        
+        <!-- Squadron B -->
+        <div class="jet jet-1 jet-rtl" style="right: 10%; animation-delay: 2s"><div class="smoke-trail"></div></div>
+        <div class="jet jet-2 jet-rtl" style="right: 20%; animation-delay: 2.5s"><div class="smoke-trail"></div></div>
+        <div class="jet jet-3 jet-rtl" style="right: 30%; animation-delay: 3s"><div class="smoke-trail"></div></div>
+    `;
+    container.appendChild(flypast);
+}
+
 document.addEventListener('DOMContentLoaded', initHeritageSystem);

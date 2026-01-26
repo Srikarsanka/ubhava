@@ -1,0 +1,65 @@
+{
+      "promotional_content": [
+            {
+                  "id": "bridal_heritage",
+                  "image": "/images/promotional/bridal_heritage.png",
+                  "title": "UDBHAVA - The Origin of Indian Handcraft",
+                  "description": "Experience the timeless elegance of Indian bridal heritage. Each piece is a masterpiece of traditional craftsmanship, featuring intricate zari work and luxurious fabrics that celebrate our rich cultural legacy.",
+                  "cta_text": "Explore Bridal Collection",
+                  "mood": [
+                        "heritage",
+                        "traditional",
+                        "elegant"
+                  ]
+            },
+            {
+                  "id": "artisan_weaving",
+                  "image": "/images/promotional/artisan_weaving.jpg",
+                  "title": "UDBHAVA - Where Tradition Begins",
+                  "description": "Witness the magic of traditional handloom weaving. Every thread tells a story of dedication, skill, and centuries-old craftsmanship passed down through generations.",
+                  "cta_text": "Explore Handloom Collection",
+                  "mood": [
+                        "artisan",
+                        "authentic",
+                        "craftsmanship"
+                  ]
+            },
+            {
+                  "id": "festival_celebration",
+                  "image": "/images/promotional/festival_celebration.jpg",
+                  "title": "UDBHAVA - Celebrating Together",
+                  "description": "Join us in celebrating the vibrant spirit of Indian festivals. From joyous gatherings to colorful traditions, UDBHAVA brings you closer to the heart of our cultural celebrations. Experience the magic of togetherness.",
+                  "cta_text": "Explore Festival Collection",
+                  "mood": [
+                        "festive",
+                        "joyful",
+                        "celebratory"
+                  ]
+            },
+            {
+                  "id": "handcrafted_toys",
+                  "image": "/images/promotional/handcrafted_toys.jpg",
+                  "title": "Handcrafted Happiness, Rooted in Tradition",
+                  "description": "Discover the joy of traditional Indian wooden toys. From colorful spinning tops to handcrafted dolls, each toy is a masterpiece that brings smiles and celebrates our rich heritage.",
+                  "cta_text": "Shop Toys Collection",
+                  "mood": [
+                        "playful",
+                        "traditional",
+                        "joyful"
+                  ]
+            },
+            {
+                  "id": "patriotic_heritage",
+                  "image": "/images/promotional/patriotic_heritage.png",
+                  "title": "UDBHAVA - The Pride of National Heritage",
+                  "description": "Celebrating the spirit of India with handcrafted Khadi and traditional handlooms. Our patriotic collection honors the essence of the nation through every weave.",
+                  "cta_text": "Explore Patriotic Collection",
+                  "mood": [
+                        "patriotic",
+                        "pride",
+                        "national",
+                        "traditional"
+                  ]
+            }
+      ]
+}
