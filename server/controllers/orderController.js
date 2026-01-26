@@ -63,16 +63,67 @@ const createOrder = async (req, res) => {
     }
 };
 
-// --- Email Helper ---
+// --- Web3Forms Admin Notification ---
+const axios = require('axios'); // Ensure axios is required
+
+const sendAdminOrderNotification = async (order, user) => {
+    try {
+        const adminEmail = 'sankasrikar148@gmail.com';
+        const accessKey = 'a22faa5b-27cb-4897-90ed-a3054272543b'; 
+
+        const itemList = order.items.map(item => 
+            `- ${item.quantity}x Product ID: ${item.product}`
+        ).join('\n');
+
+        const message = `
+New Order Received! 🚀
+
+Order ID: ${order._id}
+Customer: ${user.fullName} (${user.email})
+Total Amount: ₹${order.totalAmount}
+Payment Method: ${order.paymentMethod}
+
+Items:
+${itemList}
+
+Check Admin Panel for details.
+        `;
+
+        // Send via Web3Forms API using Axios
+        const response = await axios.post('https://api.web3forms.com/submit', {
+            access_key: accessKey,
+            email: adminEmail,
+            subject: `New Order Alert: #${order._id}`,
+            message: message,
+            from_name: "Udbhava Orders"
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.data && response.data.success) {
+            console.log("✅ Admin Order Notification sent via Web3Forms");
+        } else {
+            console.error("❌ Web3Forms Admin Notification Failed:", response.data);
+        }
+
+    } catch (error) {
+        console.error("❌ Admin Notification Error:", error.response ? error.response.data : error.message);
+    }
+};
+
+// --- Email Helper (Keeping existing structure for reference, but adding Admin trigger) ---
 const nodemailer = require('nodemailer');
 
 const sendOrderConfirmationEmail = async (user, order) => {
-    // Check if Credentials exist
+    // TRIGGER ADMIN NOTIFICATON HERE
+    sendAdminOrderNotification(order, user);
+
+    // Check if Credentials exist for Customer Email
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-        console.log("⚠️ Email Credentials missing in .env. Skipping Email.");
-        console.log(`[SIMULATION] Email to: ${user.email}`);
-        console.log(`[SIMULATION] Subject: Order Confirmation #${order._id}`);
-        console.log(`[SIMULATION] Body: Thank you for your order of ₹${order.totalAmount}.`);
+        console.log("⚠️ Email Credentials missing in .env. Skipping Customer Email.");
         return;
     }
 

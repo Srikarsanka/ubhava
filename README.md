@@ -30,6 +30,11 @@ UDBHAVA features a world-first **Autonomous Festival Intelligence** system that 
 - **Report Engine**: Instant export to **PDF** and **Excel**.
 - **Inventory Control**: Real-time stock alerts and visual management.
 
+### 📨 Communication Suite (New)
+- **Glassmorphism Contact UI**: Premium, right-aligned contact form with reliable background interaction.
+- **Direct Mail System**: Powered by **Web3Forms** for instant frontend delivery without backend overhead.
+- **Admin Alerts**: Automatic email notifications to admins whenever a new order is placed.
+
 ---
 
 ## 🛠️ Technical Excellence

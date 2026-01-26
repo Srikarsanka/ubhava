@@ -165,7 +165,113 @@ const getAnalyticsData = async (req, res) => {
     }
 };
 
+const Coupon = require('../models/Coupon');
+
+// ... existing imports ...
+
+// @desc    Get All Coupons
+// @route   GET /api/admin/coupons
+// @access  Private/Admin
+const getCoupons = async (req, res) => {
+    try {
+        const coupons = await Coupon.find({}).sort({ createdAt: -1 });
+        res.json(coupons);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Create New Coupon
+// @route   POST /api/admin/coupons
+// @access  Private/Admin
+const createCoupon = async (req, res) => {
+    try {
+        const { code, discountPercentage, minSpend, expiryDate, description } = req.body;
+        
+        const couponExists = await Coupon.findOne({ code });
+        if (couponExists) {
+            return res.status(400).json({ message: 'Coupon code already exists' });
+        }
+
+        const coupon = await Coupon.create({
+            code,
+            discountPercentage,
+            minSpend,
+            expiryDate,
+            description,
+            isAiGenerated: false
+        });
+
+        res.status(201).json(coupon);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// @desc    Update Coupon Status/Value
+// @route   PUT /api/admin/coupons/:id
+// @access  Private/Admin
+const updateCoupon = async (req, res) => {
+    try {
+        const coupon = await Coupon.findById(req.params.id);
+        if (!coupon) {
+            return res.status(404).json({ message: 'Coupon not found' });
+        }
+
+        coupon.isActive = req.body.isActive !== undefined ? req.body.isActive : coupon.isActive;
+        coupon.discountPercentage = req.body.discountPercentage || coupon.discountPercentage;
+        coupon.minSpend = req.body.minSpend !== undefined ? req.body.minSpend : coupon.minSpend;
+        
+        const updatedCoupon = await coupon.save();
+        res.json(updatedCoupon);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// @desc    Delete Coupon
+// @route   DELETE /api/admin/coupons/:id
+// @access  Private/Admin
+const deleteCoupon = async (req, res) => {
+    try {
+        const coupon = await Coupon.findById(req.params.id);
+        if (!coupon) {
+            return res.status(404).json({ message: 'Coupon not found' });
+        }
+        await coupon.deleteOne();
+        res.json({ message: 'Coupon removed' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Remove Deal (Festive Price) from Product
+// @route   PUT /api/admin/products/:id/remove-deal
+// @access  Private/Admin
+const removeDeal = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        product.festivePrice = undefined;
+        product.originalPrice = undefined;
+        await product.save();
+
+        res.json({ message: 'Deal removed', product });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 module.exports = {
     getDashboardStats,
-    getAnalyticsData
+    getAnalyticsData,
+    getCoupons,
+    createCoupon,
+    updateCoupon,
+    deleteCoupon,
+    removeDeal
 };

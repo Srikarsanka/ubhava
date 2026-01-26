@@ -782,14 +782,14 @@ function showProductModal(container) {
       // Add to Cart
       modalContainer.querySelector("#addToCart").addEventListener("click", async () => {
           if (!Auth.user) {
-             alert("Please login to add items to cart.");
+             showToast("Please login to add items to cart.", "info");
              closeValues();
              Auth.showLoginModal();
              return;
           }
 
           if (showSelector && !selectedSize) {
-              alert("Please select a size first.");
+              showToast("Please select a size first.", "error");
               return;
           }
          
@@ -812,13 +812,13 @@ function showProductModal(container) {
                  setTimeout(() => { closeValues(); }, 500);
              } else {
                 const err = await response.json();
-                alert(`Error: ${err.message || 'Failed'}`);
+                showToast(`Error: ${err.message || 'Failed'}`, "error");
                 btn.textContent = originalText;
                 btn.disabled = false;
              }
          } catch (error) {
              console.error(error);
-             alert("Network error.");
+             showToast("Network error.", "error");
              btn.textContent = originalText;
              btn.disabled = false;
          }
@@ -834,12 +834,12 @@ function showProductModal(container) {
               currentWishlist.splice(existsIndex, 1);
               btn.textContent = "♡ Wishlist";
               btn.classList.remove("active");
-              alert("Removed from Wishlist");
+              showToast("Removed from Wishlist", "info");
           } else {
               currentWishlist.push({ name, img, disprice, id: productId });
               btn.textContent = "❤️ Wishlisted";
               btn.classList.add("active");
-              alert("Added to Wishlist!");
+              showToast("Added to Wishlist!", "success");
           }
           localStorage.setItem("wishlist", JSON.stringify(currentWishlist));
       });

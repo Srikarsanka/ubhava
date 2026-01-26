@@ -31,8 +31,177 @@ document.addEventListener('DOMContentLoaded', async () => {
             if(targetId === 'orders') loadOrders();
             if(targetId === 'inventory') loadInventory();
             if(targetId === 'analysis') loadAnalytics();
+            if(targetId === 'coupons') { loadCoupons(); loadDeals(); }
         });
     });
+
+    // ... existing initialization ...
+
+    // --- MODULE: COUPONS & DEALS ---
+    async function loadCoupons() {
+        try {
+            const tbody = document.getElementById('couponsTableBody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
+            
+            const res = await fetch('/api/admin/coupons');
+            const coupons = await res.json();
+
+            if (coupons.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No active coupons.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = coupons.map(c => `
+                <tr style="opacity: ${c.isActive ? 1 : 0.5}">
+                    <td><strong>${c.code}</strong><br><small>${c.description}</small></td>
+                    <td>${c.discountPercentage}%</td>
+                    <td>₹${c.minSpend}</td>
+                    <td>
+                        <span class="status-badge ${c.isActive ? 'status-paid' : 'status-failed'}">
+                            ${c.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                        ${c.isAiGenerated ? '<br><small>🤖 AI</small>' : ''}
+                    </td>
+                    <td>
+                        <button class="btn-small" onclick="toggleCoupon('${c._id}', ${!c.isActive})" style="background:#fbc02d; color:black;">
+                            ${c.isActive ? 'Pause' : 'Activate'}
+                        </button>
+                        <button class="btn-small" onclick="deleteCoupon('${c._id}')" style="background:#e74c3c; color:white; margin-left:5px;">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (error) { console.error("Coupons Error:", error); }
+    }
+
+    async function loadDeals() {
+        try {
+            const container = document.getElementById('dealsList');
+            container.innerHTML = 'Loading deals...';
+
+            const res = await fetch('/api/products');
+            const products = await res.json();
+            const dealProducts = products.filter(p => p.festivePrice > 0);
+
+            if (dealProducts.length === 0) {
+                container.innerHTML = '<p>No deals active. AI will generate them automatically during festivals.</p>';
+                return;
+            }
+
+            container.innerHTML = dealProducts.map(p => `
+                <div class="list-item" style="border:1px solid #eee; padding:10px; border-radius:8px;">
+                    <img src="${p.images[0]}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                    <div class="item-details">
+                        <span style="display:block; font-weight:600;">${p.name}</span>
+                        <span style="text-decoration:line-through; color:#999;">₹${p.price}</span>
+                        <span style="color:#e74c3c; font-weight:bold;"> ₹${p.festivePrice}</span>
+                    </div>
+                    <div style="display:flex; gap:5px; flex-direction:column;">
+                        <button class="btn-small" onclick="updateDealPrice('${p._id}', ${p.festivePrice})" style="background:#3498db; color:white;">Edit Price</button>
+                        <button class="btn-small" onclick="removeDeal('${p._id}')" style="background:#e74c3c; color:white;">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Expose update function
+            window.updateDealPrice = async (id, currentPrice) => {
+                const newPrice = prompt("Enter new festive price:", currentPrice);
+                if(newPrice === null) return;
+                
+                const priceVal = parseFloat(newPrice);
+                if(isNaN(priceVal) || priceVal <= 0) return showToast("Invalid price", "error");
+
+                try {
+                    const res = await fetch(`/api/products/${id}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ festivePrice: priceVal })
+                    });
+                    if(res.ok) {
+                        showToast("Price updated successfully", "success");
+                        loadDeals();
+                    } else {
+                        showToast("Update failed", "error");
+                    }
+                } catch(e) { console.error(e); }
+            };
+
+        } catch (error) { console.error("Deals Error:", error); }
+    }
+
+    // Actions
+    window.toggleCoupon = async (id, status) => {
+        if(!confirm(`Set coupon status to ${status ? 'Active' : 'Inactive'}?`)) return;
+        await fetch(`/api/admin/coupons/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ isActive: status })
+        });
+        loadCoupons();
+    };
+
+    window.deleteCoupon = async (id) => {
+        if(!confirm("Permanently delete this coupon?")) return;
+        await fetch(`/api/admin/coupons/${id}`, { method: 'DELETE' });
+        loadCoupons();
+    };
+
+    window.removeDeal = async (id) => {
+        if(!confirm("Remove this deal? The product price will revert to normal.")) return;
+        await fetch(`/api/admin/products/${id}/remove-deal`, { method: 'PUT' });
+        loadDeals();
+    };
+
+    // Modal Logic for Creation
+    // Inject Modal HTML once
+    if(!document.getElementById('couponModal')) {
+        const modalHTML = `
+        <div id="couponModal" class="modal">
+            <div class="modal-content" style="max-width:400px;">
+                <span class="close-modal" onclick="document.getElementById('couponModal').style.display='none'">&times;</span>
+                <h2>Create New Coupon</h2>
+                <form id="createCouponForm">
+                    <div class="form-group"><label>Code (Uppercase)</label><input type="text" id="cCode" required style="text-transform:uppercase"></div>
+                    <div class="form-group"><label>Discount (%)</label><input type="number" id="cDisc" required min="1" max="100"></div>
+                    <div class="form-group"><label>Min Spend (₹)</label><input type="number" id="cMin" value="0"></div>
+                    <div class="form-group"><label>Description</label><input type="text" id="cDesc" required></div>
+                    <div class="form-group"><label>Expiry Date</label><input type="date" id="cExp" required></div>
+                    <button type="submit" class="btn-submit">Create Coupon</button>
+                </form>
+            </div>
+        </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        document.getElementById('createCouponForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                code: document.getElementById('cCode').value.toUpperCase(),
+                discountPercentage: document.getElementById('cDisc').value,
+                minSpend: document.getElementById('cMin').value,
+                description: document.getElementById('cDesc').value,
+                expiryDate: document.getElementById('cExp').value
+            };
+            
+            try {
+                const res = await fetch('/api/admin/coupons', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const json = await res.json();
+                if(res.ok) {
+                    alert("Coupon Created!");
+                    document.getElementById('couponModal').style.display = 'none';
+                    e.target.reset();
+                    loadCoupons();
+                } else {
+                    alert(json.message);
+                }
+            } catch(err) { alert(err.message); }
+        });
+    }
+
+    window.openCouponModal = () => document.getElementById('couponModal').style.display = 'block';
 
     document.getElementById('adminLogoutBtn').addEventListener('click', () => Auth.logout());
 
@@ -302,10 +471,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('size').value = product.sizes ? product.sizes.join(', ') : '';
         document.getElementById('isTrending').checked = product.isTrending;
 
+        if (product.pricingConstraints) {
+            document.getElementById('maxDiscount').value = product.pricingConstraints.maxDiscount || '';
+            document.getElementById('maxPriceCap').value = product.pricingConstraints.maxPrice || '';
+        }
+
         // Handle Cascading Selects
         document.getElementById('category').value = product.category;
         populateSubCategories(product.category, product.subCategory);
     }
+    
+    // Automation Trigger
+    document.getElementById('runSmartPricing').addEventListener('click', async () => {
+        if(!confirm("⚡ Auto-adjust prices for ALL products based on stock rules? (Low Stock = Surge, High Stock = Discount)")) return;
+        try {
+             const btn = document.getElementById('runSmartPricing');
+             btn.disabled = true;
+             btn.textContent = "Processing...";
+             
+             const res = await fetch('/api/products/auto-price', {
+                 method: 'POST',
+                 headers: {'Content-Type': 'application/json'}
+                 // Cookie auth
+             });
+             const data = await res.json();
+             showToast(data.message, "success");
+             loadInventory();
+        } catch(e) { showToast("Error running automation", "error"); }
+        finally {
+             document.getElementById('runSmartPricing').disabled = false;
+             document.getElementById('runSmartPricing').textContent = "⚡ Run Smart Pricing";
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -322,7 +519,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             description: document.getElementById('description').value,
             stock: parseInt(document.getElementById('stock').value),
             isTrending: document.getElementById('isTrending').checked,
-            size: document.getElementById('size').value
+            size: document.getElementById('size').value,
+            pricingConstraints: {
+                maxDiscount: parseFloat(document.getElementById('maxDiscount').value) || 0,
+                maxPrice: parseFloat(document.getElementById('maxPriceCap').value) || 0
+            }
         };
 
         const url = editingProductId ? `/api/products/${editingProductId}` : '/api/products';
@@ -336,8 +537,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                messageEl.textContent = editingProductId ? 'Product Updated Successfully!' : 'Product Added Successfully!';
-                messageEl.className = 'message success';
+                showToast(editingProductId ? 'Product Updated Successfully!' : 'Product Added Successfully!', 'success');
+                messageEl.textContent = "";
+                messageEl.className = 'message';
                 
                 if(!editingProductId) form.reset(); // Only reset on add
                 
@@ -354,8 +556,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(err.message || 'Operation Failed');
             }
         } catch (error) {
-            messageEl.textContent = 'Error: ' + error.message;
-            messageEl.className = 'message error';
+            showToast('Error: ' + error.message, 'error');
+            messageEl.textContent = "";
         }
     });
 

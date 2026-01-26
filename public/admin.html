@@ -44,6 +44,9 @@
                         <button class="nav-btn" data-tab="add-product">
                               <i class="fas fa-plus-circle"></i> Add Product
                         </button>
+                        <button class="nav-btn" data-tab="coupons">
+                              <i class="fas fa-ticket-alt"></i> Coupons & Deals
+                        </button>
                   </nav>
                   <div class="sidebar-footer">
                         <button id="adminLogoutBtn" class="nav-btn logout">
@@ -192,8 +195,13 @@
                   <section id="inventory" class="content-section">
                         <header class="section-header">
                               <h1>Inventory Status</h1>
-                              <button class="btn-refresh" id="refreshInventory"><i class="fas fa-sync"></i>
-                                    Refresh</button>
+                              <div style="gap:10px; display:flex;">
+                                    <button class="btn-refresh" id="runSmartPricing"
+                                          style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">⚡ Run
+                                          Smart Pricing</button>
+                                    <button class="btn-refresh" id="refreshInventory"><i class="fas fa-sync"></i>
+                                          Refresh</button>
+                              </div>
                         </header>
                         <div class="table-container">
                               <table class="data-table">
@@ -231,6 +239,23 @@
                                           <div class="form-group">
                                                 <label>Price (₹)</label>
                                                 <input type="number" id="price" required min="1">
+                                          </div>
+                                          <!-- Smart Pricing Rules -->
+                                          <div class="form-group"
+                                                style="background:#f0f4f8; padding:10px; border-radius:5px; grid-column: 1 / -1; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                                                <p
+                                                      style="grid-column: 1 / -1; margin:0 0 5px 0; font-weight:bold; color:#2c3e50;">
+                                                      ⚡ Smart Pricing Rules</p>
+                                                <div>
+                                                      <label>Max Discount (%)</label>
+                                                      <input type="number" id="maxDiscount" placeholder="e.g. 20"
+                                                            min="0" max="90">
+                                                </div>
+                                                <div>
+                                                      <label>Max Price Cap (₹)</label>
+                                                      <input type="number" id="maxPriceCap" placeholder="e.g. 5000"
+                                                            min="0">
+                                                </div>
                                           </div>
                                           <div class="form-group">
                                                 <label>Category</label>
@@ -283,6 +308,52 @@
                         </div>
                   </section>
 
+                  <!-- COUPONS & DEALS SECTION -->
+                  <section id="coupons" class="content-section">
+                        <header class="section-header">
+                              <h1>Coupons & Deals Management</h1>
+                        </header>
+
+                        <!-- Tab Switcher inside Section -->
+                        <div class="dashboard-split">
+                              <!-- 1. Coupon Management -->
+                              <div class="dash-panel full-width">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                          <h3>🎟️ Active Coupons</h3>
+                                          <button class="btn-refresh" onclick="openCouponModal()">+ Create
+                                                Coupon</button>
+                                    </div>
+                                    <div class="table-container">
+                                          <table class="data-table">
+                                                <thead>
+                                                      <tr>
+                                                            <th>Code</th>
+                                                            <th>Discount</th>
+                                                            <th>Min Spend</th>
+                                                            <th>Status</th>
+                                                            <th>Actions</th>
+                                                      </tr>
+                                                </thead>
+                                                <tbody id="couponsTableBody">
+                                                      <!-- JS Populated -->
+                                                </tbody>
+                                          </table>
+                                    </div>
+                              </div>
+
+                              <!-- 2. Today's Deals (Festive Prices) -->
+                              <div class="dash-panel full-width" style="margin-top: 20px;">
+                                    <h3>🔥 Today's Deals (AI Generated)</h3>
+                                    <p class="subtitle">These products have special 'Festive Prices' applied based on
+                                          the current festival context.</p>
+                                    <div id="dealsList" class="deals-grid">
+                                          <!-- JS Populated -->
+                                          <p>Loading deals...</p>
+                                    </div>
+                              </div>
+                        </div>
+                  </section>
+
             </main>
       </div>
 
@@ -297,6 +368,7 @@
       </div>
 
       <script src="js/auth.js"></script>
+      <script src="js/toast-system.js"></script>
       <script src="admin.js"></script>
 </body>
 

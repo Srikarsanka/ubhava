@@ -20,7 +20,16 @@ const cartSchema = new mongoose.Schema({
         selectedSize: {
             type: String
         }
-    }]
+    }],
+    appliedCoupon: {
+        code: String,
+        discountPercentage: Number,
+        minSpend: Number
+    },
+    discountTotal: {
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Cart', cartSchema);

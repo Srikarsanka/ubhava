@@ -5,9 +5,12 @@ const {
     getProductById,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    autoAdjustPrices
 } = require('../controllers/productController');
 const { protect, admin } = require('../middleware/authMiddleware');
+
+router.route('/auto-price').post(protect, admin, autoAdjustPrices);
 
 router.route('/')
     .get(getProducts)

@@ -24,6 +24,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: 'INR'
     },
+    originalPrice: {
+        type: Number
+    },
+    festivePrice: {
+        type: Number // Populated by AI/Admin for "Today's Deals"
+    },
     discount: {
         type: Number,
         default: 0
@@ -45,6 +51,10 @@ const productSchema = new mongoose.Schema({
     isTrending: {
         type: Boolean,
         default: false
+    },
+    pricingConstraints: {
+        maxDiscount: { type: Number, default: 0 },
+        maxPrice: { type: Number, default: 0 }
     }
 }, { timestamps: true });
 

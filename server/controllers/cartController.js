@@ -78,8 +78,77 @@ const removeFromCart = async (req, res) => {
     }
 };
 
+const Coupon = require('../models/Coupon');
+
+// ... existing imports ...
+
+// @desc    Apply Coupon
+// @route   POST /api/cart/coupon
+// @access  Private
+const applyCoupon = async (req, res) => {
+    try {
+        const { code } = req.body;
+        const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
+
+        if (!cart) return res.status(404).json({ message: 'Cart not found' });
+
+        const coupon = await Coupon.findOne({ code: code.toUpperCase() });
+
+        if (!coupon) return res.status(404).json({ message: 'Invalid coupon code' });
+        if (!coupon.isActive) return res.status(400).json({ message: 'Coupon is inactive' });
+        if (new Date() > coupon.expiryDate) return res.status(400).json({ message: 'Coupon has expired' });
+
+        // Calculate Cart Total to check minSpend
+        const cartTotal = cart.items.reduce((acc, item) => {
+            const price = item.product.festivePrice || item.product.price;
+            return acc + (price * item.quantity);
+        }, 0);
+
+        if (cartTotal < coupon.minSpend) {
+            return res.status(400).json({ message: `Minimum spend of ₹${coupon.minSpend} required` });
+        }
+
+        // Apply
+        cart.appliedCoupon = {
+            code: coupon.code,
+            discountPercentage: coupon.discountPercentage,
+            minSpend: coupon.minSpend
+        };
+
+        // Recalculate discount total
+        cart.discountTotal = Math.round((cartTotal * coupon.discountPercentage) / 100);
+        
+        await cart.save();
+        res.json(cart);
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Remove Coupon
+// @route   DELETE /api/cart/coupon
+// @access  Private
+const removeCoupon = async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
+        if (cart) {
+            cart.appliedCoupon = undefined;
+            cart.discountTotal = 0;
+            await cart.save();
+            res.json(cart);
+        } else {
+            res.status(404).json({ message: 'Cart not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getCart,
     addToCart,
-    removeFromCart
+    removeFromCart,
+    applyCoupon,
+    removeCoupon
 };

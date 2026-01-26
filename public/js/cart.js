@@ -106,18 +106,14 @@ function renderCart(cart) {
         return item.product ? acc + (item.quantity * item.product.price) : acc;
     }, 0);
 
-    renderSummary(subtotal, cart.items.length);
+    renderSummary(subtotal, cart.items.length, cart.appliedCoupon, cart.discountTotal);
 }
 
-let appliedDiscount = 0;
-let appliedCode = "";
-
-function renderSummary(subtotal, count) {
+function renderSummary(subtotal, count, appliedCoupon, discountTotal) {
     if(!cartSummary) return;
     
     const shipping = 0;
-    const discountAmount = Math.round(subtotal * (appliedDiscount / 100));
-    const total = subtotal + shipping - discountAmount;
+    const total = subtotal + shipping - (discountTotal || 0);
 
     cartSummary.innerHTML = `
         <h3>Order Summary</h3>
@@ -125,10 +121,11 @@ function renderSummary(subtotal, count) {
             <span>Subtotal (${count} items)</span>
             <span>₹${subtotal}</span>
         </div>
-        ${appliedDiscount > 0 ? `
+        ${appliedCoupon ? `
         <div class="summary-row" style="color: #2e7d32; font-weight: 600;">
-            <span>Discount (${appliedDiscount}%)</span>
-            <span>-₹${discountAmount}</span>
+            <span>Discount (${appliedCoupon.code} - ${appliedCoupon.discountPercentage}%)</span>
+            <span>-₹${discountTotal}</span>
+            <button onclick="removeCoupon()" style="background:none; border:none; color:red; cursor:pointer; font-size:0.8rem; margin-left:5px;">(Remove)</button>
         </div>
         ` : ''}
         <div class="summary-row">
@@ -141,10 +138,12 @@ function renderSummary(subtotal, count) {
             <div id="available-toggle" class="available-coupons-title" onclick="showAvailableCoupons()">
                 <i class="fas fa-ticket-alt"></i> View Available Offers
             </div>
+            ${!appliedCoupon ? `
             <div class="coupon-input-group">
-                <input type="text" id="coupon-input" placeholder="ENTER CODE" value="${appliedCode}">
-                <button class="apply-coupon-btn" onclick="applyCoupon(${subtotal})">APPLY</button>
+                <input type="text" id="coupon-input" placeholder="ENTER CODE">
+                <button class="apply-coupon-btn" onclick="applyCoupon()">APPLY</button>
             </div>
+            ` : '<p style="color:green; font-size:0.9rem; margin-top:10px;">Coupon Applied Successfully!</p>'}
             <div id="coupon-feedback" class="coupon-feedback"></div>
         </div>
 
@@ -157,15 +156,12 @@ function renderSummary(subtotal, count) {
             PROCEED TO CHECKOUT
         </button>
     `;
-
-    // Re-check coupon if it was already applied (in case items changed and min-spend no longer met)
-    if (appliedCode && appliedDiscount > 0) {
-        validateThreshold(subtotal);
-    }
 }
 
 async function showAvailableCoupons() {
     try {
+        // Fetch active coupons from Admin API (public read-only needed?) or Festival Context
+        // For now, let's stick to Festival Context as it's public
         const res = await fetch('/api/festival-context');
         if (!res.ok) return;
         const context = await res.json();
@@ -173,21 +169,21 @@ async function showAvailableCoupons() {
         if (context.special_offers && context.special_offers.length > 0) {
             const feedback = document.getElementById('coupon-feedback');
             feedback.innerHTML = context.special_offers.map(offer => `
-                <div style="border: 1px dashed var(--secondary-color); padding: 10px; margin-top: 10px; border-radius: 4px;">
+                <div style="border: 1px dashed var(--secondary-color); padding: 10px; margin-top: 10px; border-radius: 4px; cursor:pointer;" onclick="document.getElementById('coupon-input').value = '${offer.discount_code}'">
                     <strong style="color: var(--primary-color);">${offer.discount_code}</strong>: 
-                    ${offer.discount_percentage}% OFF on orders above ₹${offer.min_spend || 0}.
-                    <br><small>Valid until ${new Date(offer.expires_at).toLocaleDateString()}</small>
+                    ${offer.discount_percentage}% OFF (Min ₹${offer.min_spend || 0})
+                    <br><small>Click to use</small>
                 </div>
             `).join('');
             feedback.className = 'coupon-feedback success';
             feedback.style.display = 'block';
         } else {
-            alert("No active festival coupons today. Check back soon!");
+            showToast("No active festival coupons today. Check back soon!", "info");
         }
     } catch (e) { console.error(e); }
 }
 
-async function applyCoupon(currentAmount) {
+async function applyCoupon() {
     const input = document.getElementById('coupon-input');
     const feedback = document.getElementById('coupon-feedback');
     const code = input.value.trim();
@@ -195,45 +191,34 @@ async function applyCoupon(currentAmount) {
     if (!code) return;
 
     try {
-        const res = await fetch('/api/coupons/validate', {
+        const res = await fetch('/api/cart/coupon', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code, amount: currentAmount })
+            body: JSON.stringify({ code })
         });
 
         const result = await res.json();
 
         if (res.ok) {
-            appliedDiscount = result.discount;
-            appliedCode = result.code;
-            feedback.textContent = result.message;
-            feedback.className = 'coupon-feedback success';
-            // Reload summary to reflect discount
-            loadCart(); 
+            showToast(result.message, "success");
+            renderCart(result); 
         } else {
-            feedback.textContent = result.message;
-            feedback.className = 'coupon-feedback error';
+            showToast(result.message, "error");
         }
     } catch (e) {
-        feedback.textContent = "Error validating coupon.";
-        feedback.className = 'coupon-feedback error';
+        showToast("Error applying coupon.", "error");
     }
 }
 
-function validateThreshold(amount) {
-    // Silent check to ensure current cart still meets coupon requirements
-    // If not, we reset discount
-    fetch('/api/coupons/validate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: appliedCode, amount: amount })
-    }).then(res => {
-        if (!res.ok) {
-            appliedDiscount = 0;
-            appliedCode = "";
-            loadCart(); 
+async function removeCoupon() {
+    if(!confirm("Remove applied coupon?")) return;
+    try {
+        const res = await fetch('/api/cart/coupon', { method: 'DELETE' });
+        if(res.ok) {
+            const cart = await res.json();
+            renderCart(cart);
         }
-    });
+    } catch(e) { console.error(e); }
 }
 
 
@@ -297,6 +282,7 @@ async function removeCartItem(productId) {
         if (res.ok) {
             const updatedCart = await res.json();
             renderCart(updatedCart);
+            showToast("Item removed", "success");
         }
     } catch (e) {
         console.error("Remove Error", e);

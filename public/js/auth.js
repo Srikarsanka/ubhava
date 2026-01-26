@@ -50,7 +50,7 @@ const Auth = {
                 this.user = data;
                 this.updateUI(true);
                 this.closeModal();
-                alert('Login Successful!');
+                showToast('Login Successful!', 'success');
                 
                 // Admin Redirect
                 if (this.user.role === 'admin') {
@@ -63,7 +63,7 @@ const Auth = {
             }
         } catch (error) {
             console.error('Login Error:', error);
-            alert(error.message);
+            showToast(error.message, 'error');
             return false;
         }
     },
@@ -82,13 +82,13 @@ const Auth = {
                 this.user = data;
                 this.updateUI(true);
                 this.closeModal();
-                alert('Registration Successful!');
+                showToast('Registration Successful!', 'success');
                 return true;
             } else {
                 throw new Error(data.message || 'Registration failed');
             }
         } catch (error) {
-            alert(error.message);
+            showToast(error.message, 'error');
             return false;
         }
     },
@@ -98,7 +98,7 @@ const Auth = {
             await fetch('/api/auth/logout', { method: 'POST' });
             this.user = null;
             this.updateUI(false);
-            alert('Logged Out');
+            showToast('Logged Out', 'info');
             window.location.reload();
         } catch (error) {
             console.error('Logout Error:', error);

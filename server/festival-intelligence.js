@@ -74,12 +74,47 @@ async function getFestivalContext(dateString) {
 
         festivalData.editorial_content.image_url = image_url;
 
-        // 6. PERSISTENT PRODUCT GENERATION (NEW TECHNIQUE)
-        // Find matching products based on keywords and store in DB
+const Coupon = require('./models/Coupon');
+
+// ... existing code ...
+
+        // 6. PERSISTENT PRODUCT & COUPON GENERATION
         let related_products = [];
+        
+        // A. Persist Coupons
+        if (festivalData.special_offers && festivalData.special_offers.length > 0) {
+            console.log(`🎟️ Persisting ${festivalData.special_offers.length} AI Coupons to Database`);
+            
+            // Clear old AI coupons first to keep DB clean
+            await Coupon.deleteMany({ isAiGenerated: true, isActive: true });
+
+            for (const offer of festivalData.special_offers) {
+                try {
+                    await Coupon.findOneAndUpdate(
+                        { code: offer.discount_code },
+                        {
+                            code: offer.discount_code,
+                            discountPercentage: offer.discount_percentage,
+                            minSpend: offer.min_spend || 0,
+                            description: `${offer.label} (AI Generated for ${upcomingFestival.name})`,
+                            expiryDate: new Date(offer.expires_at),
+                            isActive: true,
+                            isAiGenerated: true
+                        },
+                        { upsert: true, new: true }
+                    );
+                } catch (e) { console.warn("Coupon save failed", e.message); }
+            }
+        }
+
+        // B. Persist Deals (Festive Pricing)
         if (festivalData.product_keywords && festivalData.product_keywords.length > 0) {
-            console.log(`🔍 Pre-calculating product list for ${upcomingFestival.name}`);
+            console.log(`🔍 Updating Product Database with Festive Prices`);
             const searchTerms = festivalData.product_keywords.flatMap(kw => kw.split(' ')).filter(w => w.length > 2);
+            
+            // 1. Reset old festive prices first
+            await Product.updateMany({}, { $unset: { festivePrice: "", originalPrice: "" } });
+
             const query = {
                 $or: searchTerms.map(term => ({
                     $or: [
@@ -98,11 +133,22 @@ async function getFestivalContext(dateString) {
                 highestDiscount = Math.max(...festivalData.special_offers.map(o => o.discount_percentage));
             }
 
+            // Update matched products in DB
+            if (highestDiscount > 0) {
+                for (const prod of productMatches) {
+                    const discountAmt = Math.round(prod.price * (highestDiscount / 100));
+                    prod.originalPrice = prod.price;
+                    prod.festivePrice = prod.price - discountAmt;
+                    await prod.save();
+                }
+            }
+
+            // Refresh list from DB to return
             related_products = productMatches.map(p => {
                 const productObj = p.toObject();
-                if (highestDiscount > 0) {
-                    productObj.original_price = productObj.price;
-                    productObj.festive_price = Math.round(productObj.price * (1 - highestDiscount / 100));
+                if (p.festivePrice) {
+                    productObj.original_price = p.originalPrice;
+                    productObj.festive_price = p.festivePrice;
                     productObj.discount_applied = highestDiscount;
                 }
                 return productObj;
