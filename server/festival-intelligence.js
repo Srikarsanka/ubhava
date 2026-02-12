@@ -227,7 +227,7 @@ Return STRICT JSON:
 Note: Select the most culturally appropriate VFX array for ${festival.name}. 
 - For Diwali, ALWAYS include both "fireworks" and "diyas".
 - For Republic Day/Independence Day, ALWAYS include "airshow" and NEVER "fireworks".
-- Options: diyas, flowers, fireworks, lanterns, airshow, standard.
+- Options: diyas, flowers, fireworks, lanterns, airshow, harvest-goodness, spring-goodness, standard.
 `;
             const result = await model.generateContent(prompt);
             const response = await result.response;
@@ -266,15 +266,16 @@ Return STRICT JSON array for the "Festival" schema:
     "name": "Festival Name (e.g. Ugadi 2026)",
     "eventDate": "YYYY-MM-DD",
     "startDate": "YYYY-MM-DD", // Exactly 10 days before eventDate
-    "endDate": "YYYY-MM-DD",   // 1 day after eventDate
+    "endDate": "YYYY-MM-DD",   // Same as eventDate (unless multi-day)
     "description": "2-sentence cultural significance focusing on handcraft/heritage",
     "keywords": ["saree", "silk", "handloom", "puja", "tradition"],
-    "templateType": "harvest" // Options: patriotic, harvest, spring, spiritual, standard
+    "templateType": "harvest" // Options: patriotic, harvest, spring, spiritual, diwali, standard
   }
 ]
-- Use 'harvest' for Sankranti.
+- Use 'harvest' for Sankranti / Pongal.
 - Use 'spiritual' for Puja festivals (Ganesh, Varalakshmi, Dussehra).
 - Use 'spring' for Holi/Ugadi.
+- Use 'diwali' for Deepavali / Diwali.
 `;
             const result = await model.generateContent(prompt);
             const response = await result.response;

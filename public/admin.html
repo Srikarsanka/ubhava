@@ -41,6 +41,9 @@
                         <button class="nav-btn" data-tab="analysis">
                               <i class="fas fa-chart-pie"></i> Analysis
                         </button>
+                        <button class="nav-btn" data-tab="festivals">
+                              <i class="fas fa-magic"></i> Festivals
+                        </button>
                         <button class="nav-btn" data-tab="add-product">
                               <i class="fas fa-plus-circle"></i> Add Product
                         </button>
@@ -165,6 +168,109 @@
                                     <canvas id="topProductsChart"></canvas>
                               </div>
                         </div>
+                  </section>
+
+                  <!-- FESTIVAL INTELLIGENCE SECTION -->
+                  <section id="festivals" class="content-section">
+                        <header class="section-header">
+                              <h1>Festival Intelligence</h1>
+                              <p class="subtitle">AI-Detected Cultural Events & Database</p>
+                        </header>
+
+                        <!-- 1. AI Forecast -->
+                        <div class="dash-panel full-width" style="margin-bottom: 20px; border-left: 4px solid #9b59b6;">
+                              <h3>🔮 AI Forecast (Next 5 Days)</h3>
+                              <p>Festivals detected by AI that will trigger dynamic themes.</p>
+                              <div id="aiForecastList" class="deals-grid">
+                                    <p>Loading forecast...</p>
+                              </div>
+                        </div>
+
+                        <!-- 2. Full Database -->
+                        <div class="dash-panel full-width">
+                              <h3>📅 All Stored Festivals</h3>
+                              <div class="table-container">
+                                    <table class="data-table">
+                                          <thead>
+                                                <tr>
+                                                      <th>Festival Name</th>
+                                                      <th>Event Date</th>
+                                                      <th>Theme</th>
+                                                      <th>Images</th>
+                                                </tr>
+                                          </thead>
+                                          <tbody id="festivalsTableBody">
+                                                <!-- JS Populated -->
+                                          </tbody>
+                                    </table>
+                              </div>
+                        </div>
+
+                        <!-- 3. Theme Preview Gallery -->
+                        <div class="dash-panel full-width"
+                              style="margin-top: 20px; background: #fffaf0; border: 1px solid #e0c090;">
+                              <h3>🎨 Theme Gallery & Live Preview</h3>
+                              <p>Click "Preview Live" to see how the website looks with this theme active.</p>
+
+                              <div class="deals-grid"
+                                    style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                                    <!-- Standard -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #ddd;">
+                                          <strong>Standard / Heritage</strong>
+                                          <small>Default look. Timeless, artisan focus.</small>
+                                          <a href="/index.html?previewTheme=standard" target="_blank" class="btn-small"
+                                                style="background: #333; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+                                    <!-- Diwali -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #ffd700; background: #fffbe6;">
+                                          <strong>🪔 Diwali / Deepavali</strong>
+                                          <small>Fireworks, Diyas, Lanterns. Dark Gold theme.</small>
+                                          <a href="/index.html?previewTheme=diwali" target="_blank" class="btn-small"
+                                                style="background: #ff9800; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+                                    <!-- Patriotic -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #3498db;">
+                                          <strong>🇮🇳 Patriotic</strong>
+                                          <small>Tri-color, Airshow VFX. Republic/Indep. Day.</small>
+                                          <a href="/index.html?previewTheme=patriotic" target="_blank" class="btn-small"
+                                                style="background: #3498db; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+                                    <!-- Harvest -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #2ecc71;">
+                                          <strong>🌾 Harvest / Sankranti</strong>
+                                          <small>Falling Grains, Sugarcane. Green/Gold.</small>
+                                          <a href="/index.html?previewTheme=harvest" target="_blank" class="btn-small"
+                                                style="background: #2ecc71; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+                                    <!-- Spring -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #e91e63;">
+                                          <strong>🌸 Spring / Ugadi</strong>
+                                          <small>Falling Flowers, Mango Toran. Pink/Fresh.</small>
+                                          <a href="/index.html?previewTheme=spring" target="_blank" class="btn-small"
+                                                style="background: #e91e63; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+                                    <!-- Spiritual -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #9b59b6;">
+                                          <strong>🕉️ Spiritual / Dasara</strong>
+                                          <small>Gold Framing, Subtle Glow. Puja focus.</small>
+                                          <a href="/index.html?previewTheme=spiritual" target="_blank" class="btn-small"
+                                                style="background: #9b59b6; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+                              </div>
+                        </div>
+
                   </section>
 
                   <!-- ORDERS SECTION -->

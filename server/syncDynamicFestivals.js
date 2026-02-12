@@ -21,6 +21,7 @@ Requirements:
 1. Exact dates for ${year}.
 2. For each, give Name, eventDate, startDate (10 days before), endDate (1 day after).
 3. Include: Ugadi, Sankranti, Vinayaka Chavithi, Varalakshmi Vratham, Bonalu, Bathukamma, Dussehra, Deepavali, Sri Rama Navami, Maha Shivaratri, Republic Day, Independence Day, Eid, Christmas.
+4. For single-day events (Republic Day, Independence Day), endDate MUST be the same as eventDate.
 
 Return STRICT JSON array for 'Festival' collection.
 `;

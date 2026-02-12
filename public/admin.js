@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if(targetId === 'orders') loadOrders();
             if(targetId === 'inventory') loadInventory();
             if(targetId === 'analysis') loadAnalytics();
+            if(targetId === 'festivals') loadFestivals();
             if(targetId === 'coupons') { loadCoupons(); loadDeals(); }
         });
     });
@@ -751,5 +752,67 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Expose functions globaly
     window.loadAnalytics = loadAnalytics;
     window.updateTimeChart = updateTimeChart;
+
+    // --- MODULE: FESTIVALS ---
+    async function loadFestivals() {
+        try {
+            const forecastContainer = document.getElementById('aiForecastList');
+            const tableBody = document.getElementById('festivalsTableBody');
+            
+            if(forecastContainer) forecastContainer.innerHTML = '<p>Loading AI data...</p>';
+            if(tableBody) tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading database...</td></tr>';
+
+            const res = await fetch('/api/admin/festivals');
+            const data = await res.json();
+            const { allFestivals, aiForecast } = data;
+
+            // 1. AI Forecast
+            if (forecastContainer) {
+                if (aiForecast.length === 0) {
+                    forecastContainer.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: #666; background: #f9f9f9; border-radius: 8px;">
+                            <i class="fas fa-wind" style="font-size: 2rem; color: #ccc; margin-bottom: 10px;"></i><br>
+                            No festivals detected for the next 5 days.<br>
+                            <small>AI is monitoring for new events daily.</small>
+                        </div>`;
+                } else {
+                    forecastContainer.innerHTML = aiForecast.map(f => `
+                        <div class="list-item" style="border-left: 4px solid #2ecc71; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            <div class="item-details">
+                                <span style="display:block; font-weight:700; font-size: 1.1rem; color: #2c0665;">
+                                    ${f.name} <span style="font-size: 0.8rem; font-weight: normal; color: #666; background: #eee; padding: 2px 6px; border-radius: 4px;">${f.templateType}</span>
+                                </span>
+                                <span style="display:block; color: #555; margin-top: 5px;">
+                                    📅 ${new Date(f.eventDate).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
+                                </span>
+                                <span style="display:block; color: #777; font-size: 0.9rem; margin-top: 5px;">
+                                    📸 ${f.suggestedImages ? f.suggestedImages.length : 0} Assets Ready
+                                </span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // 2. All Festivals Table
+            if (tableBody) {
+                if (allFestivals.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Database is empty.</td></tr>';
+                } else {
+                    tableBody.innerHTML = allFestivals.map(f => `
+                        <tr>
+                            <td><strong>${f.name}</strong></td>
+                            <td>${new Date(f.eventDate).toISOString().split('T')[0]}</td>
+                            <td><span class="status-badge" style="background:#e0e0e0; color:#333;">${f.templateType}</span></td>
+                            <td><small>${f.suggestedImages && f.suggestedImages.length > 0 ? f.suggestedImages[0].split('/').pop() : 'None'}</small></td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+        } catch (error) {
+            console.error("Festivals Load Error:", error);
+        }
+    }
 
 });

@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const Festival = require('../models/Festival');
 
 // @desc    Get Admin Dashboard Stats
 // @route   GET /api/admin/stats
@@ -266,6 +267,32 @@ const removeDeal = async (req, res) => {
 };
 
 
+// @desc    Get All Festivals & AI Forecast
+// @route   GET /api/admin/festivals
+// @access  Private/Admin
+const getFestivals = async (req, res) => {
+    try {
+        const allFestivals = await Festival.find({}).sort({ eventDate: 1 });
+        
+        // Calculate "Next 5 Days" forecast
+        const today = new Date();
+        const next5Days = new Date();
+        next5Days.setDate(today.getDate() + 5);
+
+        const aiForecast = allFestivals.filter(f => {
+            const fDate = new Date(f.eventDate);
+            return fDate >= today && fDate <= next5Days;
+        });
+
+        res.json({
+            allFestivals,
+            aiForecast
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getDashboardStats,
     getAnalyticsData,
@@ -273,5 +300,6 @@ module.exports = {
     createCoupon,
     updateCoupon,
     deleteCoupon,
-    removeDeal
+    removeDeal,
+    getFestivals
 };
