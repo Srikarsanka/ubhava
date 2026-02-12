@@ -227,7 +227,8 @@ Return STRICT JSON:
 Note: Select the most culturally appropriate VFX array for ${festival.name}. 
 - For Diwali, ALWAYS include both "fireworks" and "diyas".
 - For Republic Day/Independence Day, ALWAYS include "airshow" and NEVER "fireworks".
-- Options: diyas, flowers, fireworks, lanterns, airshow, harvest-goodness, spring-goodness, standard.
+- For Shivaratri, ALWAYS use "cosmic-lights" and "damaru".
+- Options: diyas, flowers, fireworks, lanterns, airshow, harvest-goodness, spring-goodness, cosmic-lights, damaru, standard.
 `;
             const result = await model.generateContent(prompt);
             const response = await result.response;

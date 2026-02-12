@@ -229,6 +229,7 @@ function injectEditorialLayer(context) {
     if (context.templateType === 'harvest') section.classList.add('harvest-theme');
     if (context.templateType === 'spring') section.classList.add('spring-theme');
     if (context.templateType === 'monsoon') section.classList.add('monsoon-theme');
+    if (context.templateType === 'shivaratri') section.classList.add('shivaratri-vibe');
 
     // DIWALI CHECK: If it's spiritual and has both fireworks + diyas, it's a Diwali Vibe
     if (context.templateType === 'spiritual' && vfx.includes('fireworks') && vfx.includes('diyas')) {
@@ -326,6 +327,8 @@ function injectAmbientVFX(section, vfxTypes) {
         if (type === 'flowers') initFlowers(vfxContainer);
         if (type === 'lanterns') initLanterns(vfxContainer);
         if (type === 'airshow') initAirShow(vfxContainer);
+        if (type === 'cosmic-lights') initCosmicLights(vfxContainer); // Shivaratri Special
+        if (type === 'damaru') initDamaru(vfxContainer); // Shivaratri Special
     });
 }
 
@@ -545,6 +548,43 @@ function initAirShow(container) {
         <div class="jet jet-3 jet-rtl" style="right: 30%; animation-delay: 3s"><div class="smoke-trail"></div></div>
     `;
     container.appendChild(flypast);
+}
+
+// 4. SHIVARATRI SPECIAL: Cosmic Lights & Damaru
+function initCosmicLights(container) {
+    const section = container.parentElement;
+    // Create a canvas for starry background and cosmic rays
+    const canvas = document.createElement('canvas');
+    canvas.classList.add('cosmic-canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '0';
+    canvas.style.pointerEvents = 'none';
+    container.appendChild(canvas);
+    
+    // Add simple CSS animation class to container or section if needed
+    section.classList.add('cosmic-active');
+}
+
+function initDamaru(container) {
+    // Add floating damarus (drums) or tridents
+    for (let i = 0; i < 6; i++) {
+        const damaru = document.createElement('div');
+        damaru.className = 'damaru-icon';
+        damaru.innerHTML = '🔱'; // Trident for now, or use SVG
+        damaru.style.left = Math.random() * 90 + '%';
+        damaru.style.animationDelay = Math.random() * 5 + 's';
+        damaru.style.fontSize = (20 + Math.random() * 20) + 'px';
+        damaru.style.position = 'absolute';
+        damaru.style.opacity = '0';
+        damaru.style.color = '#FFD700'; // Gold
+        damaru.style.filter = 'drop-shadow(0 0 5px rgba(255,215,0,0.5))';
+        damaru.style.animation = 'floatUpFade 8s infinite linear';
+        container.appendChild(damaru);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initHeritageSystem);

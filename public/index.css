@@ -1632,6 +1632,128 @@ footer::before {
       border-color: rgba(212, 175, 55, 0.1);
 }
 
+/* --- Shivaratri Theme: Cosmic & Divine (Dark Purple/Blue/Gold) --- */
+/* --- Shivaratri Theme: Divine Light (White/Gold/Rudraksha) --- */
+.shivaratri-vibe {
+      background: radial-gradient(circle at 50% 30%, #FFFFF0 0%, #FFF8DC 100%) !important;
+      /* Ivory to Cornsilk */
+      color: #8B4513 !important;
+      /* Saddle Brown / Rudraksha Color */
+}
+
+.shivaratri-vibe .festival-title {
+      color: #D2691E !important;
+      /* Chocolate/Bronze */
+      text-shadow: 0 0 15px rgba(210, 105, 30, 0.3);
+      font-family: 'Playfair Display', serif;
+}
+
+.shivaratri-vibe .festival-desc {
+      color: rgba(139, 69, 19, 0.9) !important;
+}
+
+.shivaratri-vibe .festival-offer-badge {
+      border: 1px solid #D2691E !important;
+      background: rgba(255, 235, 205, 0.6) !important;
+      box-shadow: 0 0 10px rgba(210, 105, 30, 0.2);
+}
+
+.shivaratri-vibe .offer-discount {
+      background: linear-gradient(135deg, #D2691E, #8B4513) !important;
+      color: #fff !important;
+}
+
+.shivaratri-vibe .offer-label {
+      color: #5C3317 !important;
+}
+
+.shivaratri-vibe .offer-code {
+      color: #3E2723 !important;
+}
+
+/* Cosmic Animation Adapted for Light Theme */
+.cosmic-active::before {
+      background-image:
+            radial-gradient(#D2691E, rgba(210, 105, 30, .2) 2px, transparent 3px),
+            radial-gradient(#D2691E, rgba(210, 105, 30, .15) 1px, transparent 2px);
+      background-size: 550px 550px, 350px 350px;
+      opacity: 0.3;
+}
+
+.shivaratri-vibe+.festival-product-showcase {
+      background: linear-gradient(to bottom, #FFF8DC, #FAEBD7) !important;
+      border-image: linear-gradient(to right, #D2691E, #FFD700, #D2691E) 1 !important;
+}
+
+.shivaratri-vibe+.festival-product-showcase h2 {
+      color: #8B4513 !important;
+      text-shadow: none !important;
+}
+
+.shivaratri-vibe+.festival-product-showcase .product-card {
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: 1px solid rgba(210, 105, 30, 0.2);
+      box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+}
+
+.shivaratri-vibe+.festival-product-showcase .product-card:hover {
+      border-color: #D2691E;
+      box-shadow: 0 10px 25px rgba(139, 69, 19, 0.2);
+}
+
+
+
+@keyframes starsMove {
+      from {
+            transform: translateY(0);
+      }
+
+      to {
+            transform: translateY(-550px);
+      }
+}
+
+@keyframes floatUpFade {
+      0% {
+            transform: translateY(100%) rotate(0deg);
+            opacity: 0;
+      }
+
+      20% {
+            opacity: 0.8;
+      }
+
+      80% {
+            opacity: 0.8;
+      }
+
+      100% {
+            transform: translateY(-120%) rotate(360deg);
+            opacity: 0;
+      }
+}
+
+.shivaratri-vibe+.festival-product-showcase {
+      background: linear-gradient(to bottom, #000000, #1a0b2e) !important;
+      border-image: linear-gradient(to right, #4B0082, #FFD700, #4B0082) 1 !important;
+}
+
+.shivaratri-vibe+.festival-product-showcase h2 {
+      color: #FFD700 !important;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.shivaratri-vibe+.festival-product-showcase .product-card {
+      background: rgba(25, 25, 35, 0.8) !important;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 15px rgba(75, 0, 130, 0.2);
+}
+
+.shivaratri-vibe+.festival-product-showcase .product-card:hover {
+      border-color: #FFD700;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+}
+
 .spiritual-theme+.festival-product-showcase .product-card:hover {
       transform: translateY(-12px) scale(1.02);
       box-shadow: 0 20px 50px rgba(249, 115, 22, 0.2);

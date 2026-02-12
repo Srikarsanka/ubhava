@@ -19,7 +19,7 @@ Generate a COMPREHENSIVE list of festivals for the year ${year}.
 Focus: Telugu Culture (Andhra & Telangana) + All Major Indian Festivals.
 Requirements:
 1. Exact dates for ${year}.
-2. For each, give Name, eventDate, startDate (10 days before), endDate (1 day after).
+2. For each, give Name, eventDate, startDate (exactly 5 days before), endDate (1 day after).
 3. Include: Ugadi, Sankranti, Vinayaka Chavithi, Varalakshmi Vratham, Bonalu, Bathukamma, Dussehra, Deepavali, Sri Rama Navami, Maha Shivaratri, Republic Day, Independence Day, Eid, Christmas.
 
 Return STRICT JSON array for 'Festival' collection.
@@ -53,6 +53,21 @@ Return STRICT JSON array for 'Festival' collection.
             throw parseErr;
         }
 
+        // --- ENFORCEMENT for User Request (Shivaratri) ---
+        const hasShivaratri = festivalList.some(f => f.name && f.name.toLowerCase().includes('shivara'));
+        if (!hasShivaratri) {
+            console.log("⚠️ AI missed Shivaratri. Injecting manually as per user request...");
+            festivalList.push({
+                name: "Maha Shivaratri 2026",
+                eventDate: "2026-02-15",
+                startDate: "2026-02-10",
+                endDate: "2026-02-16",
+                description: "The Great Night of Shiva. A time for prayer, meditation, and overcoming darkness and ignorance.",
+                templateType: "shivaratri" // Will trigger cosmic-lights
+            });
+        }
+        // ------------------------------------------------
+
         console.log(`✨ Found ${festivalList.length} significant dates for ${year}.`);
 
         for (const fest of festivalList) {
@@ -73,6 +88,7 @@ Return STRICT JSON array for 'Festival' collection.
                 if (lowerName.includes('republic') || lowerName.includes('independ')) type = 'patriotic';
                 if (lowerName.includes('sankranti') || lowerName.includes('pongal')) type = 'harvest';
                 if (lowerName.includes('holi') || lowerName.includes('ugadi')) type = 'spring';
+                if (lowerName.includes('shivaratri') || lowerName.includes('shiva')) type = 'shivaratri'; // New Intelligence Rule
                 
                 fest.templateType = fest.templateType || type;
 
