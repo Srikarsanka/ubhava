@@ -39,6 +39,11 @@ const productSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
+    // New Size-Based Stock Logic
+    sizeStock: [{
+        size: { type: String, required: true },
+        stock: { type: Number, default: 0 }
+    }],
     images: [{
         type: String // URL paths
     }],
@@ -55,7 +60,16 @@ const productSchema = new mongoose.Schema({
     pricingConstraints: {
         maxDiscount: { type: Number, default: 0 },
         maxPrice: { type: Number, default: 0 }
-    }
+    },
+    season: {
+        type: String // e.g., monsoon, winter, summer
+    },
+    brand: {
+        type: String // e.g., Moansson, UDBHAVA
+    },
+    themeColors: [{
+        type: String // hex color codes for UI rendering
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - UDBHAVA</title>
+    <link rel="stylesheet" href="shop.css">
+    <link rel="stylesheet" href="product-details.css">
+    <link rel=icon href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" style="padding: 15px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; background: #fff;">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: #800000;">
+                <h1 style="margin: 0; font-size: 1.5rem; letter-spacing: 1px;">UDBHAVA</h1>
+            </a>
+        </div>
+        <div class="nav-links" style="display: flex; gap: 20px; align-items: center;">
+            <a href="shop.html" style="text-decoration: none; color: #111; font-weight: 500;">Shop</a>
+            <a id="nav-login-btn" href="#" style="text-decoration: none; font-weight: 600; color: #ff7b00;">Login</a>
+            <span id="nav-user-display" style="display:none; color: #800000; cursor: pointer; font-weight: 600;" title="View Profile"></span>
+            <a id="nav-logout-btn" href="#" style="display:none; text-decoration: none; color: #666; font-size: 0.9rem;">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Auth Modal (Needed for global auth logic) -->
+    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 10000;">
+        <div style="background: white; padding: 30px; border-radius: 10px; width: 400px; text-align: center; position: relative;">
+            <span id="auth-modal-close" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
+            <h2 id="auth-modal-title" style="color: #800000; margin-bottom: 20px;">Login</h2>
+            <div id="login-form-container">
+                <form id="auth-login-form">
+                    <input type="email" name="email" placeholder="Email Address" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="password" name="password" placeholder="Password" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 12px; background: #800000; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: 600;">Login</button>
+                </form>
+                <p style="margin-top: 20px; font-size: 0.9rem;">New here? <a href="#" id="switch-to-register" style="color: #ff7b00; text-decoration: none; font-weight: 600;">Sign Up</a></p>
+            </div>
+            <div id="register-form-container" style="display: none;">
+                <form id="auth-register-form">
+                    <input type="text" name="fullName" placeholder="Full Name" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="email" name="email" placeholder="Email Address" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="password" name="password" placeholder="Password" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="text" name="phone" placeholder="Phone Number" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 12px; background: #800000; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Sign Up</button>
+                </form>
+                <p style="margin-top: 20px; font-size: 0.9rem;">Already have an account? <a href="#" id="switch-to-login" style="color: #ff7b00; text-decoration: none; font-weight: 600;">Login</a></p>
+            </div>
+        </div>
+    </div>
+    <!-- Main Content Container -->
+    <main id="product-details-main" style="min-height: 80vh; padding-top: 40px; background-color: #fff;">
+        <!-- Content will be injected by JS -->
+        <div style="text-align:center; padding: 100px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #800000;"></i>
+            <p style="margin-top:20px; font-family: 'Inter', sans-serif;">Loading luxurious details...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="copyright">
+              <p>&copy; 2025 UDBHAVA - The Origin of Indian Handcraft. All rights reserved. Crafted with ❤️ in India.</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/toast-system.js"></script>
+    <script src="products_data.js"></script>
+    <script src="product-details.js"></script>
+</body>
+</html>

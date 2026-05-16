@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | UDBHAVA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #800000;
+            --secondary-color: #1a1a1a;
+            --success-color: #2ecc71;
+            --bg-color: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .success-card {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .checkmark-wrapper {
+            width: 80px;
+            height: 80px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 25px;
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .order-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .info-row:last-child { margin-bottom: 0; }
+        .info-row span:first-child { color: #888; }
+        .info-row span:last-child { color: #111; font-weight: 600; }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #600000;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #eee;
+            color: #333;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        #confetti {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="confetti"></canvas>
+    
+    <div class="success-card">
+        <div class="checkmark-wrapper">
+            <i class="fas fa-check"></i>
+        </div>
+        <h1>Order Confirmed!</h1>
+        <p>Thank you for shopping with UDBHAVA. Your order has been placed successfully and is being processed.</p>
+        
+        <div class="order-info">
+            <div class="info-row">
+                <span>Order ID</span>
+                <span id="order-id-display">#...</span>
+            </div>
+            <div class="info-row">
+                <span>Total Amount</span>
+                <span id="order-total-display">₹...</span>
+            </div>
+            <div class="info-row">
+                <span>Estimated Delivery</span>
+                <span id="order-delivery-display">3-5 Business Days</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="#" id="view-invoice-btn" class="btn btn-primary">
+                <i class="fas fa-file-invoice"></i> View Invoice
+            </a>
+            <a href="shop.html" class="btn btn-secondary">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get('orderId');
+            
+            if (orderId) {
+                document.getElementById('order-id-display').textContent = '#' + orderId.substring(0, 10).toUpperCase();
+                document.getElementById('view-invoice-btn').href = 'invoice.html?orderId=' + orderId;
+                
+                // Fetch basic order info if needed or use previous state
+                // For now we assume the URL might have total too for speed
+                const total = params.get('total');
+                if(total) document.getElementById('order-total-display').textContent = '₹' + total;
+            }
+
+            // Simple Confetti Animation
+            initConfetti();
+        });
+
+        function initConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#800000', '#2ecc71', '#3498db', '#f1c40f', '#e67e22'];
+
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 7 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speed: Math.random() * 3 + 2,
+                    angle: Math.random() * 360
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    p.y += p.speed;
+                    p.x += Math.sin(p.angle) * 2;
+                    p.angle += 0.1;
+
+                    if (p.y > canvas.height) p.y = -10;
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+    </script>
+</body>
+</html>

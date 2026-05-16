@@ -111,12 +111,18 @@ const applyCoupon = async (req, res) => {
         // Apply
         cart.appliedCoupon = {
             code: coupon.code,
-            discountPercentage: coupon.discountPercentage,
+            discountType: coupon.discountType || 'percentage',
+            discountPercentage: coupon.discountPercentage || 0,
+            discountAmount: coupon.discountAmount || 0,
             minSpend: coupon.minSpend
         };
 
         // Recalculate discount total
-        cart.discountTotal = Math.round((cartTotal * coupon.discountPercentage) / 100);
+        if (cart.appliedCoupon.discountType === 'flat') {
+            cart.discountTotal = Math.min(cartTotal, cart.appliedCoupon.discountAmount);
+        } else {
+            cart.discountTotal = Math.round((cartTotal * cart.appliedCoupon.discountPercentage) / 100);
+        }
         
         await cart.save();
         res.json(cart);

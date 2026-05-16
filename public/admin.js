@@ -281,10 +281,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <small>${order.user ? order.user.email : ''}</small>
                     </td>
                     <td>₹${order.totalAmount}</td>
-                    <td><span class="status-badge status-paid">${order.isPaid ? 'Paid' : 'Unpaid (COD)'}</span></td>
+                    <td>
+                        <span class="status-badge" style="background:${order.orderStatus === 'Delivered' ? '#e8f5e9' : '#fff3e0'}; color:${order.orderStatus === 'Delivered' ? '#2e7d32' : '#e65100'}; border: 1px solid currentColor;">
+                            ${order.orderStatus}
+                        </span>
+                    </td>
                     <td>${new Date(order.createdAt).toLocaleDateString()}</td>
                     <td>
-                        <button class="btn-small" onclick="viewOrderDetails('${order._id}')">Details</button>
+                        <button class="btn-small" onclick="viewOrderDetails('${order._id}')">Manage</button>
                     </td>
                 </tr>
             `).join('');
@@ -320,7 +324,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4>Shipping Address</h4>
                     <p>${addr.fullName}<br>
                     ${addr.street}, ${addr.city}<br>
-                    ${addr.state} - ${addr.postalCode}<br>
+                    ${addr.state} - ${addr.pincode}<br>
                     ${addr.phone}</p>
                 </div>
             </div>
@@ -342,12 +346,55 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div style="text-align:right; margin-top:20px; font-size:1.2rem;">
                 <strong>Total: ₹${order.totalAmount}</strong>
             </div>
+
+            <div style="margin-top:30px; padding:15px; background:#f9f9f9; border-radius:8px; border-top: 2px solid #800000;">
+                <h4 style="margin-top:0;">Manage Order Process</h4>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="updateStatusSelect" style="flex:1; padding:10px; border-radius:4px; border:1px solid #ccc;">
+                        <option value="Placed" ${order.orderStatus === 'Placed' ? 'selected' : ''}>Placed (Waiting)</option>
+                        <option value="Order Received" ${order.orderStatus === 'Order Received' ? 'selected' : ''}>Order Received</option>
+                        <option value="Order Packed" ${order.orderStatus === 'Order Packed' ? 'selected' : ''}>Order Packed</option>
+                        <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                    <button onclick="saveOrderStatus('${order._id}')" style="background:#800000; color:#fff; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; font-weight:600;">Update Status</button>
+                </div>
+                <p id="statusUpdateMsg" style="margin-top:10px; font-size:0.85rem; display:none;"></p>
+            </div>
         `;
 
         modal.style.display = 'block';
 
         // Close logic
         modal.querySelector('.close-modal').onclick = () => modal.style.display = 'none';
+
+        // Save Status logic
+        window.saveOrderStatus = async (id) => {
+            const newStatus = document.getElementById('updateStatusSelect').value;
+            const msg = document.getElementById('statusUpdateMsg');
+            
+            try {
+                const res = await fetch(`/api/orders/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ orderStatus: newStatus })
+                });
+                
+                if(res.ok) {
+                    msg.textContent = "Status updated successfully!";
+                    msg.style.color = "green";
+                    msg.style.display = "block";
+                    loadOrders(); // Refresh table
+                    setTimeout(() => { modal.style.display = 'none'; }, 1000);
+                } else {
+                    msg.textContent = "Update failed.";
+                    msg.style.color = "red";
+                    msg.style.display = "block";
+                }
+            } catch (e) { console.error(e); }
+        };
         window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; }
     }
 
@@ -363,17 +410,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             const res = await fetch('/api/products');
             allProducts = await res.json(); // Cache
 
-            tbody.innerHTML = allProducts.map(p => `
+            tbody.innerHTML = allProducts.map(p => {
+                let stockDisplay = "";
+                if (p.sizeStock && p.sizeStock.length > 0 && p.subCategory !== 'saree' && p.category !== 'toys') {
+                    stockDisplay = `<div style="font-size:0.75rem; line-height:1.2;">` + 
+                        p.sizeStock.map(s => `<span style="color:${s.stock < 5 ? '#e74c3c' : '#555'}; font-weight:${s.stock < 5 ? 'bold' : 'normal'}">${s.size}: ${s.stock}</span>`).join(' | ') +
+                        `</div>`;
+                } else {
+                    stockDisplay = `<span class="${p.stockAvailable <= 5 ? 'stock-low' : 'stock-ok'}">${p.stockAvailable}</span>`;
+                }
+
+                return `
                 <tr>
                     <td><img src="${p.images[0]}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;"></td>
                     <td>${p.name}</td>
                     <td>${p.category} > ${p.subCategory}</td>
                     <td>₹${p.price}</td>
-                    <td class="${p.stockAvailable <= 5 ? 'stock-low' : 'stock-ok'}">
-                        ${p.stockAvailable}
-                    </td>
+                    <td>${stockDisplay}</td>
                     <td>
-                        ${p.stockAvailable > 0 ? 
+                        ${(p.stockAvailable > 0 || (p.sizeStock && p.sizeStock.some(s => s.stock > 0))) ? 
                             '<span class="status-badge status-paid">In Stock</span>' : 
                             '<span class="status-badge status-failed">Out of Stock</span>'}
                     </td>
@@ -381,7 +436,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <button class="btn-small" onclick="editProduct('${p._id}')" style="background-color:#fbc02d; color:#333; margin-right:5px;">Edit</button>
                     </td>
                 </tr>
-            `).join('');
+                `;
+            }).join('');
             
             // Allow global access
             window.editProduct = editProduct;
@@ -403,6 +459,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     const messageEl = document.getElementById('message');
     const submitBtn = form.querySelector('.btn-submit');
     const formTitle = document.querySelector('#add-product h1');
+
+    // Initialize Size Inputs
+    function initSizeInputs() {
+        const container = document.getElementById('sizeStockInputs');
+        if (!container) return;
+        const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        container.innerHTML = sizes.map(size => `
+            <div class="size-card" style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e6ed; text-align: center; transition: all 0.2s;">
+                <label style="display: block; font-weight: 800; color: #800000; font-size: 0.8rem; margin-bottom: 8px;">${size}</label>
+                <input type="number" data-size="${size}" class="size-stock-input" value="0" min="0" 
+                    style="width: 100%; border: 1px solid #dcdfe6; border-radius: 4px; padding: 6px; text-align: center; font-weight: 600; font-size: 1rem; outline: none;">
+            </div>
+        `).join('');
+
+        // Add Listeners
+        container.querySelectorAll('.size-stock-input').forEach(input => {
+            input.addEventListener('input', calculateTotalStock);
+            input.addEventListener('focus', function() {
+                this.parentElement.style.borderColor = '#800000';
+                this.parentElement.style.boxShadow = '0 2px 8px rgba(128,0,0,0.1)';
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.style.borderColor = '#e0e6ed';
+                this.parentElement.style.boxShadow = 'none';
+            });
+        });
+    }
+
+    function calculateTotalStock() {
+        let total = 0;
+        document.querySelectorAll('.size-stock-input').forEach(i => {
+            total += parseInt(i.value) || 0;
+        });
+        document.getElementById('totalStockBadge').textContent = total;
+        document.getElementById('stock').value = total;
+    }
+
+    initSizeInputs();
 
     // Expanded Categories
     const subCategories = {
@@ -429,7 +523,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     categorySelect.addEventListener('change', () => {
         populateSubCategories(categorySelect.value);
+        toggleStockUI();
     });
+
+    subCategorySelect.addEventListener('change', toggleStockUI);
+
+    function toggleStockUI() {
+        const cat = categorySelect.value;
+        const sub = subCategorySelect.value;
+        const sizeStockContainer = document.getElementById('sizeStockContainer');
+        const generalStockGroup = document.getElementById('generalStockGroup');
+        const totalStockPreview = document.getElementById('totalStockPreview');
+
+        // Logic: Clothing (men, women except saree, kids) supports sizes
+        const supportsSizes = (['women', 'men', 'kids'].includes(cat) && sub !== 'saree');
+
+        if (supportsSizes) {
+            sizeStockContainer.style.display = 'block';
+            generalStockGroup.style.display = 'none';
+            totalStockPreview.style.display = 'block';
+        } else {
+            sizeStockContainer.style.display = 'none';
+            generalStockGroup.style.display = 'block';
+            totalStockPreview.style.display = 'none';
+        }
+    }
+
+    // Auto-Calculate Total Stock - Handled in initSizeInputs now
+    // document.querySelectorAll('.size-stock-input').forEach(input => { ... })
 
     function populateSubCategories(cat, selectedSub = null) {
         subCategorySelect.innerHTML = '<option value="" disabled selected>Select Sub-Category</option>'; 
@@ -469,7 +590,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('image').value = product.images[0] || '';
         document.getElementById('video').value = product.video || '';
         document.getElementById('description').value = product.description || '';
-        document.getElementById('size').value = product.sizes ? product.sizes.join(', ') : '';
+        
+        // Handle Size Stock Inputs
+        document.querySelectorAll('.size-stock-input').forEach(input => {
+            const size = input.getAttribute('data-size');
+            const entry = product.sizeStock ? product.sizeStock.find(s => s.size === size) : null;
+            input.value = entry ? entry.stock : 0;
+        });
+
         document.getElementById('isTrending').checked = product.isTrending;
 
         if (product.pricingConstraints) {
@@ -477,9 +605,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('maxPriceCap').value = product.pricingConstraints.maxPrice || '';
         }
 
-        // Handle Cascading Selects
+        // Handle Edit Mode Initial UI
         document.getElementById('category').value = product.category;
         populateSubCategories(product.category, product.subCategory);
+        toggleStockUI();
+        
+        // Update Total Stock Badge and Size Inputs on load
+        if (product.sizeStock && product.sizeStock.length > 0) {
+            const total = product.sizeStock.reduce((acc, s) => acc + s.stock, 0);
+            document.getElementById('totalStockBadge').textContent = total;
+            
+            // Populate individual size cards
+            product.sizeStock.forEach(s => {
+                const input = document.querySelector(`.size-stock-input[data-size="${s.size}"]`);
+                if(input) input.value = s.stock;
+            });
+        } else {
+            // Reset if no size stock (e.g. saree)
+            document.querySelectorAll('.size-stock-input').forEach(i => i.value = 0);
+            document.getElementById('totalStockBadge').textContent = '0';
+        }
     }
     
     // Automation Trigger
@@ -520,7 +665,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             description: document.getElementById('description').value,
             stock: parseInt(document.getElementById('stock').value),
             isTrending: document.getElementById('isTrending').checked,
-            size: document.getElementById('size').value,
+            sizeStock: Array.from(document.querySelectorAll('.size-stock-input')).map(input => ({
+                size: input.getAttribute('data-size'),
+                stock: parseInt(input.value) || 0
+            })),
+            sizes: Array.from(document.querySelectorAll('.size-stock-input'))
+                .filter(input => parseInt(input.value) > 0)
+                .map(input => input.getAttribute('data-size')),
             pricingConstraints: {
                 maxDiscount: parseFloat(document.getElementById('maxDiscount').value) || 0,
                 maxPrice: parseFloat(document.getElementById('maxPriceCap').value) || 0

@@ -33,6 +33,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/wishlist', require('./routes/wishlistRoutes'));
+app.use('/api/address', require('./routes/addressRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 
@@ -100,6 +102,22 @@ app.post('/api/coupons/validate', async (req, res) => {
         res.status(500).json({ message: "Error validating coupon." });
     }
 });
+
+// ═══════════ MOANSSON WEATHER ENGINE ═══════════
+const { getWeatherContext } = require('./weather-engine');
+
+app.get('/api/weather-context', async (req, res) => {
+    try {
+        const lat = parseFloat(req.query.lat) || 17.385;
+        const lon = parseFloat(req.query.lon) || 78.4867;
+        const context = await getWeatherContext(lat, lon);
+        res.json(context);
+    } catch (err) {
+        console.error("Weather Engine Error:", err);
+        res.status(500).json({ success: false, message: "Weather unavailable" });
+    }
+});
+
 
 app.get('/api/status', (req, res) => {
     res.json({ status: 'active', message: 'Backend is running with MongoDB' });

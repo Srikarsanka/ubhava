@@ -38,8 +38,12 @@ const orderSchema = new mongoose.Schema({
     },
     orderStatus: {
         type: String,
-        enum: ['Placed', 'Shipped', 'Delivered', 'Cancelled'],
+        enum: ['Placed', 'Order Received', 'Order Packed', 'Shipped', 'Delivered', 'Cancelled'],
         default: 'Placed'
+    },
+    statusLastUpdated: {
+        type: Date,
+        default: Date.now
     },
     paymentStatus: {
         type: String,

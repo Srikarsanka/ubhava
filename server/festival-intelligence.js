@@ -15,7 +15,7 @@ async function getFestivalContext(dateString) {
 
     try {
         // 1. Find the most relevant active festival (Today is within the 10-day window)
-        const upcomingFestival = await Festival.findOne({
+        let upcomingFestival = await Festival.findOne({
             startDate: { $lte: today },
             endDate: { $gte: today }
         }).sort({ eventDate: 1 }); 
@@ -116,6 +116,7 @@ const Coupon = require('./models/Coupon');
             await Product.updateMany({}, { $unset: { festivePrice: "", originalPrice: "" } });
 
             const query = {
+                brand: { $ne: 'Moansson' }, // Moansson products are for Shop only
                 $or: searchTerms.map(term => ({
                     $or: [
                         { name: { $regex: term, $options: 'i' } },
@@ -126,7 +127,7 @@ const Coupon = require('./models/Coupon');
             };
 
             let productMatches = await Product.find(query).limit(12);
-            if (productMatches.length === 0) productMatches = await Product.find({ isTrending: true }).limit(12);
+            if (productMatches.length === 0) productMatches = await Product.find({ isTrending: true, brand: { $ne: 'Moansson' } }).limit(12);
 
             let highestDiscount = 0;
             if (festivalData.special_offers && festivalData.special_offers.length > 0) {
@@ -191,11 +192,11 @@ async function generateFestivalText(festival) {
 
             const prompt = `
 Role: Cultural Editor for UDBHAVA (Premium Indian Heritage Shop).
-Festival: ${festival.name}
+Event/Season: ${festival.name}
 Details: ${festival.description}
 
-Task: Generate festive marketing content. No AI imagery needed. Just text.
-Return STRICT JSON:
+Task: Generate marketing content for this event or season. No AI imagery needed. Just text.
+Return STRICT JSON. You MUST include "festival_wishes" (a short greeting or subline):
 {
   "detected": true,
   "festival_wishes": "Warm greeting...",
@@ -257,22 +258,24 @@ Target Year: ${year}
 Current Date: ${targetDate.toISOString().split('T')[0]}
 
 Task: Identify major Indian festivals for the year ${year}, with a HEAVY FOCUS on Telugu Culture and Heritage (Andhra Pradesh & Telangana). 
-Include festivals like: Ugadi, Sankranti, Vinayaka Chavithi, Varalakshmi Vratham, Bonalu, Bathukamma, Dussehra, Deepavali, Sri Rama Navami.
+If the current date (${targetDate.toISOString().split('T')[0]}) does not fall near any major festival, you MUST include a Season-based theme for the current month (e.g., "Summer Radiance ${year}", "Monsoon Magic ${year}", "Winter Warmth ${year}") that covers the current date.
 
-For each festival, determine the EXACT date for ${year} based on the Hindu Lunar Calendar (Panchangam).
+For each festival/season, determine the EXACT date for ${year}.
 
 Return STRICT JSON array for the "Festival" schema:
 [
   {
-    "name": "Festival Name (e.g. Ugadi 2026)",
+    "name": "Festival or Season Name (e.g. Summer Radiance 2026)",
     "eventDate": "YYYY-MM-DD",
-    "startDate": "YYYY-MM-DD", // Exactly 10 days before eventDate
-    "endDate": "YYYY-MM-DD",   // Same as eventDate (unless multi-day)
-    "description": "2-sentence cultural significance focusing on handcraft/heritage",
-    "keywords": ["saree", "silk", "handloom", "puja", "tradition"],
-    "templateType": "harvest" // Options: patriotic, harvest, spring, spiritual, diwali, standard
+    "startDate": "YYYY-MM-DD", // For seasons, start of the month. For festivals, 10 days prior.
+    "endDate": "YYYY-MM-DD",   // For seasons, end of the month.
+    "description": "2-sentence cultural significance focusing on handcraft/heritage or seasonal comfort.",
+    "keywords": ["saree", "silk", "handloom", "summer", "tradition"],
+    "templateType": "summer" // Options: patriotic, harvest, spring, spiritual, diwali, summer, monsoon, standard
   }
 ]
+- Use 'summer' for Summer seasons (April, May, June).
+- Use 'monsoon' for Monsoon seasons / Teej.
 - Use 'harvest' for Sankranti / Pongal.
 - Use 'spiritual' for Puja festivals (Ganesh, Varalakshmi, Dussehra).
 - Use 'spring' for Holi/Ugadi.

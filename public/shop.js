@@ -9,200 +9,12 @@ window.addEventListener("scroll", function () {
   }
 });
 
-// Profile icon click event
-// Profile icon click event (Now attached to User Name)
-const profileTrigger = document.querySelector("#nav-user-display"); 
-if (profileTrigger) {
-    profileTrigger.addEventListener("click", function () {
-        // Only opens if user is clicked (which implies they are logged in)
-        if (Auth.user) {
-            displayprofile();
-        }
-    });
-}
-
 // Helper: Remove existing modals or popups (if any)
 function removeModalContainers() {
   const existingModal = document.querySelector("#modalContainer");
   if (existingModal) {
     existingModal.remove();
   }
-  const existingProfile = document.querySelector("#profilePopup");
-  if (existingProfile) {
-    existingProfile.remove();
-  }
-}
-
-// Note: Old display() function removed as it is replaced by Auth.showLoginModal() in auth.js
-
-/* ----------------------------- */
-/*      New: displayprofile()    */
-/*      Fetches data from API    */
-/* ----------------------------- */
-async function displayprofile() {
-  // Remove any existing modals or popups first
-  removeModalContainers();
-
-  // Fetch latest user data and orders
-  let userData = Auth.user;
-  let orders = [];
-  
-  try {
-      // Refresh user data
-      const userRes = await fetch('/api/auth/me', {
-          headers: { 'Authorization': `Bearer ${Auth.token}` } 
-      });
-      if(userRes.ok) {
-          userData = await userRes.json();
-      }
-
-      // Fetch orders
-      const orderRes = await fetch('/api/orders/myorders');
-      if(orderRes.ok) {
-          orders = await orderRes.json();
-      }
-  } catch (err) {
-      console.error("Error fetching profile data:", err);
-  }
-
-  const body = document.querySelector("body");
-  body.style.overflow = "hidden";
-  const overlay = document.createElement("div");
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100vw";
-  overlay.style.height = "100vh";
-  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
-  overlay.style.backdropFilter = "blur(10px)";
-  overlay.style.zIndex = "9998";
-  
-  const profilePopup = document.createElement("div");
-  profilePopup.id = "profilePopup";
-  profilePopup.style.position = "fixed";
-  profilePopup.style.top = "9vh";
-  profilePopup.style.right = "0";
-  profilePopup.style.width = "45vw";
-  profilePopup.style.height = "95vh";
-  profilePopup.style.backgroundColor = "#fffaf0";
-  profilePopup.style.borderTopLeftRadius = "2rem";
-  profilePopup.style.borderBottomLeftRadius = "2rem";
-  profilePopup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.5)";
-  profilePopup.style.padding = "1rem";
-  profilePopup.style.zIndex = "10000";
-  profilePopup.style.overflowY = "auto";
-
-  // Header
-  const headerDiv = document.createElement("div");
-  headerDiv.style.display = "flex";
-  headerDiv.style.justifyContent = "space-between";
-  headerDiv.style.alignItems = "center";
-  headerDiv.style.marginBottom = "1rem";
-
-  const headerTitle = document.createElement("h2");
-  headerTitle.textContent = "Profile";
-  headerTitle.style.fontFamily = "'MyCustomFont', sans-serif";
-  headerTitle.style.color = "#2c0665";
-  headerTitle.style.margin = "0";
-
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "X";
-  closeBtn.style.background = "transparent";
-  closeBtn.style.border = "none";
-  closeBtn.style.color = "#800000";
-  closeBtn.style.fontSize = "1.5rem";
-  closeBtn.style.cursor = "pointer";
-  closeBtn.addEventListener("click", () => {
-    profilePopup.remove();
-    overlay.remove();
-    document.body.style.overflow = 'auto';
-  });
-
-  headerDiv.appendChild(headerTitle);
-  headerDiv.appendChild(closeBtn);
-
-  // Body
-  const bodyDiv = document.createElement("div");
-  bodyDiv.style.marginTop = "1rem";
-
-  // Address logic 
-  const addressDisplay = "Manage addresses in Cart (coming soon)";
-
-  // Orders HTML
-  let ordersHTML = `<p style="margin: 0.3rem 0 0 1.5rem;">No orders yet.</p>`;
-  if(orders.length > 0) {
-      ordersHTML = orders.map(order => `
-        <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #fff;">
-            <strong>Order ID:</strong> ${order._id.substring(0, 10)}... <br>
-            <strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()} <br>
-            <strong>Total:</strong> ₹${order.totalAmount} <br>
-            <strong>Status:</strong> ${order.orderStatus}
-        </div>
-      `).join('');
-  }
-
-
-  bodyDiv.innerHTML = `
-        <div id="dashboard" style="padding: 2rem; font-family: 'Segoe UI', sans-serif;">
-          <h2 style="color:#2c0665; text-align:center; font-size: 2.5vw;">
-              Welcome back, <span style="color: orange;">${userData.fullName}</span> 👋
-          </h2>
-          <p style="text-align: center; color: #4a0101; font-size: 1.2vw;">
-              ${userData.email} | ${userData.phoneNumber || 'No phone'}
-          </p>
-          <hr style="margin: 1.5rem 0; border-color: #800000;">
-
-          <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 1.2vw; color: #333;">
-              
-              <div>
-                  <strong>🛍️ Wishlist:</strong>
-                  <p style="margin: 0.3rem 0 0 1.5rem; font-size: 1vw; color: gray;">
-                    (Wishlist feature coming soon)
-                  </p>
-              </div>
-
-              <div>
-                  <strong>📦 Your Orders:</strong>
-                  <div style="max-height: 300px; overflow-y: auto; margin-left: 1.5rem;">
-                      ${ordersHTML}
-                  </div>
-              </div>
-
-              <div>
-                  <strong>🏠 Address:</strong>
-                  <p id="addressText" style="margin: 0.3rem 0 0 1.5rem;">
-                      ${addressDisplay}
-                  </p>
-              </div>
-          </div>
-        </div>
-      `;
-
-  // Logout Button
-  const logoutBtn = document.createElement("button");
-  logoutBtn.textContent = "Logout";
-  logoutBtn.style.backgroundColor = "#800000";
-  logoutBtn.style.color = "#fff";
-  logoutBtn.style.border = "none";
-  logoutBtn.style.padding = "0.5rem 1rem";
-  logoutBtn.style.borderRadius = "5px";
-  logoutBtn.style.marginTop = "1rem";
-  logoutBtn.style.marginBottom = "2rem";
-  logoutBtn.style.cursor = "pointer";
-  logoutBtn.style.display = "block";
-  logoutBtn.style.marginLeft = "auto";
-  logoutBtn.style.marginRight = "auto";
-  logoutBtn.addEventListener("click", () => {
-    Auth.logout();
-    profilePopup.remove();
-    overlay.remove();
-  });
-
-  profilePopup.appendChild(headerDiv);
-  profilePopup.appendChild(bodyDiv);
-  profilePopup.appendChild(logoutBtn);
-  document.body.appendChild(overlay);
-  document.body.appendChild(profilePopup);
 }
 
 // --------------------------------------------------------
@@ -360,7 +172,7 @@ function attachProductEvents() {
     });
 
     container.addEventListener("click", () => {
-      showProductModal(container); 
+      window.location.href = `product-details.html?id=${container.getAttribute("id")}`;
     });
   });
 }
@@ -659,7 +471,16 @@ function showProductModal(container) {
             <div class="size-selector-container">
               <strong style="color:#0f346c;">${sizeLabel}</strong>
               <div class="size-options-grid">
-                ${sizes.map(s => `<div class="size-btn">${s}</div>`).join('')}
+                ${sizes.map(size => {
+                    const sizeEntry = product.sizeStock ? product.sizeStock.find(s => s.size === size) : null;
+                    const isAvailable = sizeEntry ? sizeEntry.stock > 0 : (product.sizes && product.sizes.includes(size));
+                    
+                    if (isAvailable || selectorType === 'age') { // Allow ages for now since age stock is not defined
+                        return `<div class="size-btn">${size}</div>`;
+                    } else {
+                        return `<div class="size-btn out-of-stock" disabled title="Out of stock" style="opacity:0.4; text-decoration:line-through; cursor:not-allowed;">${size}</div>`;
+                    }
+                }).join('')}
               </div>
             </div>`;
       }
@@ -699,7 +520,7 @@ function showProductModal(container) {
 
       document.body.style.overflow = "hidden";
 
-      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      const wishlist = JSON.parse(localStorage.getItem("wishlistItems") || "[]");
       const isWishlisted = wishlist.some(item => item.name === name);
       const wishlistBtnText = isWishlisted ? "❤️ Wishlisted" : "♡ Wishlist";
       const wishlistBtnClass = isWishlisted ? "btn-secondary active" : "btn-secondary";
@@ -773,6 +594,7 @@ function showProductModal(container) {
       let selectedSize = null;
       modalContainer.querySelectorAll(".size-btn").forEach(btn => {
           btn.addEventListener("click", () => {
+              if (btn.classList.contains('out-of-stock')) return;
               modalContainer.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
               btn.classList.add("active");
               selectedSize = btn.textContent;
@@ -825,23 +647,51 @@ function showProductModal(container) {
       });
       
       // Wishlist
-      modalContainer.querySelector("#addToWishlist").addEventListener("click", (e) => {
+      modalContainer.querySelector("#addToWishlist").addEventListener("click", async (e) => {
           const btn = e.target;
-          let currentWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-          const existsIndex = currentWishlist.findIndex(item => item.name === name);
+          const currentId = String(product.id || product._id);
 
-          if (existsIndex > -1) {
-              currentWishlist.splice(existsIndex, 1);
-              btn.textContent = "♡ Wishlist";
-              btn.classList.remove("active");
-              showToast("Removed from Wishlist", "info");
+          if (Auth && Auth.user) {
+              const isCurrentlyWishlisted = btn.classList.contains('active');
+              const method = isCurrentlyWishlisted ? 'DELETE' : 'POST';
+              const url = isCurrentlyWishlisted ? `/api/wishlist/${currentId}` : '/api/wishlist';
+
+              try {
+                  const res = await fetch(url, {
+                      method: method,
+                      headers: { 'Content-Type': 'application/json' },
+                      body: isCurrentlyWishlisted ? null : JSON.stringify({ productId: currentId })
+                  });
+
+                  if (res.ok) {
+                      if (isCurrentlyWishlisted) {
+                          btn.textContent = "♡ Wishlist";
+                          btn.classList.remove("active");
+                          showToast("Removed from Cloud Wishlist", "info");
+                      } else {
+                          btn.textContent = "❤️ Wishlisted";
+                          btn.classList.add("active");
+                          showToast("Saved to Cloud Wishlist!", "success");
+                      }
+                  }
+              } catch (err) { console.error(err); }
           } else {
-              currentWishlist.push({ name, img, disprice, id: productId });
-              btn.textContent = "❤️ Wishlisted";
-              btn.classList.add("active");
-              showToast("Added to Wishlist!", "success");
+              let currentWishlist = JSON.parse(localStorage.getItem("wishlistItems") || "[]");
+              const existsIndex = currentWishlist.findIndex(item => String(item.id || item._id) === currentId);
+
+              if (existsIndex > -1) {
+                  currentWishlist.splice(existsIndex, 1);
+                  btn.textContent = "♡ Wishlist";
+                  btn.classList.remove("active");
+                  showToast("Removed from guest Wishlist", "info");
+              } else {
+                  currentWishlist.push({ name, img, disprice, id: productId });
+                  btn.textContent = "❤️ Wishlisted";
+                  btn.classList.add("active");
+                  showToast("Added to guest Wishlist!", "success");
+              }
+              localStorage.setItem("wishlistItems", JSON.stringify(currentWishlist));
           }
-          localStorage.setItem("wishlist", JSON.stringify(currentWishlist));
       });
 }
 

@@ -22,6 +22,33 @@ async function loadCheckoutData() {
         return;
     }
 
+    // Pre-fill Shipping Form from Cloud DB or LocalStorage
+    if (user) {
+        document.getElementById('fullName').value = user.fullName || '';
+        document.getElementById('phone').value = user.phoneNumber || localStorage.getItem('user_phone') || '';
+        
+        // Fetch from Cloud DB
+        try {
+            const addrRes = await fetch('/api/address');
+            if (addrRes.ok) {
+                const addrData = await addrRes.json();
+                if (addrData.length > 0) {
+                    const ad = addrData[0];
+                    document.getElementById('pincode').value = ad.pincode || '';
+                    document.getElementById('city').value = ad.city || '';
+                    document.getElementById('state').value = ad.state || '';
+                    document.getElementById('street').value = ad.street || '';
+                } else {
+                    // Fallback to localstorage if no DB address exists
+                    document.getElementById('pincode').value = localStorage.getItem('user_pincode') || '';
+                    document.getElementById('city').value = localStorage.getItem('user_city') || '';
+                    document.getElementById('state').value = localStorage.getItem('user_state') || '';
+                    document.getElementById('street').value = localStorage.getItem('user_street') || '';
+                }
+            }
+        } catch (err) { console.error("Checkout Address Fetch Error:", err); }
+    }
+
     try {
         // No Bearer token needed
         const res = await fetch('/api/cart');
@@ -197,7 +224,16 @@ if (orderForm) {
             const data = await res.json();
 
             if (res.ok) {
-                window.location.href = `invoice.html?orderId=${data._id}`;
+                // Auto-save this address as their default profile address
+                try {
+                    await fetch('/api/address', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(addressData)
+                    });
+                } catch(addrErr) { console.error("Could not save address to profile:", addrErr); }
+
+                window.location.href = `order-success.html?orderId=${data._id}&total=${payload.totalAmount}`;
             } else {
                 alert(`Order Failed: ${data.message}`);
                 btn.disabled = false;
@@ -208,6 +244,25 @@ if (orderForm) {
             alert("Network error. Please try again.");
             btn.disabled = false;
             btn.textContent = "Place Order";
+        }
+    });
+}
+
+// Add Auto-fetch for Pincode in Checkout Form
+const checkoutPinInput = document.getElementById('pincode');
+if (checkoutPinInput) {
+    checkoutPinInput.addEventListener('input', async (e) => {
+        const pin = e.target.value;
+        if (pin.length === 6) {
+            try {
+                const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+                const data = await res.json();
+                if (data[0].Status === 'Success') {
+                    const postOffice = data[0].PostOffice[0];
+                    document.getElementById('city').value = postOffice.Name || postOffice.Block;
+                    document.getElementById('state').value = postOffice.State;
+                }
+            } catch (err) { console.error("PIN API Error:", err); }
         }
     });
 }

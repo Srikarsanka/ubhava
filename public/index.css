@@ -1990,3 +1990,325 @@ footer::before {
       background: linear-gradient(to bottom, #128807, transparent);
       border-radius: 3px;
 }
+
+/* ============================================================
+   PREMIUM THEME SYSTEM — Universal Badges, Dividers & CTAs
+   ============================================================ */
+
+/* --- Theme Badge (Universal) --- */
+.theme-badge {
+      display: inline-block;
+      padding: 8px 20px;
+      font-size: 0.72rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      border-radius: 2px;
+      margin-bottom: 1.8rem;
+      position: relative;
+      transition: all 0.4s ease;
+}
+
+.standard-badge {
+      color: var(--accent-color);
+      border: 1px solid rgba(255, 123, 0, 0.25);
+      background: rgba(255, 123, 0, 0.04);
+}
+
+.patriotic-badge {
+      color: #000080;
+      border: 1px solid rgba(0, 0, 128, 0.2);
+      background: rgba(255, 153, 51, 0.06);
+}
+
+.harvest-badge {
+      color: #b8860b;
+      border: 1px solid rgba(184, 134, 11, 0.25);
+      background: rgba(255, 215, 0, 0.06);
+}
+
+.spring-badge {
+      color: #4c9a2a;
+      border: 1px solid rgba(76, 154, 42, 0.25);
+      background: rgba(76, 154, 42, 0.06);
+}
+
+.summer-badge {
+      color: #e65100 !important;
+      border: 1px solid rgba(255, 140, 0, 0.3);
+      background: rgba(255, 140, 0, 0.06);
+}
+
+.monsoon-badge {
+      color: #006d6f !important;
+      border: 1px solid rgba(0, 128, 128, 0.25);
+      background: rgba(0, 128, 128, 0.06);
+}
+
+.diwali-badge {
+      color: #FFD700 !important;
+      border: 1px solid rgba(212, 175, 55, 0.3) !important;
+      background: rgba(212, 175, 55, 0.08) !important;
+}
+
+/* --- Theme Divider (Universal) --- */
+.theme-divider {
+      width: 60px;
+      height: 2px;
+      margin: 1.5rem 0 2rem;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+}
+
+.theme-divider::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.6);
+      animation: shimmerDivider 3s infinite;
+}
+
+@keyframes shimmerDivider {
+      0% { left: -100%; }
+      100% { left: 200%; }
+}
+
+.patriotic-divider { background: linear-gradient(90deg, #FF9933, #fff, #128807); width: 80px; }
+.harvest-divider { background: linear-gradient(90deg, #b8860b, #FFD700); }
+.spring-divider { background: linear-gradient(90deg, #4c9a2a, #68bb59); }
+.spiritual-divider { background: linear-gradient(90deg, #F97316, #FDBA74); }
+.diwali-divider { background: linear-gradient(90deg, #D4AF37, #FFD700, #D4AF37); width: 80px; }
+.summer-divider { background: linear-gradient(90deg, #ff6f00, #ffab40); }
+.monsoon-divider { background: linear-gradient(90deg, #006d6f, #26a69a); }
+
+/* --- Theme CTA Buttons (Variations) --- */
+.theme-cta {
+      margin-top: 2rem;
+}
+
+.summer-cta {
+      background: linear-gradient(135deg, #e65100, #ff8f00) !important;
+      color: #fff !important;
+      border: none !important;
+      box-shadow: 0 8px 25px rgba(230, 81, 0, 0.25) !important;
+}
+
+.summer-cta:hover {
+      background: linear-gradient(135deg, #bf360c, #e65100) !important;
+      transform: translateY(-5px) !important;
+      box-shadow: 0 12px 35px rgba(230, 81, 0, 0.35) !important;
+}
+
+.monsoon-cta {
+      background: linear-gradient(135deg, #004d40, #00695c) !important;
+      color: #fff !important;
+      border: none !important;
+      box-shadow: 0 8px 25px rgba(0, 77, 64, 0.25) !important;
+}
+
+.monsoon-cta:hover {
+      background: linear-gradient(135deg, #00251a, #004d40) !important;
+      transform: translateY(-5px) !important;
+}
+
+.diwali-cta {
+      background: linear-gradient(135deg, #D4AF37, #FFD700) !important;
+      color: #1a0f0a !important;
+      border: none !important;
+      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4) !important;
+      font-weight: 700 !important;
+}
+
+.diwali-cta:hover {
+      background: linear-gradient(135deg, #B8960C, #D4AF37) !important;
+      transform: translateY(-5px) !important;
+      box-shadow: 0 12px 40px rgba(212, 175, 55, 0.6) !important;
+}
+
+/* ============================================================
+   SUMMER THEME — Warm Amber & Golden Hour Vibes
+   ============================================================ */
+.summer-theme {
+      background: linear-gradient(135deg, #FFFBF0 0%, #FFF3E0 50%, #FFE0B2 100%) !important;
+      position: relative;
+}
+
+.summer-theme::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 152, 0, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+}
+
+.summer-theme .festival-title {
+      color: #bf360c !important;
+      font-family: 'Playfair Display', serif;
+      text-shadow: 0 2px 10px rgba(191, 54, 12, 0.1);
+}
+
+.summer-theme .festival-desc {
+      color: rgba(191, 54, 12, 0.7) !important;
+}
+
+.summer-theme .festival-wishes-text {
+      color: #e65100 !important;
+}
+
+.summer-theme .festival-offer-badge {
+      border: 1px solid rgba(255, 152, 0, 0.35) !important;
+      background: rgba(255, 243, 224, 0.6) !important;
+}
+
+.summer-theme .offer-discount {
+      background: linear-gradient(135deg, #e65100, #ff8f00) !important;
+      color: #fff !important;
+}
+
+.summer-theme .offer-label { color: #bf360c !important; }
+.summer-theme .offer-code { color: #4e342e !important; font-weight: 700; }
+
+/* Summer Product Showcase */
+.summer-showcase {
+      background: linear-gradient(180deg, #FFFBF0, #FFF8E1) !important;
+      border-top: 4px solid transparent;
+      border-image: linear-gradient(90deg, #ff6f00, #ffab40, #ff6f00) 1;
+}
+
+.summer-showcase h2 { color: #bf360c !important; }
+.summer-showcase .section-tagline { color: #e65100 !important; }
+
+.summer-showcase .product-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px solid rgba(255, 152, 0, 0.1);
+      transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.summer-showcase .product-card:hover {
+      transform: translateY(-10px);
+      border-color: #ff8f00;
+      box-shadow: 0 15px 40px rgba(255, 152, 0, 0.15);
+}
+
+.summer-theme .editorial-image-wrapper img {
+      filter: saturate(1.15) contrast(1.05) brightness(1.02);
+}
+
+/* ============================================================
+   MONSOON THEME — Emerald Greens & Misty Rain Vibes
+   ============================================================ */
+.monsoon-theme {
+      background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 50%, #E8F5E9 100%) !important;
+      position: relative;
+}
+
+.monsoon-theme::before {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 128, 128, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+}
+
+.monsoon-theme .festival-title {
+      color: #004d40 !important;
+      font-family: 'Playfair Display', serif;
+      text-shadow: 0 2px 10px rgba(0, 77, 64, 0.1);
+}
+
+.monsoon-theme .festival-desc {
+      color: rgba(0, 77, 64, 0.75) !important;
+}
+
+.monsoon-theme .festival-wishes-text {
+      color: #00695c !important;
+}
+
+.monsoon-theme .festival-offer-badge {
+      border: 1px solid rgba(0, 128, 128, 0.3) !important;
+      background: rgba(224, 242, 241, 0.6) !important;
+}
+
+.monsoon-theme .offer-discount {
+      background: linear-gradient(135deg, #004d40, #00897b) !important;
+      color: #fff !important;
+}
+
+.monsoon-theme .offer-label { color: #004d40 !important; }
+.monsoon-theme .offer-code { color: #1b5e20 !important; font-weight: 700; }
+
+/* Monsoon Product Showcase */
+.monsoon-showcase {
+      background: linear-gradient(180deg, #E0F2F1, #E8F5E9) !important;
+      border-top: 4px solid transparent;
+      border-image: linear-gradient(90deg, #004d40, #26a69a, #004d40) 1;
+}
+
+.monsoon-showcase h2 { color: #004d40 !important; }
+.monsoon-showcase .section-tagline { color: #00695c !important; }
+
+.monsoon-showcase .product-card {
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px solid rgba(0, 128, 128, 0.1);
+      transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.monsoon-showcase .product-card:hover {
+      transform: translateY(-10px);
+      border-color: #00897b;
+      box-shadow: 0 15px 40px rgba(0, 128, 128, 0.15);
+}
+
+.monsoon-theme .editorial-image-wrapper img {
+      filter: saturate(1.2) hue-rotate(-5deg) brightness(0.98);
+}
+
+/* ============================================================
+   WISHES BANNER — Premium Styling for All Themes
+   ============================================================ */
+.festival-wishes-banner {
+      display: inline-block;
+      padding: 0 0 18px 0;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(128, 0, 0, 0.15);
+      opacity: 0;
+      transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.festival-wishes-text {
+      color: var(--text-color);
+      font-size: 1.05rem;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      line-height: 1.6;
+}
+
+.summer-theme .festival-wishes-banner {
+      border-bottom-color: rgba(230, 81, 0, 0.2);
+}
+
+.monsoon-theme .festival-wishes-banner {
+      border-bottom-color: rgba(0, 128, 128, 0.2);
+}
+
+.spiritual-theme.diwali-vibe .festival-wishes-banner {
+      border-bottom-color: rgba(212, 175, 55, 0.3);
+}
+
+.spiritual-theme.diwali-vibe .festival-wishes-text {
+      color: rgba(255, 255, 255, 0.85) !important;
+}

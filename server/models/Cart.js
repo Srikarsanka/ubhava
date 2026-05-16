@@ -23,7 +23,9 @@ const cartSchema = new mongoose.Schema({
     }],
     appliedCoupon: {
         code: String,
+        discountType: String,
         discountPercentage: Number,
+        discountAmount: Number,
         minSpend: Number
     },
     discountTotal: {

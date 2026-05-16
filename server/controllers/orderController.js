@@ -19,22 +19,42 @@ const createOrder = async (req, res) => {
     }
 
     try {
+        console.log("📝 ORDER ATTEMPT:", { items: orderItems.length, total: totalAmount });
+        
         // 1. Validate Stock & Deduct
-        // We do this loop *before* creating the order to ensure all items are valid
         for (const item of orderItems) {
-            // item.product must be the Product ID
             const product = await Product.findById(item.product);
             
             if (!product) {
-                return res.status(404).json({ message: `Product not found: ${item.name || 'Unknown Item'}` });
+                console.log(`❌ Product Not Found: ${item.product}`);
+                return res.status(404).json({ message: `Product not found` });
             }
 
-            if (product.stockAvailable < item.quantity) {
-                return res.status(400).json({ message: `Insufficient stock for ${product.name}. Only ${product.stockAvailable} left.` });
+            // Size-Based Stock Logic
+            if (item.selectedSize && product.sizeStock && product.sizeStock.length > 0) {
+                const sizeEntry = product.sizeStock.find(s => s.size === item.selectedSize);
+                if (sizeEntry) {
+                    if (sizeEntry.stock < item.quantity) {
+                        console.log(`❌ Out of Stock for Size ${item.selectedSize}: ${product.name}`);
+                        return res.status(400).json({ message: `Insufficient stock for size ${item.selectedSize}` });
+                    }
+                    sizeEntry.stock -= item.quantity;
+                    // Ensure global stock is also reduced
+                    product.stockAvailable -= item.quantity;
+                    console.log(`📉 Deducted ${item.quantity} from size ${item.selectedSize} and total stock for ${product.name}`);
+                } else {
+                    // Fallback to general stock if size entry doesn't exist but size was selected
+                    product.stockAvailable -= item.quantity;
+                }
+            } else {
+                // Standard deduction for Sarees, Toys, or single-size items
+                if (product.stockAvailable < item.quantity) {
+                    console.log(`❌ Out of Stock: ${product.name}`);
+                    return res.status(400).json({ message: `Insufficient stock` });
+                }
+                product.stockAvailable -= item.quantity;
             }
 
-            // Deduct stock
-            product.stockAvailable -= item.quantity;
             await product.save();
         }
 
@@ -47,7 +67,9 @@ const createOrder = async (req, res) => {
             paymentMethod: paymentMethod || 'COD'
         });
 
+        console.log("💾 Saving order to Atlas...");
         const createdOrder = await order.save();
+        console.log("✅ ORDER SAVED:", createdOrder._id);
 
         // 3. Clear user cart
         await Cart.findOneAndUpdate({ user: req.user._id }, { items: [] });
@@ -189,8 +211,48 @@ const getOrderById = async (req, res) => {
 // @access  Private
 const getMyOrders = async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user._id }).sort({ createdAt: -1 });
+        const orders = await Order.find({ user: req.user._id })
+            .populate('items.product', 'name images price')
+            .sort({ createdAt: -1 });
+        console.log(`🔍 [DEBUG] Found ${orders.length} orders for user ${req.user.email} (${req.user._id})`);
+        
+        // Auto-Update Logic: If 'Placed' for > 1 day, change to 'Order Received'
+        try {
+            const oneDayAgo = new Date();
+            oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+            for (let order of orders) {
+                if (order.orderStatus === 'Placed' && order.createdAt < oneDayAgo) {
+                    order.orderStatus = 'Order Received';
+                    order.statusLastUpdated = new Date();
+                    await order.save();
+                }
+            }
+        } catch (autoErr) {
+            console.error("Auto-update status error:", autoErr);
+        }
+
         res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update order status (Admin)
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+const updateOrderStatus = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (order) {
+            order.orderStatus = req.body.orderStatus || order.orderStatus;
+            order.statusLastUpdated = Date.now();
+            const updatedOrder = await order.save();
+            res.json(updatedOrder);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -215,5 +277,6 @@ module.exports = {
     createOrder,
     getMyOrders,
     getOrders,
-    getOrderById
+    getOrderById,
+    updateOrderStatus
 };

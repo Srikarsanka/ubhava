@@ -8,8 +8,9 @@
       <link rel="stylesheet" href="shop.css">
       <link rel=icon href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <link rel="stylesheet" href="index.css">
 
@@ -92,6 +93,7 @@
       </center>
       <div class="categories">
             <button id="a">ALL</button>
+            <button id="moansson-btn" style="background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; font-weight: 600;">🌧️ MOANSSON</button>
             <button id="b" cat="HomeDecor">HOME DECOR & WALL PAINTS</button>
             <button id="c">JEWELRY</button>
             <button id="d" cat="women">WOMEN'S WEAR</button>
@@ -101,6 +103,28 @@
             <button id="fill">filter</button>
 
       </div>
+
+      <!-- ═══════════ MOANSSON SEASONAL COLLECTION ═══════════ -->
+      <section id="moansson-section" class="category-section" data-category="moansson" style="display: none;">
+            <div class="category-main-header" style="background: linear-gradient(135deg, #0a1628, #1a2744); color: #e0e8f5; padding: 40px 30px; border-radius: 12px; margin-bottom: 25px; position: relative; overflow: hidden;">
+                  <div style="position: relative; z-index: 2;">
+                        <span style="font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.7; display: block; margin-bottom: 8px;" id="moansson-season-badge">☀️ SUMMER COLLECTION</span>
+                        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0; color: #fff;">MOANSSON</h1>
+                        <p style="opacity: 0.75; margin-top: 8px; font-size: 0.9rem; max-width: 500px;" id="moansson-season-desc">Season-adaptive fashion engineered for every weather.</p>
+                  </div>
+                  <div style="position: absolute; top: -30%; right: -5%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(79,195,247,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+            </div>
+
+            <!-- Season Tabs -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap;">
+                  <button class="moansson-season-tab active" data-season="current" style="padding: 8px 20px; border: 1px solid #0d47a1; background: #0d47a1; color: white; border-radius: 25px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Current Season</button>
+                  <button class="moansson-season-tab" data-season="summer" style="padding: 8px 20px; border: 1px solid #ff8f00; background: transparent; color: #ff8f00; border-radius: 25px; cursor: pointer; font-size: 0.8rem;">☀️ Summer</button>
+                  <button class="moansson-season-tab" data-season="monsoon" style="padding: 8px 20px; border: 1px solid #1565c0; background: transparent; color: #1565c0; border-radius: 25px; cursor: pointer; font-size: 0.8rem;">🌧️ Monsoon</button>
+                  <button class="moansson-season-tab" data-season="winter" style="padding: 8px 20px; border: 1px solid #546e7a; background: transparent; color: #546e7a; border-radius: 25px; cursor: pointer; font-size: 0.8rem;">❄️ Winter</button>
+            </div>
+
+            <div class="container" id="moansson-products" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;"></div>
+      </section>
       <!-- Price Range Filter Section -->
       <div class="price-filter-section"
             style="text-align: center; margin: 20px 0; background: rgba(255, 123, 0, 0.05); border-radius: 15px; padding: 20px;">
@@ -353,5 +377,118 @@
 
 <script src="products_data.js"></script>
 <script src="shop.js"></script>
+
+<!-- Moansson Season Loader -->
+<script>
+(function() {
+    const moanBtn = document.getElementById('moansson-btn');
+    const moanSection = document.getElementById('moansson-section');
+    const productsGrid = document.getElementById('moansson-products');
+    const badge = document.getElementById('moansson-season-badge');
+    const desc = document.getElementById('moansson-season-desc');
+    let currentSeason = 'summer'; // Will be auto-detected
+
+    // Detect current season from weather API
+    fetch('/api/weather-context')
+        .then(r => r.json())
+        .then(d => { if (d.season) currentSeason = d.season; })
+        .catch(() => {});
+
+    // Moansson button click
+    if (moanBtn) {
+        moanBtn.addEventListener('click', () => {
+            // Hide all other category sections
+            document.querySelectorAll('.category-section').forEach(s => s.style.display = 'none');
+            document.getElementById('defaultContent').style.display = 'none';
+
+            // Show Moansson section
+            moanSection.style.display = 'block';
+            loadSeasonProducts(currentSeason);
+
+            // Active state
+            document.querySelectorAll('.categories button').forEach(b => b.style.opacity = '0.5');
+            moanBtn.style.opacity = '1';
+        });
+    }
+
+    // Season tab clicks
+    document.querySelectorAll('.moansson-season-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.moansson-season-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.background = 'transparent';
+                t.style.color = t.dataset.season === 'summer' ? '#ff8f00' :
+                                 t.dataset.season === 'monsoon' ? '#1565c0' :
+                                 t.dataset.season === 'winter' ? '#546e7a' : '#0d47a1';
+            });
+            tab.classList.add('active');
+            tab.style.background = tab.dataset.season === 'summer' ? '#ff8f00' :
+                                    tab.dataset.season === 'monsoon' ? '#1565c0' :
+                                    tab.dataset.season === 'winter' ? '#546e7a' : '#0d47a1';
+            tab.style.color = 'white';
+
+            const season = tab.dataset.season === 'current' ? currentSeason : tab.dataset.season;
+            loadSeasonProducts(season);
+        });
+    });
+
+    function loadSeasonProducts(season) {
+        const seasonMeta = {
+            summer: { icon: '☀️', label: 'SUMMER COLLECTION', desc: 'Breathable cotton and linen — engineered for Indian summers.', bg: 'linear-gradient(135deg, #bf360c, #ff8f00)' },
+            monsoon: { icon: '🌧️', label: 'MONSOON COLLECTION', desc: 'Waterproof rainwear and urban protection for the rains.', bg: 'linear-gradient(135deg, #0a1628, #1a2744)' },
+            winter: { icon: '❄️', label: 'WINTER COLLECTION', desc: 'Premium knitwear and insulated layers for cold comfort.', bg: 'linear-gradient(135deg, #263238, #455a64)' }
+        };
+
+        const meta = seasonMeta[season] || seasonMeta.summer;
+        badge.textContent = `${meta.icon} ${meta.label}`;
+        desc.textContent = meta.desc;
+        badge.parentElement.parentElement.style.background = meta.bg;
+
+        productsGrid.innerHTML = '<p style="text-align:center; padding:30px; color:#999;">Loading collection...</p>';
+
+        fetch(`/api/products/seasonal?season=${season}&limit=12`)
+            .then(r => r.json())
+            .then(data => {
+                if (!data.products || data.products.length === 0) {
+                    productsGrid.innerHTML = '<p style="text-align:center; padding:40px; color:#888;">No products available for this season yet.</p>';
+                    return;
+                }
+
+                productsGrid.innerHTML = data.products.map(p => {
+                    const discount = p.discount || 0;
+                    const salePrice = discount > 0 ? Math.round(p.price * (1 - discount/100)) : p.price;
+                    const img = p.images && p.images[0] ? p.images[0] : '/images/moansson/summer_cotton_shirt.png';
+
+                    return `
+                        <div class="moansson-card" style="background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: all 0.35s ease; cursor: pointer;"
+                             onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.1)'"
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+                             onclick="window.location.href='product-details.html?id=${p._id}'">
+                            <div style="position: relative; overflow: hidden; height: 260px; background: #f5f5f5;">
+                                <img src="${img}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;"
+                                     onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                ${discount > 0 ? `<span style="position:absolute; top:10px; left:10px; background:#e53935; color:#fff; font-size:0.65rem; padding:4px 10px; border-radius:20px; font-weight:700;">${discount}% OFF</span>` : ''}
+                                ${p.season ? `<span style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); color:#fff; font-size:0.6rem; padding:3px 8px; border-radius:12px; text-transform:uppercase; letter-spacing:0.1em;">${p.season}</span>` : ''}
+                            </div>
+                            <div style="padding: 15px;">
+                                <p style="font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em; margin: 0 0 5px;">${p.brand || 'Moansson'}</p>
+                                <h4 style="font-size: 0.9rem; margin: 0 0 8px; color: #222; font-weight: 600; line-height: 1.3;">${p.name}</h4>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-weight: 700; font-size: 1rem; color: #0d47a1;">₹${salePrice.toLocaleString()}</span>
+                                    ${discount > 0 ? `<span style="text-decoration: line-through; color: #aaa; font-size: 0.8rem;">₹${p.price.toLocaleString()}</span>` : ''}
+                                </div>
+                                ${p.sizes && p.sizes.length > 0 ? `<p style="font-size:0.65rem; color:#999; margin-top:6px;">${p.sizes.join(' · ')}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            })
+            .catch(err => {
+                productsGrid.innerHTML = '<p style="text-align:center; padding:40px; color:#e53935;">Failed to load products.</p>';
+                console.error(err);
+            });
+    }
+})();
+</script>
 
 </html>

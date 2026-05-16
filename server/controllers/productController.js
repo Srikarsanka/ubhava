@@ -44,16 +44,16 @@ const createProduct = async (req, res) => {
         name,
         price,
         description,
-        image, // legacy support
+        image,
         images,
         category,
         subCategory,
         stock,
         isTrending,
-        sizes
+        sizes,
+        sizeStock // NEW
     } = req.body;
 
-    // Handle image array vs single string
     const imageList = images || (image ? [image] : []);
 
     try {
@@ -66,7 +66,8 @@ const createProduct = async (req, res) => {
             subCategory,
             stockAvailable: stock || 0,
             isTrending: isTrending || false,
-            sizes: sizes || []
+            sizes: sizes || [],
+            sizeStock: sizeStock || [] // NEW
         });
 
         const createdProduct = await product.save();
@@ -88,18 +89,17 @@ const updateProduct = async (req, res) => {
             product.price = req.body.price || product.price;
             product.description = req.body.description || product.description;
             product.category = req.body.category || product.category;
-            product.subCategory = req.body.subCategory || product.subCategory; // Added
+            product.subCategory = req.body.subCategory || product.subCategory;
             product.stockAvailable = req.body.stock !== undefined ? req.body.stock : product.stockAvailable;
-            product.isTrending = req.body.isTrending !== undefined ? req.body.isTrending : product.isTrending; // Added
-            product.video = req.body.video || product.video; // Added
-            product.sizes = req.body.sizes || product.sizes; 
+            product.isTrending = req.body.isTrending !== undefined ? req.body.isTrending : product.isTrending;
+            product.video = req.body.video || product.video;
+            product.sizes = req.body.sizes || product.sizes;
+            product.sizeStock = req.body.sizeStock || product.sizeStock; // NEW
             
-            // Handle Pricing Config
             if(req.body.pricingConstraints) {
                 product.pricingConstraints = req.body.pricingConstraints;
             }
 
-            // Handle Festive Price Updates
             if (req.body.festivePrice !== undefined) {
                 product.festivePrice = req.body.festivePrice;
                 if (!product.originalPrice && req.body.festivePrice > 0) {
@@ -107,7 +107,6 @@ const updateProduct = async (req, res) => {
                 }
             }
             
-            // ... existing legacy image handling ... 
             if (req.body.images) {
                 product.images = req.body.images;
             } else if (req.body.image) {

@@ -6,6 +6,7 @@
       <title>UDBHAVA - The Origin of Indian Handcraft</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="index.css">
+      <link rel="stylesheet" href="css/atmosphere.css">
       <link rel="icon" href="https://res.cloudinary.com/dnevq4wek/image/upload/v1744636831/logo_qjwdbn.png">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -309,22 +310,63 @@
       <!-- Templates for Dynamic Injection (Used by festival_system.js) -->
 
       <!-- 1. Standard / Branding Template -->
-      <template id="tmpl-editorial-section">
-            <section class="editorial-section">
+      <template id="tmpl-standard-section">
+            <section class="editorial-section standard-theme">
                   <div class="editorial-text">
                         <div class="festival-wishes-banner" style="display:none;">
                               <p class="festival-wishes-text"></p>
                         </div>
-                        <h4 class="festival-tag">Season's Edit</h4>
+                        <div class="theme-badge standard-badge">✦ Heritage Edit</div>
                         <h2 class="festival-title"></h2>
                         <p class="festival-desc"></p>
                         <div class="festival-offer-badge" style="display:none;">
                               <span class="offer-label"></span>: <span class="offer-code"></span>
                               <div class="offer-discount"></div>
                         </div>
+                        <a href="shop.html" class="btn-editorial theme-cta">Explore Collection</a>
                   </div>
                   <div class="editorial-image-wrapper">
-                        <img src="" alt="Festival Mood" class="festival-img">
+                        <img src="" alt="Heritage Mood" class="festival-img">
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Curated For You</h2>
+                              <span class="section-tagline">Timeless heritage, handpicked with care</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- Also keep tmpl-editorial-section as alias for standard -->
+      <template id="tmpl-editorial-section">
+            <section class="editorial-section standard-theme">
+                  <div class="editorial-text">
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge standard-badge">✦ Heritage Edit</div>
+                        <h2 class="festival-title"></h2>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                        <a href="shop.html" class="btn-editorial theme-cta">Explore Collection</a>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Heritage Mood" class="festival-img">
+                  </div>
+            </section>
+            <section class="festival-product-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Curated For You</h2>
+                              <span class="section-tagline">Timeless heritage, handpicked with care</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
                   </div>
             </section>
       </template>
@@ -333,19 +375,21 @@
       <template id="tmpl-patriotic-section">
             <section class="editorial-section patriotic-theme">
                   <div class="editorial-text">
-                        <div class="patriotic-badge">🇮🇳 National Celebration</div>
-                        <h2 class="festival-title" style="color: #000080; font-size: 3.5rem;"></h2>
-                        <p class="festival-wishes-text" style="font-weight: 500; font-style: italic; color: #666;"></p>
-                        <p class="festival-desc" style="max-width: 500px;"></p>
-                        <div class="festival-offer-badge patriotic" style="display:none; margin-top: 30px;">
-                              <span class="offer-label">Special Offer</span>: <span class="offer-code"></span>
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge patriotic-badge">🇮🇳 National Pride</div>
+                        <h2 class="festival-title"></h2>
+                        <div class="theme-divider patriotic-divider"></div>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge patriotic" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
                               <div class="offer-discount"></div>
                         </div>
+                        <a href="shop.html" class="btn-editorial theme-cta">Shop the Tricolour Edit</a>
                   </div>
                   <div class="editorial-image-wrapper">
-                        <img src="" alt="Festival Mood" class="festival-img">
-
-                        <!-- VFX Review Container (Silk Ribbons) -->
+                        <img src="" alt="National Celebration" class="festival-img">
                         <div class="patriotic-vfx-container">
                               <div class="silk-ribbon ribbon-saffron"></div>
                               <div class="silk-ribbon ribbon-white"></div>
@@ -368,102 +412,184 @@
       <template id="tmpl-harvest-section">
             <section class="editorial-section harvest-theme">
                   <div class="editorial-image-wrapper">
-                        <img src="" alt="Festival Mood" class="festival-img">
+                        <img src="" alt="Harvest Celebration" class="festival-img">
                   </div>
                   <div class="editorial-text">
-                        <div class="harvest-badge">🌾 Bountiful Season</div>
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge harvest-badge">🌾 Bountiful Season</div>
                         <h2 class="festival-title"></h2>
+                        <div class="theme-divider harvest-divider"></div>
                         <p class="festival-desc"></p>
                         <div class="festival-offer-badge harvest" style="display:none;">
                               <span class="offer-label"></span>: <span class="offer-code"></span>
                               <div class="offer-discount"></div>
                         </div>
+                        <a href="shop.html" class="btn-editorial theme-cta">Shop Harvest Edit</a>
                   </div>
             </section>
             <section class="festival-product-showcase" style="display:none;">
                   <div class="container">
                         <div class="section-header center">
-                              <h2>Harvest Picks</h2>
-                              <span class="section-tagline">Exclusively picked for the occasion</span>
+                              <h2>Golden Harvest Picks</h2>
+                              <span class="section-tagline">Woven from the bounty of the land</span>
                         </div>
                         <div class="festival-products-grid"></div>
                   </div>
             </section>
       </template>
 
-      <!-- 4. Spring Template (Holi / Vasant Panchami) -->
+      <!-- 4. Spring Template (Holi / Ugadi / Vasant Panchami) -->
       <template id="tmpl-spring-section">
             <section class="editorial-section spring-theme">
                   <div class="editorial-text">
-                        <div class="spring-badge">🌸 Spring Bloom</div>
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge spring-badge">🌸 Spring Bloom</div>
                         <h2 class="festival-title"></h2>
+                        <div class="theme-divider spring-divider"></div>
                         <p class="festival-desc"></p>
                         <div class="festival-offer-badge spring" style="display:none;">
                               <span class="offer-label"></span>: <span class="offer-code"></span>
                               <div class="offer-discount"></div>
                         </div>
+                        <a href="shop.html" class="btn-editorial theme-cta">Discover the Bloom</a>
                   </div>
                   <div class="editorial-image-wrapper">
-                        <img src="" alt="Festival Mood" class="festival-img">
+                        <img src="" alt="Spring Festival" class="festival-img">
                   </div>
             </section>
             <section class="festival-product-showcase" style="display:none;">
                   <div class="container">
                         <div class="section-header center">
                               <h2>Spring Curations</h2>
-                              <span class="section-tagline">Exclusively picked for the occasion</span>
+                              <span class="section-tagline">Fresh blooms woven into tradition</span>
                         </div>
                         <div class="festival-products-grid"></div>
                   </div>
             </section>
       </template>
 
-      <!-- 5. Spiritual Template (Maha Shivaratri / Diwali / Temple Festivals) -->
+      <!-- 5. Spiritual Template (Ganesh / Dussehra / Diwali / Temple Festivals) -->
       <template id="tmpl-spiritual-section">
             <section class="editorial-section spiritual-theme">
                   <div class="editorial-image-wrapper">
-                        <img src="" alt="Festival Mood" class="festival-img">
+                        <img src="" alt="Sacred Heritage" class="festival-img">
                   </div>
                   <div class="editorial-text">
-                        <div class="spiritual-badge">✨ Sacred Heritage</div>
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge spiritual-badge">✨ Sacred Heritage</div>
                         <h2 class="festival-title"></h2>
+                        <div class="theme-divider spiritual-divider"></div>
                         <p class="festival-desc"></p>
                         <div class="festival-offer-badge spiritual" style="display:none;">
                               <span class="offer-label"></span>: <span class="offer-code"></span>
                               <div class="offer-discount"></div>
                         </div>
+                        <a href="shop.html" class="btn-editorial theme-cta">Shop Devotional Edit</a>
                   </div>
             </section>
             <section class="festival-product-showcase" style="display:none; background: #111; color: #fff;">
                   <div class="container">
                         <div class="section-header center">
                               <h2 style="color: #fff;">Devotional Edit</h2>
-                              <span class="section-tagline" style="color: #888;">Sacred weaves with timeless
-                                    essence</span>
+                              <span class="section-tagline" style="color: #888;">Sacred weaves with timeless essence</span>
                         </div>
                         <div class="festival-products-grid"></div>
                   </div>
             </section>
       </template>
 
-      <!-- 6. Monsoon Template (Teej / Varalakshmi) -->
-      <template id="tmpl-monsoon-section">
-            <section class="editorial-section monsoon-theme" style="background: #f0f8ff;">
-                  <div class="editorial-text">
-                        <div class="monsoon-badge" style="color: #008080;">🌧️ Verdant Season</div>
-                        <h2 class="festival-title" style="color: #2f4f4f;"></h2>
-                        <p class="festival-desc"></p>
-                        <div class="festival-offer-badge monsoon" style="display:none; border-color: #008080;">
-                              <span class="offer-label"></span>: <span class="offer-code"></span>
-                              <div class="offer-discount" style="background: #008080;"></div>
-                        </div>
-                  </div>
+      <!-- 6. Diwali Template (Deepavali - Grand Dark Gold) -->
+      <template id="tmpl-diwali-section">
+            <section class="editorial-section spiritual-theme diwali-vibe">
                   <div class="editorial-image-wrapper">
-                        <img src="" alt="Festival Mood" class="festival-img"
-                              style="filter: saturate(1.2) hue-rotate(-10deg);">
+                        <img src="" alt="Diwali Celebration" class="festival-img">
+                  </div>
+                  <div class="editorial-text">
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge diwali-badge">🪔 Festival of Lights</div>
+                        <h2 class="festival-title"></h2>
+                        <div class="theme-divider diwali-divider"></div>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge diwali" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                        <a href="shop.html" class="btn-editorial theme-cta diwali-cta">Illuminate Your Style</a>
                   </div>
             </section>
-            <section class="festival-product-showcase" style="display:none;">
+            <section class="festival-product-showcase" style="display:none; background: #0d0603; color: #fff;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2 style="color: #FACC15;">Luminous Collection</h2>
+                              <span class="section-tagline" style="color: #D4AF37;">Radiance woven in every thread</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- 7. Summer Template (Greeshma / Hot Season) -->
+      <template id="tmpl-summer-section">
+            <section class="editorial-section summer-theme">
+                  <div class="editorial-text">
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge summer-badge">☀️ Summer Radiance</div>
+                        <h2 class="festival-title"></h2>
+                        <div class="theme-divider summer-divider"></div>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge summer" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                        <a href="shop.html" class="btn-editorial theme-cta summer-cta">Shop Summer Edit</a>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Summer Collection" class="festival-img">
+                  </div>
+            </section>
+            <section class="festival-product-showcase summer-showcase" style="display:none;">
+                  <div class="container">
+                        <div class="section-header center">
+                              <h2>Summer Breezes</h2>
+                              <span class="section-tagline">Lightweight weaves for the warm season</span>
+                        </div>
+                        <div class="festival-products-grid"></div>
+                  </div>
+            </section>
+      </template>
+
+      <!-- 8. Monsoon Template (Teej / Varalakshmi / Rainy Season) -->
+      <template id="tmpl-monsoon-section">
+            <section class="editorial-section monsoon-theme">
+                  <div class="editorial-text">
+                        <div class="festival-wishes-banner" style="display:none;">
+                              <p class="festival-wishes-text"></p>
+                        </div>
+                        <div class="theme-badge monsoon-badge">🌧️ Verdant Season</div>
+                        <h2 class="festival-title"></h2>
+                        <div class="theme-divider monsoon-divider"></div>
+                        <p class="festival-desc"></p>
+                        <div class="festival-offer-badge monsoon" style="display:none;">
+                              <span class="offer-label"></span>: <span class="offer-code"></span>
+                              <div class="offer-discount"></div>
+                        </div>
+                        <a href="shop.html" class="btn-editorial theme-cta monsoon-cta">Shop Monsoon Edit</a>
+                  </div>
+                  <div class="editorial-image-wrapper">
+                        <img src="" alt="Monsoon Collection" class="festival-img">
+                  </div>
+            </section>
+            <section class="festival-product-showcase monsoon-showcase" style="display:none;">
                   <div class="container">
                         <div class="section-header center">
                               <h2>Emerald Weaves</h2>
@@ -472,20 +598,6 @@
                         <div class="festival-products-grid"></div>
                   </div>
             </section>
-      </template>
-
-
-      <section class="festival-product-showcase" style="display:none;">
-            <div class="container">
-                  <div class="section-header center">
-                        <h2>Festive Curations</h2>
-                        <span class="section-tagline">Exclusively picked for the occasion</span>
-                  </div>
-                  <div class="festival-products-grid">
-                        <!-- Products injected here -->
-                  </div>
-            </div>
-      </section>
       </template>
 
       <template id="tmpl-festival-product-card">
@@ -510,6 +622,7 @@
 
 
       <script src="festival_system.js"></script>
+      <script src="js/atmosphere-engine.js"></script>
       <script src="js/auth.js"></script>
       <script src="index.js"></script>
 </body>

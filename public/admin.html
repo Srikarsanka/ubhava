@@ -212,26 +212,68 @@
                               <h3>🎨 Theme Gallery & Live Preview</h3>
                               <p>Click "Preview Live" to see how the website looks with this theme active.</p>
 
+                              <!-- Live Weather Status -->
+                              <div id="adminWeatherCard" style="margin: 15px 0; padding: 15px 20px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; color: white; display: flex; align-items: center; gap: 15px;">
+                                    <span style="font-size: 2rem;" id="adminWeatherIcon">⛅</span>
+                                    <div>
+                                          <div style="font-weight: 700; font-size: 1.1rem;" id="adminWeatherTemp">Loading...</div>
+                                          <div style="font-size: 0.8rem; opacity: 0.85;" id="adminWeatherTheme">Auto-detecting theme...</div>
+                                    </div>
+                              </div>
+
                               <div class="deals-grid"
                                     style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+
+                                    <!-- ☀️ Summer -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #ffab40; background: #fff8e1;">
+                                          <strong>☀️ Summer / Greeshma</strong>
+                                          <small>Warm amber gradients, sun glow VFX. Cotton collection.</small>
+                                          <a href="/index.html?previewTheme=summer" target="_blank" class="btn-small"
+                                                style="background: linear-gradient(135deg, #e65100, #ff8f00); color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+
+                                    <!-- 🌧️ Monsoon -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #4fc3f7; background: #e1f5fe;">
+                                          <strong>🌧️ Monsoon / Varsha</strong>
+                                          <small>Rain VFX, glassmorphism, dark blue. Rainwear collection.</small>
+                                          <a href="/index.html?previewTheme=monsoon" target="_blank" class="btn-small"
+                                                style="background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+
+                                    <!-- ❄️ Winter -->
+                                    <div class="list-item"
+                                          style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #90caf9; background: #eceff1;">
+                                          <strong>❄️ Winter / Shishira</strong>
+                                          <small>Snow particles, frost glass, cool blue. Sweater collection.</small>
+                                          <a href="/index.html?previewTheme=winter" target="_blank" class="btn-small"
+                                                style="background: linear-gradient(135deg, #37474f, #546e7a); color: white; text-decoration: none; text-align: center; width: 100%;">Preview
+                                                Live 👁️</a>
+                                    </div>
+
                                     <!-- Standard -->
                                     <div class="list-item"
                                           style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #ddd;">
-                                          <strong>Standard / Heritage</strong>
+                                          <strong>✦ Standard / Heritage</strong>
                                           <small>Default look. Timeless, artisan focus.</small>
                                           <a href="/index.html?previewTheme=standard" target="_blank" class="btn-small"
                                                 style="background: #333; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
                                                 Live 👁️</a>
                                     </div>
+
                                     <!-- Diwali -->
                                     <div class="list-item"
                                           style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #ffd700; background: #fffbe6;">
                                           <strong>🪔 Diwali / Deepavali</strong>
-                                          <small>Fireworks, Diyas, Lanterns. Dark Gold theme.</small>
+                                          <small>Fireworks, Diyas, Dark Gold. Festival of lights.</small>
                                           <a href="/index.html?previewTheme=diwali" target="_blank" class="btn-small"
                                                 style="background: #ff9800; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
                                                 Live 👁️</a>
                                     </div>
+
                                     <!-- Patriotic -->
                                     <div class="list-item"
                                           style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #3498db;">
@@ -241,35 +283,54 @@
                                                 style="background: #3498db; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
                                                 Live 👁️</a>
                                     </div>
+
                                     <!-- Harvest -->
                                     <div class="list-item"
                                           style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #2ecc71;">
                                           <strong>🌾 Harvest / Sankranti</strong>
-                                          <small>Falling Grains, Sugarcane. Green/Gold.</small>
+                                          <small>Golden grains, abundance. Pongal/Sankranti.</small>
                                           <a href="/index.html?previewTheme=harvest" target="_blank" class="btn-small"
                                                 style="background: #2ecc71; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
                                                 Live 👁️</a>
                                     </div>
+
                                     <!-- Spring -->
                                     <div class="list-item"
                                           style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #e91e63;">
                                           <strong>🌸 Spring / Ugadi</strong>
-                                          <small>Falling Flowers, Mango Toran. Pink/Fresh.</small>
+                                          <small>Flowers, Mango Toran. Fresh bloom.</small>
                                           <a href="/index.html?previewTheme=spring" target="_blank" class="btn-small"
                                                 style="background: #e91e63; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
                                                 Live 👁️</a>
                                     </div>
+
                                     <!-- Spiritual -->
                                     <div class="list-item"
                                           style="flex-direction: column; align-items: start; gap: 10px; border: 1px solid #9b59b6;">
                                           <strong>🕉️ Spiritual / Dasara</strong>
-                                          <small>Gold Framing, Subtle Glow. Puja focus.</small>
+                                          <small>Gold glow, saffron. Temple festivals.</small>
                                           <a href="/index.html?previewTheme=spiritual" target="_blank" class="btn-small"
                                                 style="background: #9b59b6; color: white; text-decoration: none; text-align: center; width: 100%;">Preview
                                                 Live 👁️</a>
                                     </div>
                               </div>
                         </div>
+
+                        <!-- Admin Weather Auto-Load Script -->
+                        <script>
+                              (async function loadAdminWeather() {
+                                    try {
+                                          const res = await fetch('/api/weather-context');
+                                          const data = await res.json();
+                                          if (data.current) {
+                                                const icons = { rain: '🌧️', thunderstorm: '⛈️', snow: '❄️', clear: '☀️', cloudy: '⛅', fog: '🌫️' };
+                                                document.getElementById('adminWeatherIcon').textContent = icons[data.weatherInfo?.weather] || '🌡️';
+                                                document.getElementById('adminWeatherTemp').textContent = `${Math.round(data.current.temperature)}°C — ${data.weatherInfo?.weather} | Humidity: ${data.current.humidity}%`;
+                                                document.getElementById('adminWeatherTheme').textContent = `Auto Theme: ${data.resolvedTheme?.toUpperCase()} | Season: ${data.season} | Mood: ${data.tempInfo?.mood}`;
+                                          }
+                                    } catch (e) { console.log('Weather card error', e); }
+                              })();
+                        </script>
 
                   </section>
 
@@ -381,13 +442,23 @@
                                                       <option value="" disabled selected>Select Sub-Category</option>
                                                 </select>
                                           </div>
-                                          <div class="form-group">
+                                          <div class="form-group" id="generalStockGroup">
                                                 <label>Stock Quantity</label>
-                                                <input type="number" id="stock" value="10" min="1">
+                                                <input type="number" id="stock" value="10" min="0">
                                           </div>
-                                          <div class="form-group">
-                                                <label>Size (Optional)</label>
-                                                <input type="text" id="size" placeholder="e.g. Free Size">
+                                          <div class="form-group" id="totalStockPreview" style="display:none; background: #e3f2fd; padding: 10px; border-radius: 8px; border: 1px solid #90caf9; align-self: end; margin-bottom: 5px;">
+                                                <label style="color: #0d47a1; font-weight: 700; margin-bottom: 2px;">Total Calculated Stock</label>
+                                                <div id="totalStockBadge" style="font-size: 1.4rem; font-weight: 800; color: #1565c0;">0</div>
+                                          </div>
+                                          <div class="form-group full-width" id="sizeStockContainer" style="display:none; background:#f0f2f5; padding:20px; border-radius:12px; border: 1px solid #d1d9e6; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                                    <label style="margin:0; font-weight: 700; color: #2c3e50; font-size: 1rem;">📦 Size-Wise Inventory Breakdown</label>
+                                                    <span style="font-size: 0.75rem; background: #fff; padding: 4px 10px; border-radius: 20px; border: 1px solid #ccc; color: #666;">Clothing / Footwear Mode</span>
+                                                </div>
+                                                <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:12px;" id="sizeStockInputs">
+                                                    <!-- Generated by admin.js -->
+                                                </div>
+                                                <p style="margin-top:15px; font-size:0.75rem; color:#7f8c8d; font-style: italic;">AI Note: Total stock will be auto-calculated for the shop front.</p>
                                           </div>
                                           <div class="form-group full-width">
                                                 <label>Image URL</label>

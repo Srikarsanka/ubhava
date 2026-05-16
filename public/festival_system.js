@@ -15,21 +15,47 @@ async function initHeritageSystem() {
     }
 
     try {
+        // Intercept Admin Preview Themes
+        const urlParams = new URLSearchParams(window.location.search);
+        const previewTheme = urlParams.get('previewTheme');
+        
+        if (['summer', 'monsoon', 'winter', 'standard'].includes(previewTheme)) {
+            console.log(`👁️ Admin Preview Mode Active: ${previewTheme}`);
+            await showSeasonalContent(previewTheme);
+            return;
+        }
+
         // Fetch dynamic festival context from backend (Gemini AI)
-        const response = await fetch('/api/festival-context');
-        const context = await response.json();
+        let response = null;
+        let context = null;
+        try {
+            response = await fetch('/api/festival-context');
+            context = await response.json();
+        } catch (e) {
+            console.warn("Festival API failed", e);
+        }
         
         // Backend provides everything - dynamic text + promotional images
-        if (context && context.editorial_content) {
+        if (context && context.editorial_content && context.detected) {
             injectEditorialLayer(context);
         } else {
-            console.warn("⚠️ API returned valid JSON but missing content. Using fallback.");
-            showFallbackContent();
+            console.log("⚠️ No active festival detected. Falling back to seasonal Moansson theme.");
+            // If no festival, fallback to the current season/weather theme
+            let currentSeason = 'standard';
+            try {
+                const weatherRes = await fetch('/api/weather-context');
+                const weatherData = await weatherRes.json();
+                if (weatherData && weatherData.resolvedTheme) {
+                    currentSeason = weatherData.resolvedTheme;
+                }
+            } catch (e) {}
+            
+            await showSeasonalContent(currentSeason);
         }
         
     } catch (err) {
         console.error("Error loading festival content:", err);
-        showFallbackContent();
+        await showSeasonalContent('standard');
     } finally {
         // 2. Hide loader and Unlock Scroll (with slight delay for injection finish)
         setTimeout(() => {
@@ -41,21 +67,61 @@ async function initHeritageSystem() {
     }
 }
 
-// Fallback if backend is completely down
-async function showFallbackContent() {
-    console.log("🔄 engaging fallback content system...");
-    const fallbackData = await getPromotionalContent();
-    
-    // data is guaranteed to exist now (either from JSON or hardcoded backup)
+// Moansson Seasonal Editorial Fallback
+async function showSeasonalContent(theme) {
+    const contentMap = {
+        summer: {
+            title: "Moansson Summer Edit",
+            desc: "Lightweight, breathable cottons engineered for the scorching sun.",
+            cta: "Shop Summer",
+            img: "/images/moansson/summer_editorial.png",
+            vfx: "sun-glow"
+        },
+        monsoon: {
+            title: "Moansson Rainwear",
+            desc: "Sleek, waterproof protection designed for the urban downpour.",
+            cta: "Shop Monsoon",
+            img: "/images/moansson/monsoon_editorial.png",
+            vfx: "rain"
+        },
+        winter: {
+            title: "Moansson Winter Collection",
+            desc: "Premium insulated layers and woolens for absolute warmth.",
+            cta: "Shop Winter",
+            img: "/images/moansson/winter_editorial.png",
+            vfx: "snowfall"
+        },
+        standard: {
+            title: "UDBHAVA Heritage",
+            desc: "Celebrating the enduring traditions of Indian craftsmanship shaped by generations.",
+            cta: "Explore Our Story",
+            img: "/images/promotional/bridal_heritage.png",
+            vfx: "standard"
+        }
+    };
+
+    // Fetch related products for this season
+    let relatedProducts = [];
+    try {
+        const prodRes = await fetch(`/api/products/seasonal?season=${theme}&limit=4`);
+        const prodData = await prodRes.json();
+        relatedProducts = prodData.products || [];
+    } catch (e) {
+        console.warn("Seasonal Product Fetch failed", e);
+    }
+
     const context = {
         detected: false,
-        festival_name: null,
-        mood: ["heritage"], 
+        templateType: theme,
+        festival_name: selected.title,
+        mood: [theme], 
+        vfx_type: [selected.vfx],
+        related_products: relatedProducts,
         editorial_content: {
-            title: fallbackData.title,
-            description: fallbackData.description,
-            cta_text: fallbackData.cta_text,
-            image_url: fallbackData.image_url
+            title: selected.title,
+            description: selected.desc,
+            cta_text: selected.cta,
+            image_url: selected.img
         }
     };
     injectEditorialLayer(context);
@@ -169,7 +235,8 @@ function injectEditorialLayer(context) {
     const container = document.getElementById('dynamic-content-layer');
     
     // Pick Template based on context.templateType
-    const templateId = `tmpl-${context.templateType || 'standard'}-section`;
+    const templateType = context.templateType || 'standard';
+    const templateId = `tmpl-${templateType}-section`;
     const template = document.getElementById(templateId) || document.getElementById('tmpl-editorial-section');
 
     if (!container || !template) return;
@@ -182,25 +249,32 @@ function injectEditorialLayer(context) {
     const content = context.editorial_content;
     const section = clone.querySelector('.editorial-section');
 
-    // 1. Text Content Mapping (Handles different selector names across templates)
+    // 1. Text Content Mapping
     const titleEl = clone.querySelector('.festival-title');
     if (titleEl) titleEl.textContent = content.title;
 
     const descEl = clone.querySelector('.festival-desc');
     if (descEl) descEl.textContent = content.description;
 
+    // Wishes Banner (subline)
     const wishesEl = clone.querySelector('.festival-wishes-text');
-    if (wishesEl) {
-        wishesEl.textContent = context.festival_wishes || "";
+    if (wishesEl && context.festival_wishes) {
+        wishesEl.textContent = context.festival_wishes;
         const banner = clone.querySelector('.festival-wishes-banner');
-        if (banner) banner.style.display = context.festival_wishes ? 'inline-block' : 'none';
+        if (banner) banner.style.display = 'inline-block';
+    }
+
+    // CTA Button text from AI
+    const ctaBtn = clone.querySelector('.theme-cta');
+    if (ctaBtn && content.cta_text) {
+        ctaBtn.textContent = content.cta_text;
     }
 
     // 2. Image
     const img = clone.querySelector('.festival-img');
     if (img) img.src = content.image_url;
 
-    // 3. Social Offer Badge
+    // 3. Offer Badge (supports multiple coupons)
     const offerBadge = clone.querySelector('.festival-offer-badge');
     if (context.special_offers && context.special_offers.length > 0 && offerBadge) {
         const offer = context.special_offers[0];
@@ -220,29 +294,29 @@ function injectEditorialLayer(context) {
         offerBadge.style.display = 'none';
     }
 
-    // 4. Products & Theme Polish
+    // 4. Theme Classes & VFX
     const vfx = Array.isArray(context.vfx_type) ? context.vfx_type : [context.vfx_type];
     
-    // Explicitly add theme classes if they are missing
-    if (context.templateType === 'spiritual') section.classList.add('spiritual-theme');
-    if (context.templateType === 'patriotic') section.classList.add('patriotic-theme');
-    if (context.templateType === 'harvest') section.classList.add('harvest-theme');
-    if (context.templateType === 'spring') section.classList.add('spring-theme');
-    if (context.templateType === 'monsoon') section.classList.add('monsoon-theme');
-    if (context.templateType === 'shivaratri') section.classList.add('shivaratri-vibe');
+    // Add theme classes
+    if (templateType === 'spiritual') section.classList.add('spiritual-theme');
+    if (templateType === 'patriotic') section.classList.add('patriotic-theme');
+    if (templateType === 'harvest') section.classList.add('harvest-theme');
+    if (templateType === 'spring') section.classList.add('spring-theme');
+    if (templateType === 'monsoon') section.classList.add('monsoon-theme');
+    if (templateType === 'summer') section.classList.add('summer-theme');
+    if (templateType === 'shivaratri') section.classList.add('shivaratri-vibe');
 
-    // DIWALI CHECK: If it's spiritual and has both fireworks + diyas, it's a Diwali Vibe
-    if (context.templateType === 'spiritual' && vfx.includes('fireworks') && vfx.includes('diyas')) {
+    // DIWALI CHECK
+    if (templateType === 'spiritual' && vfx.includes('fireworks') && vfx.includes('diyas')) {
         section.classList.add('diwali-vibe');
     }
 
-    // ABUNDANCE VFX: Specialized falling elements for Harvest and Spring
-    if (vfx.includes('harvest-goodness') || context.templateType === 'harvest') {
+    // ABUNDANCE VFX
+    if (vfx.includes('harvest-goodness') || templateType === 'harvest') {
         createFallingAbundance('harvest');
     }
-    if (vfx.includes('spring-goodness') || context.templateType === 'spring') {
+    if (vfx.includes('spring-goodness') || templateType === 'spring') {
         createFallingAbundance('spring');
-        // Add Mango Toran to editorial section
         const toran = document.createElement('div');
         toran.className = 'mango-toran';
         section.prepend(toran);
@@ -293,11 +367,30 @@ function injectEditorialLayer(context) {
         if (injectedSection) {
             injectedSection.classList.add('visible');
 
-            
-
-            // 2. Dynamic Ambient VFX (Diyas, Flowers, etc.)
+            // Dynamic Ambient VFX — filter inappropriate ones per theme
             if (context.vfx_type && context.vfx_type !== 'standard') {
-                injectAmbientVFX(injectedSection, context.vfx_type);
+                let vfx = Array.isArray(context.vfx_type) ? [...context.vfx_type] : [context.vfx_type];
+
+                // Remove flower petals from non-spring themes
+                if (templateType !== 'spring') {
+                    vfx = vfx.filter(v => v !== 'flowers' && v !== 'spring-goodness');
+                }
+                // Remove harvest effects from non-harvest themes
+                if (templateType !== 'harvest') {
+                    vfx = vfx.filter(v => v !== 'harvest-goodness');
+                }
+                // For summer, only allow summer-appropriate VFX
+                if (templateType === 'summer') {
+                    vfx = vfx.filter(v => ['standard', 'sun-glow'].includes(v));
+                }
+                // For monsoon, only allow rain/water VFX
+                if (templateType === 'monsoon') {
+                    vfx = vfx.filter(v => ['standard', 'rain', 'lightning'].includes(v));
+                }
+
+                if (vfx.length > 0) {
+                    injectAmbientVFX(injectedSection, vfx);
+                }
             }
         }
         

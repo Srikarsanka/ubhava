@@ -2,13 +2,27 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        if (!process.env.MONGO_URI) {
-            console.warn("⚠️  WARNING: MONGO_URI is missing. Defaulting to Localhost (This will FAIL on Render/Cloud).");
+        const uri = process.env.MONGO_URI;
+        if (!uri) {
+            console.error("❌ CRITICAL: MONGO_URI is missing in .env file!");
+            process.exit(1);
         }
-        const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/pride-ecommerce');
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+        // Standard Atlas connection options
+        const options = {
+            dbName: 'pride', // Explicitly target pride database
+            tlsAllowInvalidCertificates: true, // Workaround for local CA certificate issues
+        };
+
+        const conn = await mongoose.connect(uri, options);
+        console.log(`✅ MongoDB Atlas Connected: ${conn.connection.host}`);
+        
     } catch (error) {
-        console.error(`Error: ${error.message}`);
+        console.error(`❌ MongoDB Connection Error: ${error.message}`);
+        // If certificate error, provide specific advice
+        if (error.message.includes('certificate')) {
+            console.log("💡 TIP: Your local machine might have outdated SSL certificates. Try updating Node.js or check your network/VPN settings.");
+        }
         process.exit(1);
     }
 };
